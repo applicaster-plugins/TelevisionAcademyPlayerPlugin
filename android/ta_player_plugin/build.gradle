@@ -13,7 +13,6 @@ android {
         minSdkVersion project.ext.minSdkVersion
         targetSdkVersion project.ext.targetSdkVersion
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
     }
 
@@ -28,13 +27,10 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "androidx.appcompat:appcompat:$androidxVersion"
-    implementation "androidx.core:core-ktx:$androidxVersion"
+    implementation "com.android.support:support-compat:$androidSupportVersion"
     implementation 'com.bitmovin.player:playercore:2.37.0'
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
     // Applicaster SDK
     def applicasterSDKPath = 'com.applicaster:applicaster-android-sdk:2.32.15'
