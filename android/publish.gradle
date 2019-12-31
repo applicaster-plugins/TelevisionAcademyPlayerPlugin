@@ -26,6 +26,6 @@ publish {
     publishVersion = releaseVersion
     repoName = 'maven'
     userOrg = 'applicaster-ltd'
-    groupId = 'com.applicaster.television_academy'
+    groupId = 'com.applicaster'
     website = 'https://github.com/applicaster-plugins/TelevisionAcademyPlayerPlugin.git'
 }
