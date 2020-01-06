@@ -13,7 +13,6 @@ android {
         minSdkVersion project.ext.minSdkVersion
         targetSdkVersion project.ext.targetSdkVersion
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
     }
 
@@ -23,21 +22,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "androidx.appcompat:appcompat:$androidxVersion"
-    implementation "androidx.core:core-ktx:$androidxVersion"
+    implementation "com.android.support:support-compat:$androidSupportVersion"
     implementation 'com.bitmovin.player:playercore:2.37.0'
 
-
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-
 
     // Applicaster SDK
     def applicasterSDKPath = 'com.applicaster:applicaster-android-sdk:2.32.15'
@@ -50,21 +43,6 @@ dependencies {
     } else {
         api(applicasterSDKPath)
     }
-
-//    def exo_player_version = '1.0.3'
-//    implementation "com.applicaster.exoplayer:exoplayer:$exo_player_version"
-//    implementation "com.applicaster.exoplayer:extension-ima:$exo_player_version"
-//    implementation "com.applicaster.exoplayer:extension-mpegh:$exo_player_version"
-//    implementation "com.applicaster.exoplayer:exoplayer-ui:$exo_player_version"
-
-//    implementation 'com.npaw.youbora:youboralib:6.0.9'
-//    implementation 'com.android.support:preference-leanback-v17:27.0.2'
-//    implementation "com.android.support:leanback-v17:27.0.2"
-}
-
-ext {
-    releaseArtifact = 'television-academy-player'
-    releaseDescription = 'The Television Academy player plugin.'
 }
 
 apply from: '../publish.gradle'

@@ -1,0 +1,31 @@
+{
+  "api": {
+    "require_startup_execution": false,
+    "class_name": "com.applicaster.plugin.televisionacademyplayer.PlayerContract"
+  },
+  "dependency_repository_url": [
+    {
+      "url": "http://bitmovin.bintray.com/maven"
+    }
+  ],
+  "platform": "android",
+  "author_name": "D. Puzak",
+  "author_email": "dmytro.puzak@corewillsoft.com",
+  "manifest_version": "0.0.3",
+  "name": "Television Academy Player",
+  "description": "Android Plugin for Television Academy",
+  "type": "player",
+  "screen": false,
+  "identifier": "TelevisionAcademyPlayerPlugin",
+  "ui_builder_support": true,
+  "dependency_name": "com.applicaster:television-academy-player-plugin",
+  "dependency_version": "0.0.3",
+  "whitelisted_account_ids": [
+    "5dcaba3ee648eb000eaf5c0a"
+  ],
+  "min_zapp_sdk": "6.3.1",
+  "deprecated_since_zapp_sdk": "",
+  "unsupported_since_zapp_sdk": "",
+  "react_native": false,
+  "custom_configuration_fields": []
+}

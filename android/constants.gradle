@@ -12,29 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 project.ext {
-    releaseVersion = '0.0.1'
+    releaseVersion = '0.0.3'
     releaseVersionCode = 1
     minSdkVersion = 17
     targetSdkVersion = 29
     compileSdkVersion = 29
     buildToolsVersion = '29.0.2'
     androidxVersion = '1.0.2'
+    androidSupportVersion = '28.0.0'
+
     modulePrefix = ':'
 
-//    #VERSION_NAME=1.0.0
-//    #VERSION_CODE=1
-//    #GROUP=com.applicaster
-//    #ARTIFACT_ID=TVPlayerPlugin-Android
-//    #POM_DESCRIPTION=Android TV Player using Exoplayer and Youbora Analytics
-//    #POM_URL=https://github.com/applicaster/TVPlayerPlugin-Android.git
-//    #POM_SCM_URL=https://github.com/applicaster/TVPlayerPlugin-Android.git
-//    #POM_SCM_CONNECTION=scm:https://github.com/applicaster/TVPlayerPlugin-Android.git
-//    #POM_SCM_DEV_CONNECTION=scm:https://github.com/applicaster/TVPlayerPlugin-Android.git
-//    #POM_LICENCE_NAME=The Apache Software License, Version 2.0
-//    #POM_LICENCE_URL=http://www.apache.org/licenses/LICENSE-2.0.txt
-//    #POM_LICENCE_DIST=repo
-//    #POM_DEVELOPER_ID=j.casaudoumecq
-//    #POM_DEVELOPER_NAME=Applicaster
-//    #POM_DEVELOPER_EMAIL=android@applicaster.com
-//    #ISSUE_URL=https://github.com/applicaster/TVPlayerPlugin-Android/issues
+    releaseArtifact = 'television-academy-player-plugin'
+    releaseDescription = 'The Television Academy player plugin.'
 }

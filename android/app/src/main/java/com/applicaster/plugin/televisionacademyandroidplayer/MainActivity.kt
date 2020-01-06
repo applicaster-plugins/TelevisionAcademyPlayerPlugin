@@ -1,7 +1,7 @@
 package com.applicaster.plugin.televisionacademyandroidplayer
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import com.applicaster.plugin.televisionacademyplayer.PlayerContract
 
 class MainActivity : AppCompatActivity() {
