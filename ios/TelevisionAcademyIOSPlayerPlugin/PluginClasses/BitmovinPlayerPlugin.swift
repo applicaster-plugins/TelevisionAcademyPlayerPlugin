@@ -11,7 +11,7 @@ import ZappPlugins
 
 public class BitmovinPlayerPlugin: NSObject, ZPPluggableScreenProtocol {
 
-    var playerViewController: PlayerViewController?
+    private var playerViewController: PlayerViewController!
 
     @objc weak public var screenPluginDelegate: ZPPlugableScreenDelegate?
     private var pluginModel: ZPPluginModel?
@@ -62,28 +62,18 @@ extension BitmovinPlayerPlugin: ZPPlayerProtocol {
     }
 
     public func presentPlayerFullScreen(_ rootViewController: UIViewController, configuration: ZPPlayerConfiguration?, completion: (() -> Void)?) {
-//        guard let playerViewController = self.playerViewController,
-//            let topmostViewController = rootViewController.topmostModal(),
-//            let currentItem = playerViewController.player.currentItem  else {
-//            return
-//        }
-//
-//        let animated: Bool = configuration?.animated ?? true
-//        playerViewController.builder.mode = .fullscreen
-//        playerViewController.setupPlayer()
-//        playerViewController.delegate = self.adAnalytics
-//        playerViewController.onDismiss = { [weak self] in
-//            self?.analytics.complete(item: playerViewController.player.currentItem!,
-//                                     progress: playerViewController.player.playbackState)
-//        }
-//        playerViewController.analyticEventDelegate = self
-//
-//        analytics.screenMode = .fullscreen
-//        topmostViewController.present(playerViewController, animated: animated, completion: completion)
+        guard let playerViewController = self.playerViewController,
+            let topmostViewController = rootViewController.topmostModal() else {
+            return
+        }
+
+        playerViewController.modalPresentationStyle = .fullScreen
+
+        topmostViewController.present(playerViewController, animated: configuration?.animated ?? true, completion: completion)
     }
 
     public func pluggablePlayerAddInline(_ rootViewController: UIViewController, container: UIView) {
-        guard let playerViewController = self.playerViewController else { return }
+//        guard let playerViewController = self.playerViewController else { return }
 
 //             playerViewController.builder.mode = .inline
 //
@@ -107,15 +97,14 @@ extension BitmovinPlayerPlugin: ZPPlayerProtocol {
     }
 
     public func pluggablePlayerPause() {
-        self.playerViewController?.player?.pause()
-
+        self.playerViewController.pause()
     }
 
     public func pluggablePlayerStop() {
-//        self.playerViewController?.player?.stop()
+        self.playerViewController.stop()
     }
 
     public func pluggablePlayerPlay(_ configuration: ZPPlayerConfiguration?) {
-        self.playerViewController?.player?.play()
+        self.playerViewController.play()
     }
 }

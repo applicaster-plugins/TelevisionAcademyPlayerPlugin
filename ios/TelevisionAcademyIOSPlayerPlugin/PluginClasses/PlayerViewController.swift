@@ -12,6 +12,8 @@ import ZappPlugins
 
 class PlayerViewController: UIViewController {
 
+    var player: BitmovinPlayer!
+
     let videos: [ZPPlayable]
     let configuration: NSDictionary
 
@@ -26,20 +28,17 @@ class PlayerViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    var player: BitmovinPlayer?
-
     deinit {
-        player?.destroy()
+        player.destroy()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = .black
+        view.backgroundColor = .black
 
-        // Define needed resources
-        guard let streamUrl = URL(string: "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"),
-            let posterUrl = URL(string: "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/poster.jpg") else {
+        guard let item = videos.first,
+            let streamUrl = URL(string: item.contentVideoURLPath()) else {
                 return
         }
 
@@ -48,9 +47,6 @@ class PlayerViewController: UIViewController {
 
         do {
             try config.setSourceItem(url: streamUrl)
-
-            // Set a poster image
-            config.sourceItem?.posterSource = posterUrl
 
             // Create player based on player configuration
             let player = BitmovinPlayer(configuration: config)
@@ -100,3 +96,18 @@ extension PlayerViewController: PlayerListener {
 }
 
 
+//MARK:- Public
+
+extension PlayerViewController {
+    func pause() {
+        player.pause()
+    }
+
+    func stop() {
+        player.pause()
+    }
+
+    func play() {
+        player.play()
+    }
+}
