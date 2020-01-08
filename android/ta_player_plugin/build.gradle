@@ -21,6 +21,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
     }
 }
 
@@ -39,9 +43,21 @@ dependencies {
     //Check if an open SDK is defined - if not use the closed one.
     def devSDK = findProject(':applicaster-android-sdk')
     if (devSDK != null) {
-        api project(':applicaster-android-sdk')
+        api project(':applicaster-android-sdk') {
+            exclude group: 'com.google.android.exoplayer', module: 'exoplayer-core'
+            exclude group: 'com.google.android.exoplayer', module: 'exoplayer-dash'
+            exclude group: 'com.google.android.exoplayer', module: 'exoplayer-hls'
+            exclude group: 'com.google.android.exoplayer', module: 'exoplayer-ui'
+            exclude group: 'com.google.android.exoplayer', module: 'exoplayer-smoothstreaming'
+        }
     } else {
-        api(applicasterSDKPath)
+        api(applicasterSDKPath) {
+            exclude group: 'com.google.android.exoplayer', module: 'exoplayer-core'
+            exclude group: 'com.google.android.exoplayer', module: 'exoplayer-dash'
+            exclude group: 'com.google.android.exoplayer', module: 'exoplayer-hls'
+            exclude group: 'com.google.android.exoplayer', module: 'exoplayer-ui'
+            exclude group: 'com.google.android.exoplayer', module: 'exoplayer-smoothstreaming'
+        }
     }
 }
 
