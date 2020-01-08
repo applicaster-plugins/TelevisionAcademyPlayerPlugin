@@ -11,8 +11,7 @@ import ZappPlugins
 
 class DemoViewController: UIViewController {
 
-    var plugin: BitmovinPlayerPlugin?
-
+    var plugin: BitmovinPlayerPlugin!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,6 +20,6 @@ class DemoViewController: UIViewController {
     @IBAction func buttonDemo() {
         let playable = Playable.createVASTVideo()
         plugin = BitmovinPlayerPlugin.pluggablePlayerInit(playableItems: [playable], configurationJSON:[:]) as! BitmovinPlayerPlugin
-        plugin?.presentPlayerFullScreen(self, configuration: nil, completion: nil)
+        plugin.presentPlayerFullScreen(self, configuration: nil, completion: nil)
     }
 }

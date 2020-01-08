@@ -12,8 +12,11 @@ import ZappPlugins
 
 class PlayerViewController: UIViewController {
 
+    // player utils
     var player: BitmovinPlayer!
+    var playerView: UIView!
 
+    // playable data
     let videos: [ZPPlayable]
     let configuration: NSDictionary
 
@@ -30,6 +33,8 @@ class PlayerViewController: UIViewController {
 
     deinit {
         player.destroy()
+        player = nil
+        playerView = nil
     }
 
     override func viewDidLoad() {
@@ -37,42 +42,49 @@ class PlayerViewController: UIViewController {
 
         view.backgroundColor = .black
 
-        guard let item = videos.first,
-            let streamUrl = URL(string: item.contentVideoURLPath()) else {
-                return
+        setupPlayer()
+    }
+
+    private func setupPlayer() {
+
+        let sourceItems =
+        videos.map { (playable) -> SourceItem in
+            let source = SourceItem(url: URL(string: playable.contentVideoURLPath())!)!
+            source.itemTitle = playable.playableName()
+
+            return source
         }
 
-        // Create player configuration
         let config = PlayerConfiguration()
+        config.sourceItem = sourceItems.first
 
-        do {
-            try config.setSourceItem(url: streamUrl)
+        let p = BitmovinPlayer(configuration: config)
+        p.add(listener: self)
 
-            // Create player based on player configuration
-            let player = BitmovinPlayer(configuration: config)
+        let v = BMPBitmovinPlayerView(player: p, frame: .zero)
+        v.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        v.frame = view.bounds
 
-            // Create player view and pass the player instance to it
-            let playerView = BMPBitmovinPlayerView(player: player, frame: .zero)
+        view.addSubview(v)
+        view.bringSubviewToFront(v)
 
-            // Listen to player events
-            player.add(listener: self)
-
-            playerView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
-            playerView.frame = view.bounds
-
-            view.addSubview(playerView)
-            view.bringSubviewToFront(playerView)
-
-            self.player = player
-        } catch {
-            print("Configuration error: \(error)")
-        }
+        self.player = p
+        self.playerView = v
     }
 }
 
 //MARK:- PlayerListener
 
 extension PlayerViewController: PlayerListener {
+
+    public func onMetadata(_ event: MetadataEvent) {
+        for entry in event.metadata.entries {
+            if let metadataEntry = entry as? AVMetadataItem,
+                let id3Key = metadataEntry.key {
+                print("Received metadata with key: \(id3Key)")
+            }
+        }
+    }
 
     func onPlay(_ event: PlayEvent) {
         print("onPlay \(event.time)")
@@ -99,6 +111,7 @@ extension PlayerViewController: PlayerListener {
 //MARK:- Public
 
 extension PlayerViewController {
+
     func pause() {
         player.pause()
     }
@@ -109,5 +122,16 @@ extension PlayerViewController {
 
     func play() {
         player.play()
+    }
+
+    func setInlineView(rootViewController: UIViewController, container: UIView) {
+        rootViewController.addChildViewController(self, to: container)
+        view.matchParent()
+    }
+
+    func setFullscreenView() {
+        let container = self.view.superview
+        container?.removeFromSuperview()
+        view.matchParent()
     }
 }

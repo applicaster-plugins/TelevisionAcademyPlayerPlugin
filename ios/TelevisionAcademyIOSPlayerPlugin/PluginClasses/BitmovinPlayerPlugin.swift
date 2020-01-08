@@ -62,6 +62,7 @@ extension BitmovinPlayerPlugin: ZPPlayerProtocol {
     }
 
     public func presentPlayerFullScreen(_ rootViewController: UIViewController, configuration: ZPPlayerConfiguration?, completion: (() -> Void)?) {
+
         guard let playerViewController = self.playerViewController,
             let topmostViewController = rootViewController.topmostModal() else {
             return
@@ -73,27 +74,21 @@ extension BitmovinPlayerPlugin: ZPPlayerProtocol {
     }
 
     public func pluggablePlayerAddInline(_ rootViewController: UIViewController, container: UIView) {
-//        guard let playerViewController = self.playerViewController else { return }
 
-//             playerViewController.builder.mode = .inline
-//
-//             rootViewController.addChildViewController(playerViewController, to: container)
-//             playerViewController.view.matchParent()
-//             playerViewController.setupPlayer()
-//             playerViewController.delegate = self.adAnalytics
-//             playerViewController.analyticEventDelegate = self
-//             analytics.screenMode = .inline
+        guard let playerViewController = self.playerViewController else {
+            return
+        }
+
+        playerViewController.setInlineView(rootViewController: rootViewController, container: container)
     }
 
     public func pluggablePlayerRemoveInline() {
-//        if let item = self.playerViewController?.player.currentItem,
-//            let progress = self.playerViewController?.player.playbackState {
-//            analytics.complete(item: item,
-//                               progress: progress)
-//        }
-//
-//        let container = self.playerViewController?.view.superview
-//        container?.removeFromSuperview()
+
+        guard let playerViewController = self.playerViewController else {
+            return
+        }
+
+        playerViewController.setFullscreenView()
     }
 
     public func pluggablePlayerPause() {
