@@ -8,6 +8,8 @@ import android.view.WindowManager
 import com.applicaster.plugin_manager.playersmanager.Playable
 import com.bitmovin.player.BitmovinPlayer
 import com.bitmovin.player.config.media.SourceConfiguration
+import com.bitmovin.player.config.media.SourceItem
+import com.bitmovin.player.config.vr.VRContentType
 import kotlinx.android.synthetic.main.activity_player.*
 
 class TAPlayerActivity : AppCompatActivity() {
@@ -33,6 +35,7 @@ class TAPlayerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_player)
         bitmovinPlayer = bitmovinPlayerView.player
         initializePlayer()
+
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -74,8 +77,16 @@ class TAPlayerActivity : AppCompatActivity() {
 
     private fun initializePlayer() {
         playable?.apply {
+            val vrSourceItem = SourceItem(contentVideoURL)
+            // Get the current VRConfiguration of the SourceItem
+            val vrConfiguration = vrSourceItem.vrConfiguration
+            // Set the VrContentType on the VRConfiguration
+            vrConfiguration.vrContentType = VRContentType.SINGLE
+            // Set the start position to 180 degrees
+            vrConfiguration.startPosition = 180.0
+
             val sourceConfiguration = SourceConfiguration()
-            sourceConfiguration.addSourceItem(contentVideoURL)
+            sourceConfiguration.addSourceItem(vrSourceItem)
             sourceConfiguration.startOffset = currentProgress
             bitmovinPlayer?.config?.playbackConfiguration?.isAutoplayEnabled = true
             bitmovinPlayer?.load(sourceConfiguration)
