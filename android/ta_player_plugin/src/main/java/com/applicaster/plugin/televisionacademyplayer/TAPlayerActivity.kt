@@ -8,7 +8,7 @@ import android.view.WindowManager
 import com.applicaster.plugin_manager.playersmanager.Playable
 import com.bitmovin.player.BitmovinPlayer
 import com.bitmovin.player.config.media.SourceConfiguration
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_player.*
 
 class TAPlayerActivity : AppCompatActivity() {
 
@@ -30,7 +30,7 @@ class TAPlayerActivity : AppCompatActivity() {
         if (savedInstanceState != null) {
             currentProgress = savedInstanceState.getDouble(KEY_CURRENT_PROGRESS, 0.0)
         }
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_player)
         bitmovinPlayer = bitmovinPlayerView.player
         initializePlayer()
     }
@@ -77,6 +77,7 @@ class TAPlayerActivity : AppCompatActivity() {
             val sourceConfiguration = SourceConfiguration()
             sourceConfiguration.addSourceItem(contentVideoURL)
             sourceConfiguration.startOffset = currentProgress
+            bitmovinPlayer?.config?.playbackConfiguration?.isAutoplayEnabled = true
             bitmovinPlayer?.load(sourceConfiguration)
         }
     }

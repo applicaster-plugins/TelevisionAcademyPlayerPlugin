@@ -32,7 +32,7 @@ class PlayerContract : BasePlayer() {
         context: Context
     ) {
         val intent = Intent(context, TAPlayerActivity::class.java)
-        firstPlayable.also {
+        firstPlayable?.also {
             intent.putExtra(KEY_PLAYABLE, it)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             context.startActivity(intent)
@@ -54,6 +54,7 @@ class PlayerContract : BasePlayer() {
         firstPlayable.also {
             val source = SourceConfiguration()
             source.addSourceItem(it.contentVideoURL)
+            videoView.player?.config?.playbackConfiguration?.isAutoplayEnabled = true
             videoView.player?.load(source)
         }
     }
