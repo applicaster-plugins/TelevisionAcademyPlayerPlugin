@@ -19,6 +19,7 @@ class PlayerViewController: UIViewController {
     // playable data
     let videos: [ZPPlayable]
     let configuration: NSDictionary
+//        let playerEventsManager = PlayerEventsManager()
 
     required init(with items: [ZPPlayable]?, configurationJSON: NSDictionary?) {
         videos = items ?? []
@@ -48,16 +49,18 @@ class PlayerViewController: UIViewController {
     private func setupPlayer() {
 
         let sourceItems =
-        videos.map { (playable) -> SourceItem in
-            let source = SourceItem(url: URL(string: playable.contentVideoURLPath())!)!
-            source.itemTitle = playable.playableName()
+            videos.map { (playable) -> PlayableSourceItem in
+                let source = PlayableSourceItem(url: URL(string: playable.contentVideoURLPath())!)!
+                source.itemTitle = playable.playableName()
+                source.elapsedTime = playable.extensionsDictionary?["elapsed_time"] as? Double
 
-            return source
+                return source
         }
 
         let config = PlayerConfiguration()
+        config.playbackConfiguration.isAutoplayEnabled = true
         config.sourceItem = sourceItems.first
-
+        
         let p = BitmovinPlayer(configuration: config)
         p.add(listener: self)
 
@@ -77,36 +80,43 @@ class PlayerViewController: UIViewController {
 
 extension PlayerViewController: PlayerListener {
 
-    public func onMetadata(_ event: MetadataEvent) {
-        for entry in event.metadata.entries {
-            if let metadataEntry = entry as? AVMetadataItem,
-                let id3Key = metadataEntry.key {
-                print("Received metadata with key: \(id3Key)")
-            }
+    func onReady(_ event: ReadyEvent) {
+        guard let item = self.player.config.sourceItem as? PlayableSourceItem,
+            let elapsedTime = item.elapsedTime else {
+            return
         }
+
+        self.player.seek(time: elapsedTime)
     }
 
     func onPlay(_ event: PlayEvent) {
         print("onPlay \(event.time)")
+//        playerEventsManager.onPlayerEvent("play", properties: [:])
     }
 
     func onPaused(_ event: PausedEvent) {
         print("onPaused \(event.time)")
+//        playerEventsManager.onPlayerEvent("pause", properties: [:])
     }
 
     func onTimeChanged(_ event: TimeChangedEvent) {
         print("onTimeChanged \(event.currentTime)")
+//        playerEventsManager.onPlayerEvent("heartbeat", properties: ["elapsed_time" : 2000]) //in miliseconds
     }
 
-    func onDurationChanged(_ event: DurationChangedEvent) {
-        print("onDurationChanged \(event.duration)")
+    func onPlaybackFinished(_ event: PlaybackFinishedEvent) {
+        print("onPlaybackFinished \(event.timestamp)")
+//        playerEventsManager.onPlayerEvent("stop", properties: [:])
     }
 
-    func onError(_ event: ErrorEvent) {
-        print("onError \(event.message)")
-    }
+//    func onDurationChanged(_ event: DurationChangedEvent) {
+//        print("onDurationChanged \(event.duration)")
+//    }
+//
+//    func onError(_ event: ErrorEvent) {
+//        print("onError \(event.message)")
+//    }
 }
-
 
 //MARK:- Public
 

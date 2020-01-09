@@ -7,9 +7,9 @@ source 'git@github.com:applicaster/PluginsBuilderCocoaPods.git'
 source 'git@github.com:CocoaPods/Specs.git'
 
 target 'TelevisionAcademyIOSPlayerPlugin' do
-#  pod 'BitmovinPlayerPlugin', :path => '../ios/BitmovinPlayerPlugin.podspec'
+#  pod 'PlayerEvents'
   pod 'ZappPlugins'
-	pod 'BitmovinPlayer', git: 'https://github.com/bitmovin/bitmovin-player-ios-sdk-cocoapod.git', tag:'2.36.1'
+	pod 'BitmovinPlayer', git: 'https://github.com/bitmovin/bitmovin-player-ios-sdk-cocoapod.git', tag:'2.37.0'
 end
 
 post_install do |installer|

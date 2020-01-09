@@ -1,11 +1,11 @@
 PODS:
-  - BitmovinPlayer (2.36.1)
+  - BitmovinPlayer (2.37.0)
   - ZappCore (0.1.5)
   - ZappPlugins (11.1.8):
     - ZappCore
 
 DEPENDENCIES:
-  - BitmovinPlayer (from `https://github.com/bitmovin/bitmovin-player-ios-sdk-cocoapod.git`, tag `2.36.1`)
+  - BitmovinPlayer (from `https://github.com/bitmovin/bitmovin-player-ios-sdk-cocoapod.git`, tag `2.37.0`)
   - ZappPlugins
 
 SPEC REPOS:
@@ -16,18 +16,18 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   BitmovinPlayer:
     :git: https://github.com/bitmovin/bitmovin-player-ios-sdk-cocoapod.git
-    :tag: 2.36.1
+    :tag: 2.37.0
 
 CHECKOUT OPTIONS:
   BitmovinPlayer:
     :git: https://github.com/bitmovin/bitmovin-player-ios-sdk-cocoapod.git
-    :tag: 2.36.1
+    :tag: 2.37.0
 
 SPEC CHECKSUMS:
-  BitmovinPlayer: faf3c03a6e52c08e9c6aa9f45cd33258fec6f0b3
+  BitmovinPlayer: 82c65a3ad4815b52520b2273c9832166e21f4f09
   ZappCore: 25908b99a27d3daace5d5b134ff1f911c4ed1782
   ZappPlugins: 20bdc1011c0da748aa9c00e33f7f13bc8a36990a
 
-PODFILE CHECKSUM: a440ab4b2d3170dd5d3250781b11ed025648d02d
+PODFILE CHECKSUM: c05e27c905e6d6d8f219ac20a53e1f570d1621b4
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.0.beta.2

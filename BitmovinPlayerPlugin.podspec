@@ -10,7 +10,6 @@ Pod::Spec.new do |s|
     s.license          = 'MIT'
     s.author           = { "Anatolii Afanasiev" => "anatolii.afanasiev@corewillsoft.com" }
     s.source           = { :git => "https://github.com/applicaster-plugins/TelevisionAcademyPlayerPlugin.git", :tag => s.version.to_s }
-  
     s.platform = :ios
     s.ios.deployment_target = "10.0"
     s.requires_arc = true
@@ -20,6 +19,7 @@ Pod::Spec.new do |s|
     s.source_files = 'ios/PluginClasses/**/*.{swift,h,m}'
     s.dependency 'ZappPlugins'
     s.dependency 'BitmovinPlayer'
+    s.dependency 'PlayerEvents'
     s.xcconfig =  { 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES',
                     'ENABLE_BITCODE' => 'YES',
                     'SWIFT_VERSION' => '5.0'
