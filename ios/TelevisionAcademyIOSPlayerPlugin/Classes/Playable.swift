@@ -15,7 +15,7 @@ class Playable: NSObject, ZPPlayable {
         let item = Playable()
         item.videoURL = "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
         item.name = "Test Video"
-        item.extensionsDictionary = ["elapsed_time": 120]
+        item.extensionsDictionary = ["elapsed_time": 10]
         return item
     }
 

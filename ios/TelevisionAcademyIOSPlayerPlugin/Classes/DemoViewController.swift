@@ -10,6 +10,8 @@ import UIKit
 import ZappPlugins
 
 class DemoViewController: UIViewController {
+    
+    @IBOutlet  var inlineView: UIView!
 
     var plugin: BitmovinPlayerPlugin!
 

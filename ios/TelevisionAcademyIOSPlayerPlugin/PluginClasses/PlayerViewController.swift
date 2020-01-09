@@ -9,17 +9,25 @@
 import UIKit
 import BitmovinPlayer
 import ZappPlugins
+import PlayerEvents
 
 class PlayerViewController: UIViewController {
 
+    enum Constants: Int {
+        case miliseconds = 1000
+    }
+
     // player utils
     var player: BitmovinPlayer!
-    var playerView: UIView!
+    var playerView: BMPBitmovinPlayerView!
 
     // playable data
     let videos: [ZPPlayable]
     let configuration: NSDictionary
-//        let playerEventsManager = PlayerEventsManager()
+    let playerEventsManager = PlayerEventsManager()
+
+    // general tools
+    var timer: Timer?
 
     required init(with items: [ZPPlayable]?, configurationJSON: NSDictionary?) {
         videos = items ?? []
@@ -40,9 +48,7 @@ class PlayerViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         view.backgroundColor = .black
-
         setupPlayer()
     }
 
@@ -67,12 +73,24 @@ class PlayerViewController: UIViewController {
         let v = BMPBitmovinPlayerView(player: p, frame: .zero)
         v.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         v.frame = view.bounds
+        v.add(listener: self)
 
         view.addSubview(v)
         view.bringSubviewToFront(v)
 
         self.player = p
         self.playerView = v
+    }
+}
+
+//MARK:- UserInterfaceListener
+
+extension PlayerViewController: UserInterfaceListener {
+    func onControlsShow(_ event: ControlsShowEvent) {
+        // Show the close button
+    }
+    func onControlsHide(_ event: ControlsHideEvent) {
+        // Hide the close button
     }
 }
 
@@ -83,39 +101,51 @@ extension PlayerViewController: PlayerListener {
     func onReady(_ event: ReadyEvent) {
         guard let item = self.player.config.sourceItem as? PlayableSourceItem,
             let elapsedTime = item.elapsedTime else {
-            return
+                return
         }
 
-        self.player.seek(time: elapsedTime)
+        let time = elapsedTime/Double(Constants.miliseconds.rawValue)
+        self.player.seek(time: time)
     }
 
     func onPlay(_ event: PlayEvent) {
         print("onPlay \(event.time)")
-//        playerEventsManager.onPlayerEvent("play", properties: [:])
+        playerEventsManager.onPlayerEvent("play", properties: [:])
     }
 
     func onPaused(_ event: PausedEvent) {
         print("onPaused \(event.time)")
-//        playerEventsManager.onPlayerEvent("pause", properties: [:])
+        playerEventsManager.onPlayerEvent("pause", properties: [:])
     }
 
     func onTimeChanged(_ event: TimeChangedEvent) {
+
+        if let t = timer,
+            t.isValid { return }
+
+        timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
+
         print("onTimeChanged \(event.currentTime)")
-//        playerEventsManager.onPlayerEvent("heartbeat", properties: ["elapsed_time" : 2000]) //in miliseconds
+        let miliseconds = event.currentTime * Double(Constants.miliseconds.rawValue)
+        playerEventsManager.onPlayerEvent("heartbeat", properties: ["elapsed_time" : miliseconds]) //in miliseconds
+    }
+
+    @objc func timerAction() {
+        timer?.invalidate()
     }
 
     func onPlaybackFinished(_ event: PlaybackFinishedEvent) {
         print("onPlaybackFinished \(event.timestamp)")
-//        playerEventsManager.onPlayerEvent("stop", properties: [:])
+        playerEventsManager.onPlayerEvent("stop", properties: [:])
     }
 
-//    func onDurationChanged(_ event: DurationChangedEvent) {
-//        print("onDurationChanged \(event.duration)")
-//    }
-//
-//    func onError(_ event: ErrorEvent) {
-//        print("onError \(event.message)")
-//    }
+    func onDurationChanged(_ event: DurationChangedEvent) {
+        print("onDurationChanged \(event.duration)")
+    }
+
+    func onError(_ event: ErrorEvent) {
+        print("onError \(event.message)")
+    }
 }
 
 //MARK:- Public
