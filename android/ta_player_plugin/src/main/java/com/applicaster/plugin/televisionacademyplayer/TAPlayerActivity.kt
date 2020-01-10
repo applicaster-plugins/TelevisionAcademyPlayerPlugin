@@ -18,7 +18,7 @@ class TAPlayerActivity : AppCompatActivity() {
 
     private var bitmovinPlayer: BitmovinPlayer? = null
 
-    private var playable: Playable? = null
+    private var contentVideoURL: String? = null
     private var currentProgress: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,7 +28,7 @@ class TAPlayerActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
-        playable = with(intent) { extras?.getSerializable(PlayerContract.KEY_PLAYABLE) } as Playable
+        contentVideoURL = with(intent) { extras?.getString(PlayerContract.KEY_PLAYABLE) }
         if (savedInstanceState != null) {
             currentProgress = savedInstanceState.getDouble(KEY_CURRENT_PROGRESS, 0.0)
         }
@@ -76,17 +76,19 @@ class TAPlayerActivity : AppCompatActivity() {
     }
 
     private fun initializePlayer() {
-        playable?.apply {
-            val vrSourceItem = SourceItem(contentVideoURL)
-            // Get the current VRConfiguration of the SourceItem
-            val vrConfiguration = vrSourceItem.vrConfiguration
-            // Set the VrContentType on the VRConfiguration
-            vrConfiguration.vrContentType = VRContentType.SINGLE
-            // Set the start position to 180 degrees
-            vrConfiguration.startPosition = 180.0
+        getContentVideoUrl()?.apply {
+            // TODO:: uncomment it and use vrSourceItem as a source to turn on VR
+//            val vrSourceItem = SourceItem(this)
+//            // Get the current VRConfiguration of the SourceItem
+//            val vrConfiguration = vrSourceItem.vrConfiguration
+//            // Set the VrContentType on the VRConfiguration
+//            vrConfiguration.vrContentType = VRContentType.SINGLE
+//            // Set the start position to 180 degrees
+//            vrConfiguration.startPosition = 180.0
 
             val sourceConfiguration = SourceConfiguration()
-            sourceConfiguration.addSourceItem(vrSourceItem)
+            sourceConfiguration.addSourceItem(this)
+//            sourceConfiguration.addSourceItem(vrSourceItem)
             sourceConfiguration.startOffset = currentProgress
             bitmovinPlayer?.config?.playbackConfiguration?.isAutoplayEnabled = true
             bitmovinPlayer?.load(sourceConfiguration)
@@ -97,4 +99,7 @@ class TAPlayerActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState.putDouble(KEY_CURRENT_PROGRESS, bitmovinPlayer?.currentTime ?: 0.0)
     }
+
+    private fun getContentVideoUrl() =
+        if (ConfigurationRepository.testVideoUrl.isEmpty()) contentVideoURL else ConfigurationRepository.testVideoUrl
 }

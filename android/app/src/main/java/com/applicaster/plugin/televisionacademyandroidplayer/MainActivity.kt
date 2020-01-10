@@ -15,9 +15,10 @@ class MainActivity : AppCompatActivity() {
         btn_start.setOnClickListener {
             PlayerContract().apply {
                 val playable = APVodItem()
-                playable.stream_url =
-                    "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd"
                 init(playable, applicationContext)
+                val params = HashMap<String, String>()
+                params["test_video_url"] = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd"
+                pluginConfigurationParams = params
                 playInFullscreen(null, 0, applicationContext)
             }
         }

@@ -32,7 +32,7 @@ class PlayerContract : BasePlayer() {
         context: Context
     ) {
         val intent = Intent(context, TAPlayerActivity::class.java)
-        firstPlayable?.also {
+        getContentVideoUrl()?.also {
             intent.putExtra(KEY_PLAYABLE, it)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             context.startActivity(intent)
@@ -51,9 +51,9 @@ class PlayerContract : BasePlayer() {
 
     override fun playInline(configuration: PlayableConfiguration?) {
         super.playInline(configuration)
-        firstPlayable.also {
+        getContentVideoUrl()?.apply {
             val source = SourceConfiguration()
-            source.addSourceItem(it.contentVideoURL)
+            source.addSourceItem(this)
             videoView.player?.config?.playbackConfiguration?.isAutoplayEnabled = true
             videoView.player?.load(source)
         }
@@ -78,4 +78,12 @@ class PlayerContract : BasePlayer() {
         super.resumeInline()
         videoView.onResume()
     }
+
+    override fun setPluginConfigurationParams(params: Map<*, *>) {
+        super.setPluginConfigurationParams(params)
+        ConfigurationRepository.parseConfigurationFields(params)
+    }
+
+    private fun getContentVideoUrl() =
+        if (ConfigurationRepository.testVideoUrl.isEmpty()) firstPlayable?.contentVideoURL else ConfigurationRepository.testVideoUrl
 }
