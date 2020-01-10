@@ -14,14 +14,11 @@ class DemoViewController: UIViewController {
     @IBOutlet  var inlineView: UIView!
 
     var plugin: BitmovinPlayerPlugin!
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
     
     @IBAction func buttonDemo() {
         let playable = Playable.createVASTVideo()
         plugin = BitmovinPlayerPlugin.pluggablePlayerInit(playableItems: [playable], configurationJSON:[:]) as! BitmovinPlayerPlugin
         plugin.presentPlayerFullScreen(self, configuration: nil, completion: nil)
+//        plugin.pluggablePlayerAddInline(self, container: inlineView)
     }
 }

@@ -109,13 +109,19 @@ extension PlayerViewController: PlayerListener {
     }
 
     func onPlay(_ event: PlayEvent) {
+
         print("onPlay \(event.time)")
-        playerEventsManager.onPlayerEvent("play", properties: [:])
+
+        let miliseconds = event.time * Double(Constants.miliseconds.rawValue)
+        playerEventsManager.onPlayerEvent("play", properties: ["elapsed_time" : miliseconds])
     }
 
     func onPaused(_ event: PausedEvent) {
+
         print("onPaused \(event.time)")
-        playerEventsManager.onPlayerEvent("pause", properties: [:])
+
+        let miliseconds = event.time * Double(Constants.miliseconds.rawValue)
+        playerEventsManager.onPlayerEvent("pause", properties: ["elapsed_time" : miliseconds])
     }
 
     func onTimeChanged(_ event: TimeChangedEvent) {
@@ -123,7 +129,7 @@ extension PlayerViewController: PlayerListener {
         if let t = timer,
             t.isValid { return }
 
-        timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
 
         print("onTimeChanged \(event.currentTime)")
         let miliseconds = event.currentTime * Double(Constants.miliseconds.rawValue)
@@ -135,8 +141,9 @@ extension PlayerViewController: PlayerListener {
     }
 
     func onPlaybackFinished(_ event: PlaybackFinishedEvent) {
+
         print("onPlaybackFinished \(event.timestamp)")
-        playerEventsManager.onPlayerEvent("stop", properties: [:])
+        playerEventsManager.onPlayerEvent("heartbeat", properties: ["elapsed_time" : 0])
     }
 
     func onDurationChanged(_ event: DurationChangedEvent) {

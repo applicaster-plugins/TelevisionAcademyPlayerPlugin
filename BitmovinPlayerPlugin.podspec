@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
-    s.name             = "BitmovinPlayerPlugin"
-    s.version          = '1.0.0'
+    s.name             = "TelevisionAcademyPlayerPlugin"
+    s.version          = '0.1.0'
     s.summary          = "BitmovinPlayer video player framework for Zapp iOS."
     s.description      = <<-DESC
                           BitmovinPlayer video player framework for Zapp iOS.
@@ -15,8 +15,8 @@ Pod::Spec.new do |s|
     s.requires_arc = true
     s.swift_version = '5.0'
     s.static_framework = true
-    s.resources = ['ios/Resources/Images/*.png', 'ios/PluginClasses/*.{xib,nib,storyboard}']
-    s.source_files = 'ios/PluginClasses/**/*.{swift,h,m}'
+    s.resources = ['ios/TelevisionAcademyIOSPlayerPlugin/Resources/Images/*.png', 'ios/TelevisionAcademyIOSPlayerPlugin/PluginClasses/*.{xib,nib,storyboard}']
+    s.source_files = 'ios/TelevisionAcademyIOSPlayerPlugin/PluginClasses/**/*.{swift,h,m}'
     s.dependency 'ZappPlugins'
     s.dependency 'BitmovinPlayer'
     s.dependency 'PlayerEvents'
@@ -24,5 +24,4 @@ Pod::Spec.new do |s|
                     'ENABLE_BITCODE' => 'YES',
                     'SWIFT_VERSION' => '5.0'
                   }
-    
   end
