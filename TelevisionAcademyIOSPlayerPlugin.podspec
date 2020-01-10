@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
     s.resources = ['ios/TelevisionAcademyIOSPlayerPlugin/Resources/Images/*.png', 'ios/TelevisionAcademyIOSPlayerPlugin/PluginClasses/*.{xib,nib,storyboard}']
     s.source_files = 'ios/TelevisionAcademyIOSPlayerPlugin/PluginClasses/**/*.{swift,h,m}'
     s.dependency 'ZappPlugins'
-    s.dependency 'BitmovinPlayer'
+    s.dependency 'BitmovinPlayer', '2.37.0'
     s.dependency 'PlayerEvents'
     s.xcconfig =  { 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES',
                     'ENABLE_BITCODE' => 'YES',
