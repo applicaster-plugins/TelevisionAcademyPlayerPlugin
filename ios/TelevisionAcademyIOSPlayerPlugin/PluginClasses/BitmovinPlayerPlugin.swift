@@ -12,6 +12,7 @@ import ZappPlugins
 public class BitmovinPlayerPlugin: NSObject, ZPPluggableScreenProtocol {
 
     private var playerViewController: PlayerViewController!
+    private var analytics: AnalyticsAdapterProtocol
 
     @objc weak public var screenPluginDelegate: ZPPlugableScreenDelegate?
     private var pluginModel: ZPPluginModel?
@@ -20,7 +21,8 @@ public class BitmovinPlayerPlugin: NSObject, ZPPluggableScreenProtocol {
 
     // MARK: - Lifecycle
 
-    override init() {
+    init(analytics: AnalyticsAdapterProtocol = AnalyticsAdapter()) {
+        self.analytics = analytics
         super.init()
     }
 
@@ -28,8 +30,8 @@ public class BitmovinPlayerPlugin: NSObject, ZPPluggableScreenProtocol {
         self.pluginModel = pluginModel
         self.screenModel = screenModel
         self.dataSourceModel = dataSourceModel
+        self.analytics = AnalyticsAdapter()
     }
-
 }
 
 //MARK:- ZPPlayerProtocol
@@ -65,7 +67,7 @@ extension BitmovinPlayerPlugin: ZPPlayerProtocol {
 
         guard let playerViewController = self.playerViewController,
             let topmostViewController = rootViewController.topmostModal() else {
-            return
+                return
         }
 
         playerViewController.modalPresentationStyle = .fullScreen
@@ -75,14 +77,18 @@ extension BitmovinPlayerPlugin: ZPPlayerProtocol {
 
     public func pluggablePlayerAddInline(_ rootViewController: UIViewController, container: UIView) {
 
-        guard let playerViewController = self.playerViewController else {
-            return
-        }
+        guard let playerViewController = self.playerViewController else { return }
 
         playerViewController.setInlineView(rootViewController: rootViewController, container: container)
+        analytics.screenMode = .inline
     }
 
     public func pluggablePlayerRemoveInline() {
+
+//        if let item = self.playerViewController?.player.currentItem,
+//            let progress = self.playerViewController?.player.playbackState {
+//            analytics.complete(item: item, progress: progress)
+//        }
 
         guard let playerViewController = self.playerViewController else {
             return

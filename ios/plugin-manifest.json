@@ -4,7 +4,7 @@
     "class_name": "TelevisionAcademyIOSPlayerPlugin.BitmovinPlayerPlugin"
   },
   "dependency_repository_url": [
-    "https://github.com/bitmovin/bitmovin-player-ios-sdk-cocoapod.git, '2.37.0'",
+    "https://github.com/AlexYehorov/bitmovin-player-ios-sdk-cocoapod.git",
     "https://github.com/applicaster/PlayerEvents-iOS.git"
   ],  
   "whitelisted_account_ids": [
