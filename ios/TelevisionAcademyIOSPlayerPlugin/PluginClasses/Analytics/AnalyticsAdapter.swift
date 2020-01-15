@@ -50,16 +50,7 @@ enum AnalyticsKeys: String {
     case captionsPreviousState = "Previous State"
 }
 
-extension PlayerScreenMode {
-    var analyticsMode: String {
-        switch self {
-        case .fullscreen:
-            return "Full Screen Player"
-        case .inline:
-            return "Inline Player"
-        }
-    }
-}
+// MARK: - AnalyticsAdapterProtocol Definition
 
 protocol AnalyticsAdapterProtocol {
     var screenMode: PlayerScreenMode {get set}
@@ -67,6 +58,12 @@ protocol AnalyticsAdapterProtocol {
     func track(event: AnalyticsEvent, withParameters parameters: [AnyHashable: Any], timed: Bool)
     func complete(item: ZPPlayable, progress: Progress)
     func complete(event: AnalyticsEvent, withParameters parameters: [AnyHashable: Any])
+}
+
+// MARK: - AnalyticsAdapterProtocol Definition
+
+protocol PlaybackAnalyticEventsDelegate: AnyObject {
+    func eventOccurred(_ event: AnalyticsEvent, params: [AnyHashable: Any], timed: Bool)
 }
 
 // MARK: - AnalyticsAdapterProtocol methods

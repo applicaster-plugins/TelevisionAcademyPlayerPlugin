@@ -8,7 +8,9 @@
 
 import Foundation
 import BitmovinPlayer
+import ZappPlugins
 
 class PlayableSourceItem: SourceItem {
     var elapsedTime: Double? = nil
+    var playable: ZPPlayable? = nil
 }

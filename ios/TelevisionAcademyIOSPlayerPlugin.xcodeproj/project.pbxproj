@@ -12,11 +12,13 @@
 		B732975823B5F7A4004038ED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B732975723B5F7A4004038ED /* Assets.xcassets */; };
 		B732975B23B5F7A4004038ED /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B732975923B5F7A4004038ED /* LaunchScreen.storyboard */; };
 		B774E2F823B5FFFF006398B5 /* BitmovinPlayerPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B774E2F723B5FFFF006398B5 /* BitmovinPlayerPlugin.swift */; };
-		B77B34B323CC5D9500899D9F /* AnalyticsAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B77B34B223CC5D9500899D9F /* AnalyticsAdapter.swift */; };
 		B77B34BD23CC5F4E00899D9F /* PlayableSourceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B77B34B923CC5F4E00899D9F /* PlayableSourceItem.swift */; };
 		B77B34BE23CC5F4E00899D9F /* ZPPlayable+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B77B34BB23CC5F4E00899D9F /* ZPPlayable+Utils.swift */; };
 		B77B34BF23CC5F4E00899D9F /* String+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B77B34BC23CC5F4E00899D9F /* String+Utils.swift */; };
 		B77B34C123CC5F7200899D9F /* Progress.swift in Sources */ = {isa = PBXBuildFile; fileRef = B77B34C023CC5F7200899D9F /* Progress.swift */; };
+		B789985023CF05EF00D9B1FA /* PlayerScreenMode+Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = B789984F23CF05EF00D9B1FA /* PlayerScreenMode+Analytics.swift */; };
+		B789985623CF0D4400D9B1FA /* AnalyticsAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B789985423CF0D4400D9B1FA /* AnalyticsAdapter.swift */; };
+		B789985723CF0D4400D9B1FA /* AnalyticParamsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B789985523CF0D4400D9B1FA /* AnalyticParamsBuilder.swift */; };
 		B7F2AC3023B66A9000452D77 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7F2AC2F23B66A9000452D77 /* PlayerViewController.swift */; };
 		B7F2AC3323B8F03C00452D77 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7F2AC3223B8F03C00452D77 /* AppDelegate.swift */; };
 		B7F2AC3523B8F04F00452D77 /* Playable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7F2AC3423B8F04F00452D77 /* Playable.swift */; };
@@ -32,11 +34,13 @@
 		B732975A23B5F7A4004038ED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B732975C23B5F7A4004038ED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B774E2F723B5FFFF006398B5 /* BitmovinPlayerPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitmovinPlayerPlugin.swift; sourceTree = "<group>"; };
-		B77B34B223CC5D9500899D9F /* AnalyticsAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsAdapter.swift; sourceTree = "<group>"; };
 		B77B34B923CC5F4E00899D9F /* PlayableSourceItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayableSourceItem.swift; sourceTree = "<group>"; };
 		B77B34BB23CC5F4E00899D9F /* ZPPlayable+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ZPPlayable+Utils.swift"; sourceTree = "<group>"; };
 		B77B34BC23CC5F4E00899D9F /* String+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Utils.swift"; sourceTree = "<group>"; };
 		B77B34C023CC5F7200899D9F /* Progress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Progress.swift; sourceTree = "<group>"; };
+		B789984F23CF05EF00D9B1FA /* PlayerScreenMode+Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerScreenMode+Analytics.swift"; sourceTree = "<group>"; };
+		B789985423CF0D4400D9B1FA /* AnalyticsAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsAdapter.swift; sourceTree = "<group>"; };
+		B789985523CF0D4400D9B1FA /* AnalyticParamsBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticParamsBuilder.swift; sourceTree = "<group>"; };
 		B7F2AC2F23B66A9000452D77 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		B7F2AC3223B8F03C00452D77 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B7F2AC3423B8F04F00452D77 /* Playable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playable.swift; sourceTree = "<group>"; };
@@ -94,13 +98,13 @@
 		B732974D23B5F7A3004038ED /* TelevisionAcademyIOSPlayerPlugin */ = {
 			isa = PBXGroup;
 			children = (
+				B732975723B5F7A4004038ED /* Assets.xcassets */,
 				B7F2AC3123B8F03C00452D77 /* Classes */,
+				B732975C23B5F7A4004038ED /* Info.plist */,
+				B732975923B5F7A4004038ED /* LaunchScreen.storyboard */,
+				B732975423B5F7A3004038ED /* Main.storyboard */,
 				B774E2F423B5FFC3006398B5 /* PluginClasses */,
 				B774E2F523B5FFC3006398B5 /* Resources */,
-				B732975423B5F7A3004038ED /* Main.storyboard */,
-				B732975723B5F7A4004038ED /* Assets.xcassets */,
-				B732975923B5F7A4004038ED /* LaunchScreen.storyboard */,
-				B732975C23B5F7A4004038ED /* Info.plist */,
 			);
 			path = TelevisionAcademyIOSPlayerPlugin;
 			sourceTree = "<group>";
@@ -108,9 +112,9 @@
 		B774E2F423B5FFC3006398B5 /* PluginClasses */ = {
 			isa = PBXGroup;
 			children = (
+				B789985323CF0D4400D9B1FA /* Analytics */,
 				B77B34BA23CC5F4E00899D9F /* Extension */,
 				B77B34B823CC5F4E00899D9F /* Model */,
-				B77B34B223CC5D9500899D9F /* AnalyticsAdapter.swift */,
 				B774E2F723B5FFFF006398B5 /* BitmovinPlayerPlugin.swift */,
 				B7F2AC2F23B66A9000452D77 /* PlayerViewController.swift */,
 			);
@@ -146,8 +150,18 @@
 			children = (
 				B77B34BB23CC5F4E00899D9F /* ZPPlayable+Utils.swift */,
 				B77B34BC23CC5F4E00899D9F /* String+Utils.swift */,
+				B789984F23CF05EF00D9B1FA /* PlayerScreenMode+Analytics.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		B789985323CF0D4400D9B1FA /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				B789985423CF0D4400D9B1FA /* AnalyticsAdapter.swift */,
+				B789985523CF0D4400D9B1FA /* AnalyticParamsBuilder.swift */,
+			);
+			path = Analytics;
 			sourceTree = "<group>";
 		};
 		B7F2AC3123B8F03C00452D77 /* Classes */ = {
@@ -276,14 +290,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				B7F2AC3323B8F03C00452D77 /* AppDelegate.swift in Sources */,
+				B789985023CF05EF00D9B1FA /* PlayerScreenMode+Analytics.swift in Sources */,
+				B789985723CF0D4400D9B1FA /* AnalyticParamsBuilder.swift in Sources */,
 				B77B34BE23CC5F4E00899D9F /* ZPPlayable+Utils.swift in Sources */,
+				B789985623CF0D4400D9B1FA /* AnalyticsAdapter.swift in Sources */,
 				B7F2AC3023B66A9000452D77 /* PlayerViewController.swift in Sources */,
 				B774E2F823B5FFFF006398B5 /* BitmovinPlayerPlugin.swift in Sources */,
 				B7F2AC3523B8F04F00452D77 /* Playable.swift in Sources */,
 				B77B34BF23CC5F4E00899D9F /* String+Utils.swift in Sources */,
 				B77B34C123CC5F7200899D9F /* Progress.swift in Sources */,
 				B7F2AC3723B8F38D00452D77 /* DemoViewController.swift in Sources */,
-				B77B34B323CC5D9500899D9F /* AnalyticsAdapter.swift in Sources */,
 				B77B34BD23CC5F4E00899D9F /* PlayableSourceItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

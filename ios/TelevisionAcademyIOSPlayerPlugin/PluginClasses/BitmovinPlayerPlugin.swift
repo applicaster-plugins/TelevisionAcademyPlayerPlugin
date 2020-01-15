@@ -43,7 +43,9 @@ extension BitmovinPlayerPlugin: ZPPlayerProtocol {
         guard let videos = items else { return nil }
 
         let vc = PlayerViewController(with: videos, configurationJSON: configurationJSON)
+
         let instance = BitmovinPlayerPlugin()
+        vc.analyticEventDelegate = instance
         instance.playerViewController = vc
 
         return instance
@@ -73,6 +75,14 @@ extension BitmovinPlayerPlugin: ZPPlayerProtocol {
         playerViewController.modalPresentationStyle = .fullScreen
 
         topmostViewController.present(playerViewController, animated: configuration?.animated ?? true, completion: completion)
+
+        // analytics
+        analytics.screenMode = .fullscreen
+
+        if let item = playerViewController.getCurrentPlayable(),
+            let progress = playerViewController.getPlaybackState() {
+            analytics.complete(item: item, progress: progress)
+        }
     }
 
     public func pluggablePlayerAddInline(_ rootViewController: UIViewController, container: UIView) {
@@ -85,16 +95,17 @@ extension BitmovinPlayerPlugin: ZPPlayerProtocol {
 
     public func pluggablePlayerRemoveInline() {
 
-//        if let item = self.playerViewController?.player.currentItem,
-//            let progress = self.playerViewController?.player.playbackState {
-//            analytics.complete(item: item, progress: progress)
-//        }
-
         guard let playerViewController = self.playerViewController else {
             return
         }
 
         playerViewController.setFullscreenView()
+
+        // analytics
+        if let item = playerViewController.getCurrentPlayable(),
+            let progress = playerViewController.getPlaybackState() {
+            analytics.complete(item: item, progress: progress)
+        }
     }
 
     public func pluggablePlayerPause() {
@@ -107,5 +118,13 @@ extension BitmovinPlayerPlugin: ZPPlayerProtocol {
 
     public func pluggablePlayerPlay(_ configuration: ZPPlayerConfiguration?) {
         self.playerViewController.play()
+    }
+}
+
+//MARK:- PlaybackAnalyticEventsDelegate
+
+extension BitmovinPlayerPlugin: PlaybackAnalyticEventsDelegate {
+    func eventOccurred(_ event: AnalyticsEvent, params: [AnyHashable : Any], timed: Bool) {
+        analytics.track(event: event, withParameters: params, timed: timed)
     }
 }

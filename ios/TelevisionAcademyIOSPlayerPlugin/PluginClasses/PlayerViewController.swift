@@ -20,6 +20,8 @@ class PlayerViewController: UIViewController {
     // player utils
     var player: BitmovinPlayer!
     var playerView: BMPBitmovinPlayerView!
+    private var videoStartTime = Date()
+    private var viewSwitchCounter = 0
 
     // playable data
     let videos: [ZPPlayable]
@@ -28,6 +30,9 @@ class PlayerViewController: UIViewController {
 
     // general tools
     var timer: Timer?
+
+    // analytics
+    weak var analyticEventDelegate: PlaybackAnalyticEventsDelegate?
 
     required init(with items: [ZPPlayable]?, configurationJSON: NSDictionary?) {
         videos = items ?? []
@@ -58,6 +63,7 @@ class PlayerViewController: UIViewController {
             videos.map { (playable) -> PlayableSourceItem in
                 let source = PlayableSourceItem(url: URL(string: playable.contentVideoURLPath())!)!
                 source.itemTitle = playable.playableName()
+                source.playable = playable
                 source.elapsedTime = playable.extensionsDictionary?["elapsed_time"] as? Double
 
                 return source
@@ -81,6 +87,11 @@ class PlayerViewController: UIViewController {
         self.player = p
         self.playerView = v
     }
+
+    func didStartPlaybackSession() {
+        viewSwitchCounter = 0
+        videoStartTime = Date()
+    }
 }
 
 //MARK:- UserInterfaceListener
@@ -99,21 +110,42 @@ extension PlayerViewController: UserInterfaceListener {
 extension PlayerViewController: PlayerListener {
 
     func onReady(_ event: ReadyEvent) {
+
         guard let item = self.player.config.sourceItem as? PlayableSourceItem,
             let elapsedTime = item.elapsedTime else {
                 return
         }
 
         let time = elapsedTime/Double(Constants.miliseconds.rawValue)
-        self.player.seek(time: time)
+        player.seek(time: time)
+
+        didStartPlaybackSession()
+
+        // analytics
+
+        guard let currentPlayable = item.playable else { return }
+
+        let analyticParamsBuilder = AnalyticParamsBuilder()
+        analyticParamsBuilder.duration = player.duration
+        analyticParamsBuilder.isLive = currentPlayable.isLive()
+
+        let params = currentPlayable.additionalAnalyticsParams.merge(analyticParamsBuilder.parameters)
+        let event: AnalyticsEvent = currentPlayable.isLive() ? .live : .vod
+        analyticEventDelegate?.eventOccurred(event, params: params, timed: false)
     }
 
     func onPlay(_ event: PlayEvent) {
-
         print("onPlay \(event.time)")
 
         let miliseconds = event.time * Double(Constants.miliseconds.rawValue)
-        playerEventsManager.onPlayerEvent("play", properties: ["elapsed_time" : miliseconds])
+        let lenght = player.duration * Double(Constants.miliseconds.rawValue)
+        let uid = getCurrentPlayable()?.identifier
+
+        playerEventsManager.onPlayerEvent("play", properties: [
+            "elapsed_time" : miliseconds,
+            "content_length" : lenght,
+            "content_uid": uid
+        ])
     }
 
     func onPaused(_ event: PausedEvent) {
@@ -121,7 +153,30 @@ extension PlayerViewController: PlayerListener {
         print("onPaused \(event.time)")
 
         let miliseconds = event.time * Double(Constants.miliseconds.rawValue)
-        playerEventsManager.onPlayerEvent("pause", properties: ["elapsed_time" : miliseconds])
+        let lenght = player.duration * Double(Constants.miliseconds.rawValue)
+        let uid = getCurrentPlayable()?.identifier
+
+        playerEventsManager.onPlayerEvent("pause", properties: [
+            "elapsed_time" : miliseconds,
+            "content_length" : lenght,
+            "content_uid": uid
+        ])
+
+        // analytics
+
+        guard let item = getCurrentPlayable(),
+            let playbackState = getPlaybackState() else {
+                return
+        }
+
+        let analyticParamsBuilder = AnalyticParamsBuilder()
+        analyticParamsBuilder.progress = playbackState.progress
+        analyticParamsBuilder.duration = playbackState.duration
+        analyticParamsBuilder.isLive = item.isLive()
+        analyticParamsBuilder.durationInVideo = Date().timeIntervalSince(videoStartTime)
+
+        let params = item.additionalAnalyticsParams.merge(analyticParamsBuilder.parameters)
+        analyticEventDelegate?.eventOccurred(.pause, params: params, timed: false)
     }
 
     func onTimeChanged(_ event: TimeChangedEvent) {
@@ -131,27 +186,48 @@ extension PlayerViewController: PlayerListener {
 
         timer = Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
 
-        print("onTimeChanged \(event.currentTime)")
         let miliseconds = event.currentTime * Double(Constants.miliseconds.rawValue)
-        playerEventsManager.onPlayerEvent("heartbeat", properties: ["elapsed_time" : miliseconds]) //in miliseconds
+        let lenght = player.duration * Double(Constants.miliseconds.rawValue)
+        let uid = getCurrentPlayable()?.identifier
+
+        playerEventsManager.onPlayerEvent("heartbeat", properties: [
+            "elapsed_time" : miliseconds,
+            "content_length" : lenght,
+            "content_uid": uid
+        ])
     }
 
-    @objc func timerAction() {
-        timer?.invalidate()
+    func onSeek(_ event: SeekEvent) {
+
+        // analytics
+
+        guard let item = getCurrentPlayable(),
+            let playbackState = getPlaybackState() else {
+                return
+        }
+
+        let from = event.position
+        let to = event.seekTarget
+
+        let analyticParamsBuilder = AnalyticParamsBuilder()
+        analyticParamsBuilder.duration = playbackState.duration
+        analyticParamsBuilder.timecodeFrom = from
+        analyticParamsBuilder.timecodeTo = to
+        analyticParamsBuilder.seekDirection = to > from ? "Fast Forward" : "Rewind"
+
+        let params = item.additionalAnalyticsParams.merge(analyticParamsBuilder.parameters)
+        analyticEventDelegate?.eventOccurred(.seek, params: params, timed: false)
     }
 
     func onPlaybackFinished(_ event: PlaybackFinishedEvent) {
+        let lenght = player.duration * Double(Constants.miliseconds.rawValue)
+        let uid = getCurrentPlayable()?.identifier
 
-        print("onPlaybackFinished \(event.timestamp)")
-        playerEventsManager.onPlayerEvent("heartbeat", properties: ["elapsed_time" : 0])
-    }
-
-    func onDurationChanged(_ event: DurationChangedEvent) {
-        print("onDurationChanged \(event.duration)")
-    }
-
-    func onError(_ event: ErrorEvent) {
-        print("onError \(event.message)")
+        playerEventsManager.onPlayerEvent("heartbeat", properties: [
+            "elapsed_time" : 0,
+            "content_length" : lenght,
+            "content_uid": uid
+        ])
     }
 }
 
@@ -174,11 +250,54 @@ extension PlayerViewController {
     func setInlineView(rootViewController: UIViewController, container: UIView) {
         rootViewController.addChildViewController(self, to: container)
         view.matchParent()
+
+        playerViewDidTransit(.inline)
     }
 
     func setFullscreenView() {
         let container = self.view.superview
         container?.removeFromSuperview()
         view.matchParent()
+
+        playerViewDidTransit(.fullscreen)
+    }
+}
+
+//MARK:- General
+
+extension PlayerViewController {
+
+    func getCurrentPlayable() -> ZPPlayable? {
+        guard let item = self.player.config.sourceItem as? PlayableSourceItem else { return nil }
+        return item.playable
+    }
+
+    func getPlaybackState() -> Progress? {
+        return Progress(progress: player.currentTime, duration: player.duration)
+    }
+
+    private func playerViewDidTransit(_ playerScreenMode: PlayerScreenMode) {
+
+        guard let item = getCurrentPlayable(),
+            let playbackState = getPlaybackState() else {
+                return
+        }
+
+        viewSwitchCounter += 1
+
+        let analyticParamsBuidler = AnalyticParamsBuilder()
+        analyticParamsBuidler.progress = playbackState.progress
+        analyticParamsBuidler.duration = playbackState.duration
+        analyticParamsBuidler.isLive = item.isLive()
+        analyticParamsBuidler.durationInVideo = Date().timeIntervalSince(videoStartTime)
+        analyticParamsBuidler.newView = playerScreenMode
+        analyticParamsBuidler.viewSwitchCounter = viewSwitchCounter
+
+        let params = item.additionalAnalyticsParams.merge(analyticParamsBuidler.parameters)
+        analyticEventDelegate?.eventOccurred(.playerViewSwitch, params: params, timed: false)
+    }
+
+    @objc private func timerAction() {
+        timer?.invalidate()
     }
 }
