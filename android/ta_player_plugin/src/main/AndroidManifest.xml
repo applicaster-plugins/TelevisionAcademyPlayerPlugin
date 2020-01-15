@@ -1,14 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.applicaster.plugin.televisionacademyplayer" >
-
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    package="com.applicaster.plugin.televisionacademyplayer">
 
     <application>
         <activity android:name=".TAPlayerActivity" />
 
         <meta-data
             android:name="BITMOVIN_PLAYER_LICENSE_KEY"
-            android:value="2996e07d-b66b-4953-bed9-c24c6813c016" />
+            android:value="9909b054-c194-416e-b2bc-13f9a781431e" />
     </application>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>
