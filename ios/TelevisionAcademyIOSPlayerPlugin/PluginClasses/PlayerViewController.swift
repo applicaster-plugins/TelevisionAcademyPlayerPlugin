@@ -138,9 +138,14 @@ extension PlayerViewController: PlayerListener {
         print("onPlay \(event.time)")
 
         let miliseconds = event.time * Double(Constants.miliseconds.rawValue)
-        playerEventsManager.onPlayerEvent("play", properties: ["elapsed_time" : miliseconds])
+        let lenght = player.duration * Double(Constants.miliseconds.rawValue)
+        let uid = getCurrentPlayable()?.identifier
 
-
+        playerEventsManager.onPlayerEvent("play", properties: [
+            "elapsed_time" : miliseconds,
+            "content_length" : lenght,
+            "content_uid": uid
+        ])
     }
 
     func onPaused(_ event: PausedEvent) {
@@ -148,13 +153,20 @@ extension PlayerViewController: PlayerListener {
         print("onPaused \(event.time)")
 
         let miliseconds = event.time * Double(Constants.miliseconds.rawValue)
-        playerEventsManager.onPlayerEvent("pause", properties: ["elapsed_time" : miliseconds])
+        let lenght = player.duration * Double(Constants.miliseconds.rawValue)
+        let uid = getCurrentPlayable()?.identifier
+
+        playerEventsManager.onPlayerEvent("pause", properties: [
+            "elapsed_time" : miliseconds,
+            "content_length" : lenght,
+            "content_uid": uid
+        ])
 
         // analytics
 
         guard let item = getCurrentPlayable(),
             let playbackState = getPlaybackState() else {
-            return
+                return
         }
 
         let analyticParamsBuilder = AnalyticParamsBuilder()
@@ -174,9 +186,15 @@ extension PlayerViewController: PlayerListener {
 
         timer = Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
 
-        print("onTimeChanged \(event.currentTime)")
         let miliseconds = event.currentTime * Double(Constants.miliseconds.rawValue)
-        playerEventsManager.onPlayerEvent("heartbeat", properties: ["elapsed_time" : miliseconds]) //in miliseconds
+        let lenght = player.duration * Double(Constants.miliseconds.rawValue)
+        let uid = getCurrentPlayable()?.identifier
+
+        playerEventsManager.onPlayerEvent("heartbeat", properties: [
+            "elapsed_time" : miliseconds,
+            "content_length" : lenght,
+            "content_uid": uid
+        ])
     }
 
     func onSeek(_ event: SeekEvent) {
@@ -202,8 +220,14 @@ extension PlayerViewController: PlayerListener {
     }
 
     func onPlaybackFinished(_ event: PlaybackFinishedEvent) {
-        print("onPlaybackFinished \(event.timestamp)")
-        playerEventsManager.onPlayerEvent("heartbeat", properties: ["elapsed_time" : 0])
+        let lenght = player.duration * Double(Constants.miliseconds.rawValue)
+        let uid = getCurrentPlayable()?.identifier
+
+        playerEventsManager.onPlayerEvent("heartbeat", properties: [
+            "elapsed_time" : 0,
+            "content_length" : lenght,
+            "content_uid": uid
+        ])
     }
 }
 
@@ -252,11 +276,11 @@ extension PlayerViewController {
         return Progress(progress: player.currentTime, duration: player.duration)
     }
 
-   private func playerViewDidTransit(_ playerScreenMode: PlayerScreenMode) {
+    private func playerViewDidTransit(_ playerScreenMode: PlayerScreenMode) {
 
-       guard let item = getCurrentPlayable(),
-        let playbackState = getPlaybackState() else {
-            return
+        guard let item = getCurrentPlayable(),
+            let playbackState = getPlaybackState() else {
+                return
         }
 
         viewSwitchCounter += 1
