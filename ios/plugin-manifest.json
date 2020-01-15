@@ -18,7 +18,7 @@
   "description": "iOS Plugin for Television Academy",
   "type": "player",
   "screen": false,
-  "identifier": "TelevisionAcademyIOSPlayerPlugin",
+  "identifier": "TelevisionAcademyPlayerPlugin",
   "ui_builder_support": true,
   "dependency_name": "TelevisionAcademyIOSPlayerPlugin",
   "dependency_version": "0.1.0",
