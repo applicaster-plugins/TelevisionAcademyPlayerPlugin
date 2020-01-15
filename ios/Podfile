@@ -5,6 +5,7 @@ install! 'cocoapods', :deterministic_uuids => false
 source 'git@github.com:applicaster/CocoaPods.git'
 source 'git@github.com:applicaster/PluginsBuilderCocoaPods.git'
 source 'git@github.com:CocoaPods/Specs.git'
+source 'git@github.com:AlexYehorov/bitmovin-player-ios-sdk-cocoapod.git'
 
 target 'TelevisionAcademyIOSPlayerPlugin' do
   pod 'PlayerEvents', git: 'https://github.com/applicaster/PlayerEvents-iOS.git'
