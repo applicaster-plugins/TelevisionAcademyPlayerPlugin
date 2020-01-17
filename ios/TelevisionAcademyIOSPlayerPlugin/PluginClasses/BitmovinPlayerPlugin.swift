@@ -19,8 +19,6 @@ public class BitmovinPlayerPlugin: NSObject, ZPPluggableScreenProtocol {
     private var screenModel: ZLScreenModel?
     private var dataSourceModel: NSObject?
 
-    // MARK: - Lifecycle
-
     init(analytics: AnalyticsAdapterProtocol = AnalyticsAdapter()) {
         self.analytics = analytics
         super.init()
@@ -40,7 +38,13 @@ extension BitmovinPlayerPlugin: ZPPlayerProtocol {
 
     public static func pluggablePlayerInit(playableItems items: [ZPPlayable]?, configurationJSON: NSDictionary?) -> ZPPlayerProtocol? {
 
-        guard let videos = items else { return nil }
+        var videos: [ZPPlayable] = items ?? [ZPPlayable]()
+
+        if let d = configurationJSON,
+            let testUrl = d["test_video_url"] as? String {
+            videos.removeAll()
+            videos.append(ZPPlayablItem.createTest(for: testUrl))
+        }
 
         let vc = PlayerViewController(with: videos, configurationJSON: configurationJSON)
 
