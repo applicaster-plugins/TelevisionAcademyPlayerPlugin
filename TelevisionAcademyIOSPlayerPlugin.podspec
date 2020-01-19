@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
     s.swift_version = '5.0'
     s.static_framework = true
     s.resources = []
-    s.source_files = 'ios/TelevisionAcademyIOSPlayerPlugin/PluginClasses/*.{swift,h,m}'
+    s.source_files = 'ios/TelevisionAcademyIOSPlayerPlugin/PluginClasses/*.swift','ios/TelevisionAcademyIOSPlayerPlugin/PluginClasses/**/*.swift'
     s.dependency 'ZappPlugins'
     s.dependency 'BitmovinPlayer','~> 2.37.0'
     s.dependency 'PlayerEvents'

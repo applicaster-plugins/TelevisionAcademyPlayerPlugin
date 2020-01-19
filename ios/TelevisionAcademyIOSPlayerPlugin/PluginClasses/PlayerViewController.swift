@@ -73,19 +73,19 @@ class PlayerViewController: UIViewController {
         config.playbackConfiguration.isAutoplayEnabled = true
         config.sourceItem = sourceItems.first
         
-        let p = BitmovinPlayer(configuration: config)
-        p.add(listener: self)
+        let player = BitmovinPlayer(configuration: config)
+        player.add(listener: self)
 
-        let v = BMPBitmovinPlayerView(player: p, frame: .zero)
-        v.autoresizingMask = [.flexibleHeight, .flexibleWidth]
-        v.frame = view.bounds
-        v.add(listener: self)
+        let playerView = BMPBitmovinPlayerView(player: player, frame: .zero)
+        playerView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        playerView.frame = view.bounds
+        playerView.add(listener: self)
 
-        view.addSubview(v)
-        view.bringSubviewToFront(v)
+        view.addSubview(playerView)
+        view.bringSubviewToFront(playerView)
 
-        self.player = p
-        self.playerView = v
+        self.player = player
+        self.playerView = playerView
     }
 
     func didStartPlaybackSession() {
@@ -179,8 +179,8 @@ extension PlayerViewController: PlayerListener {
 
     func onTimeChanged(_ event: TimeChangedEvent) {
 
-        if let t = timer,
-            t.isValid { return }
+        if let timerVar = timer,
+            timerVar.isValid { return }
 
         timer = Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
 

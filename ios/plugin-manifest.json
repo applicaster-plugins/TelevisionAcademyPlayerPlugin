@@ -1,7 +1,7 @@
 {
   "api": {
     "require_startup_execution": false,
-    "class_name": "BitmovinPlayerPlugin"
+    "class_name": "TelevisionAcademyIOSPlayerPlugin.BitmovinPlayerPlugin"
   },
   "dependency_repository_url": [
     "https://github.com/bitmovin/bitmovin-player-ios-sdk-cocoapod.git",
