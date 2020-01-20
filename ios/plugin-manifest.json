@@ -4,7 +4,7 @@
     "class_name": "TelevisionAcademyIOSPlayerPlugin.BitmovinPlayerPlugin"
   },
   "dependency_repository_url": [
-    "https://github.com/AlexYehorov/bitmovin-player-ios-sdk-cocoapod.git",
+    "https://github.com/bitmovin/bitmovin-player-ios-sdk-cocoapod.git",
     "https://github.com/applicaster/PlayerEvents-iOS.git"
   ],  
   "whitelisted_account_ids": [
@@ -26,5 +26,11 @@
   "deprecated_since_zapp_sdk": "",
   "unsupported_since_zapp_sdk": "",
   "react_native": false,
-  "custom_configuration_fields": []
+  "custom_configuration_fields": [
+    {
+      "type": "text",
+      "key": "test_video_url",
+      "tooltip_text": "Test URL to check Bitmovin player functionality."
+    }
+  ]
 }

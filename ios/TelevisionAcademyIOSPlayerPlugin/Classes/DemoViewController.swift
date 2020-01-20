@@ -16,8 +16,11 @@ class DemoViewController: UIViewController {
     var plugin: BitmovinPlayerPlugin!
     
     @IBAction func buttonDemo() {
-        let playable = Playable.createVASTVideo()
-        plugin = BitmovinPlayerPlugin.pluggablePlayerInit(playableItems: [playable], configurationJSON:[:]) as! BitmovinPlayerPlugin
+
+        let configurationJSON = ["test_video_url": "https://bitmovin.com/player-content/playhouse-vr/progressive.mp4"] as NSDictionary
+
+        let playable = ZPPlayablItem.createVASTVideo()
+        plugin = BitmovinPlayerPlugin.pluggablePlayerInit(playableItems: [playable], configurationJSON: configurationJSON) as! BitmovinPlayerPlugin
         plugin.presentPlayerFullScreen(self, configuration: nil, completion: nil)
 //        plugin.pluggablePlayerAddInline(self, container: inlineView)
     }

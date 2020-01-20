@@ -19,9 +19,9 @@
 		B789985023CF05EF00D9B1FA /* PlayerScreenMode+Analytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = B789984F23CF05EF00D9B1FA /* PlayerScreenMode+Analytics.swift */; };
 		B789985623CF0D4400D9B1FA /* AnalyticsAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B789985423CF0D4400D9B1FA /* AnalyticsAdapter.swift */; };
 		B789985723CF0D4400D9B1FA /* AnalyticParamsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B789985523CF0D4400D9B1FA /* AnalyticParamsBuilder.swift */; };
+		B7A24BE823D1AB3C00A6A55E /* ZPPlayablItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7A24BE723D1AB3C00A6A55E /* ZPPlayablItem.swift */; };
 		B7F2AC3023B66A9000452D77 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7F2AC2F23B66A9000452D77 /* PlayerViewController.swift */; };
 		B7F2AC3323B8F03C00452D77 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7F2AC3223B8F03C00452D77 /* AppDelegate.swift */; };
-		B7F2AC3523B8F04F00452D77 /* Playable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7F2AC3423B8F04F00452D77 /* Playable.swift */; };
 		B7F2AC3723B8F38D00452D77 /* DemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7F2AC3623B8F38D00452D77 /* DemoViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -41,9 +41,9 @@
 		B789984F23CF05EF00D9B1FA /* PlayerScreenMode+Analytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlayerScreenMode+Analytics.swift"; sourceTree = "<group>"; };
 		B789985423CF0D4400D9B1FA /* AnalyticsAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticsAdapter.swift; sourceTree = "<group>"; };
 		B789985523CF0D4400D9B1FA /* AnalyticParamsBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticParamsBuilder.swift; sourceTree = "<group>"; };
+		B7A24BE723D1AB3C00A6A55E /* ZPPlayablItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZPPlayablItem.swift; sourceTree = "<group>"; };
 		B7F2AC2F23B66A9000452D77 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		B7F2AC3223B8F03C00452D77 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B7F2AC3423B8F04F00452D77 /* Playable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Playable.swift; sourceTree = "<group>"; };
 		B7F2AC3623B8F38D00452D77 /* DemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoViewController.swift; sourceTree = "<group>"; };
 		C2B5721C640C501ED5E953A3 /* Pods-TelevisionAcademyIOSPlayerPlugin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TelevisionAcademyIOSPlayerPlugin.debug.xcconfig"; path = "Target Support Files/Pods-TelevisionAcademyIOSPlayerPlugin/Pods-TelevisionAcademyIOSPlayerPlugin.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -104,7 +104,6 @@
 				B732975923B5F7A4004038ED /* LaunchScreen.storyboard */,
 				B732975423B5F7A3004038ED /* Main.storyboard */,
 				B774E2F423B5FFC3006398B5 /* PluginClasses */,
-				B774E2F523B5FFC3006398B5 /* Resources */,
 			);
 			path = TelevisionAcademyIOSPlayerPlugin;
 			sourceTree = "<group>";
@@ -121,24 +120,10 @@
 			path = PluginClasses;
 			sourceTree = "<group>";
 		};
-		B774E2F523B5FFC3006398B5 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				B774E2F623B5FFC3006398B5 /* Images */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		B774E2F623B5FFC3006398B5 /* Images */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Images;
-			sourceTree = "<group>";
-		};
 		B77B34B823CC5F4E00899D9F /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				B7A24BE723D1AB3C00A6A55E /* ZPPlayablItem.swift */,
 				B77B34B923CC5F4E00899D9F /* PlayableSourceItem.swift */,
 				B77B34C023CC5F7200899D9F /* Progress.swift */,
 			);
@@ -168,7 +153,6 @@
 			isa = PBXGroup;
 			children = (
 				B7F2AC3223B8F03C00452D77 /* AppDelegate.swift */,
-				B7F2AC3423B8F04F00452D77 /* Playable.swift */,
 				B7F2AC3623B8F38D00452D77 /* DemoViewController.swift */,
 			);
 			path = Classes;
@@ -289,6 +273,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B7A24BE823D1AB3C00A6A55E /* ZPPlayablItem.swift in Sources */,
 				B7F2AC3323B8F03C00452D77 /* AppDelegate.swift in Sources */,
 				B789985023CF05EF00D9B1FA /* PlayerScreenMode+Analytics.swift in Sources */,
 				B789985723CF0D4400D9B1FA /* AnalyticParamsBuilder.swift in Sources */,
@@ -296,7 +281,6 @@
 				B789985623CF0D4400D9B1FA /* AnalyticsAdapter.swift in Sources */,
 				B7F2AC3023B66A9000452D77 /* PlayerViewController.swift in Sources */,
 				B774E2F823B5FFFF006398B5 /* BitmovinPlayerPlugin.swift in Sources */,
-				B7F2AC3523B8F04F00452D77 /* Playable.swift in Sources */,
 				B77B34BF23CC5F4E00899D9F /* String+Utils.swift in Sources */,
 				B77B34C123CC5F7200899D9F /* Progress.swift in Sources */,
 				B7F2AC3723B8F38D00452D77 /* DemoViewController.swift in Sources */,
