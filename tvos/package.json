@@ -5,11 +5,11 @@
     "plugin",
     "development-app"
   ],
-  "version": "0.2.1",
+  "version": "0.2.3",
   "description": "",
   "main": "./src/index.js",
   "scripts": {
-    "clean": "rm -rf ./node_modules ./plugin/node_modules yarn.lock",
+    "clean": "rm -rf ./node_modules ./plugin/node_modules yarn.lock && yarn",
     "reset_dev_app": "rm -rf ./development-app/* ./development-app/.babelrc",
     "zapplicaster": "node_modules/.bin/zapplicaster-cli prepare --yarn --destination-path development-app",
     "start": "node_modules/.bin/react-native start --projectRoot ./development-app",

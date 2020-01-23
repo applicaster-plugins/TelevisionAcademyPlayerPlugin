@@ -128,9 +128,11 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         videoSrc = source.getMap("content")?.getString("src")
         sourceId = source.getString("id")
 
-        source.getMap("extensions")?.apply {
-            if (hasKey(ELAPSED_TIME)) {
-                elapsedTimeMillis = getString(ELAPSED_TIME)?.toLongOrNull()
+        if (source.hasKey("extensions")) {
+            source.getMap("extensions")?.apply {
+                if (hasKey(ELAPSED_TIME)) {
+                    elapsedTimeMillis = getString(ELAPSED_TIME)?.toLongOrNull()
+                }
             }
         }
     }

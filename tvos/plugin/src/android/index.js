@@ -1,20 +1,12 @@
 // @flow
 import * as React from "react";
-import {
-  DeviceEventEmitter,
-  Dimensions,
-  requireNativeComponent,
-  StyleSheet,
-  ToastAndroid,
-  View
-} from "react-native";
+import {DeviceEventEmitter, Dimensions, requireNativeComponent, StyleSheet, ToastAndroid, View} from "react-native";
 import {sendQuickBrickEvent} from "@applicaster/zapp-react-native-bridge/QuickBrick";
 import SettingsView from '../SettingsView';
 
 const PlayerView = requireNativeComponent("TVAQuickBrickPlayer");
 
-type
-Props = {
+type Props = {
   source: { uri: string },
   item: { content: {} },
   onEnd: any,
@@ -24,8 +16,7 @@ Props = {
   pluginConfiguration: {}
 };
 
-type
-State = {
+type State = {
   keyEvent: {}
 };
 
