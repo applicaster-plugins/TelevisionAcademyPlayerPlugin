@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import com.applicaster.analytics.AnalyticsAgentUtil
 import com.applicaster.plugin_manager.playersmanager.Playable
 import com.bitmovin.player.BitmovinPlayer
 import com.bitmovin.player.config.media.SourceConfiguration
@@ -17,25 +18,24 @@ class TAPlayerActivity : AppCompatActivity() {
     private val KEY_CURRENT_PROGRESS = "KEY_CURRENT_PROGRESS"
 
     private var bitmovinPlayer: BitmovinPlayer? = null
-
-    private var contentVideoURL: String? = null
+    private var playable: Playable? = null
     private var currentProgress: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
-        contentVideoURL = with(intent) { extras?.getString(PlayerContract.KEY_PLAYABLE) }
+        playable = with(intent) { extras?.getSerializable(PlayerContract.KEY_PLAYABLE) as Playable }
         if (savedInstanceState != null) {
             currentProgress = savedInstanceState.getDouble(KEY_CURRENT_PROGRESS, 0.0)
         }
         setContentView(R.layout.activity_player)
         bitmovinPlayer = bitmovinPlayerView.player
         initializePlayer()
-
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -62,6 +62,8 @@ class TAPlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         bitmovinPlayerView.onPause()
+//        TODO: Uncomment it if needed more analytic data
+//        AnalyticsAgentUtil.logPlayerEnterBackground()
         super.onPause()
     }
 
@@ -72,6 +74,12 @@ class TAPlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         bitmovinPlayerView.onDestroy()
+//        TODO: Uncomment it if needed more analytic data
+//        when {
+//            playable?.isLive == true -> AnalyticsAgentUtil.PLAY_CHANNEL
+//            else -> AnalyticsAgentUtil.PLAY_VOD_ITEM
+//        }.let { AnalyticsAgentUtil.endTimedEvent(it) }
+        EventListenerInteractor.removeListeners(bitmovinPlayer)
         super.onDestroy()
     }
 
@@ -92,6 +100,7 @@ class TAPlayerActivity : AppCompatActivity() {
             sourceConfiguration.startOffset = currentProgress
             bitmovinPlayer?.config?.playbackConfiguration?.isAutoplayEnabled = true
             bitmovinPlayer?.load(sourceConfiguration)
+            EventListenerInteractor.addListeners(bitmovinPlayer)
         }
     }
 
@@ -101,5 +110,5 @@ class TAPlayerActivity : AppCompatActivity() {
     }
 
     private fun getContentVideoUrl() =
-        if (ConfigurationRepository.testVideoUrl.isEmpty()) contentVideoURL else ConfigurationRepository.testVideoUrl
+        if (ConfigurationRepository.testVideoUrl.isEmpty()) playable?.contentVideoURL else ConfigurationRepository.testVideoUrl
 }
