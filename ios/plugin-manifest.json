@@ -1,35 +1,40 @@
 {
-  "api": {
-    "require_startup_execution": false,
-    "class_name": "TelevisionAcademyIOSPlayerPlugin.BitmovinPlayerPlugin"
-  },
-  "dependency_repository_url": [
-    "https://github.com/applicaster/PlayerEvents-iOS.git"
-  ],  
-  "whitelisted_account_ids": [
-    "5dcaba3ee648eb000eaf5c0a"
-  ],
-  "platform": "ios",
-  "author_name": "Anatolii Afanasiev",
-  "author_email": "anatolii.afanasiev@corewillsoft.com",
-  "manifest_version": "0.1.0",
-  "name": "Television Academy Player",
-  "description": "iOS Plugin for Television Academy",
-  "type": "player",
-  "screen": false,
-  "identifier": "TelevisionAcademyPlayerPlugin",
-  "ui_builder_support": true,
-  "dependency_name": "TelevisionAcademyIOSPlayerPlugin",
-  "dependency_version": "0.1.0",
-  "min_zapp_sdk": "12.0.0",
-  "deprecated_since_zapp_sdk": "",
-  "unsupported_since_zapp_sdk": "",
-  "react_native": false,
-  "custom_configuration_fields": [
-    {
-      "type": "text",
-      "key": "test_video_url",
-      "tooltip_text": "Test URL to check Bitmovin player functionality."
-    }
-  ]
+      "api": {
+            "require_startup_execution": false,
+            "class_name": "TelevisionAcademyIOSPlayerPlugin.BitmovinPlayerPlugin"
+      },
+      "dependency_repository_url": [
+            "https://github.com/applicaster/PlayerEvents-iOS.git"
+      ],
+      "whitelisted_account_ids": [
+            "5dcaba3ee648eb000eaf5c0a"
+      ],
+      "platform": "ios",
+      "author_name": "Anatolii Afanasiev",
+      "author_email": "anatolii.afanasiev@corewillsoft.com",
+      "manifest_version": "0.1.0",
+      "name": "Television Academy Player",
+      "description": "iOS Plugin for Television Academy",
+      "type": "player",
+      "screen": false,
+      "identifier": "TelevisionAcademyPlayerPlugin",
+      "ui_builder_support": true,
+      "dependency_name": "TelevisionAcademyIOSPlayerPlugin",
+      "dependency_version": "0.1.0",
+      "min_zapp_sdk": "12.0.0",
+      "deprecated_since_zapp_sdk": "",
+      "unsupported_since_zapp_sdk": "",
+      "react_native": false,
+      "custom_configuration_fields": [
+            {
+                  "type": "text",
+                  "key": "test_video_url",
+                  "tooltip_text": "Test URL to check Bitmovin player functionality."
+            },
+            {
+                  "type": "text",
+                  "key": "plist.BitmovinPlayerLicenseKey",
+                  "tooltip_text": "Bitmovin player license key."
+            }
+      ]
 }

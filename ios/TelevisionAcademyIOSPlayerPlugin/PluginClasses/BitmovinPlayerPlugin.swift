@@ -36,6 +36,10 @@ public class BitmovinPlayerPlugin: NSObject, ZPPluggableScreenProtocol {
 
 extension BitmovinPlayerPlugin: ZPPlayerProtocol {
 
+      static public func pluggablePlayerType() -> ZappPlugins.ZPPlayerType {
+            return .undefined
+      }
+
     public static func pluggablePlayerInit(playableItems items: [ZPPlayable]?, configurationJSON: NSDictionary?) -> ZPPlayerProtocol? {
 
         var videos: [ZPPlayable] = items ?? [ZPPlayable]()
