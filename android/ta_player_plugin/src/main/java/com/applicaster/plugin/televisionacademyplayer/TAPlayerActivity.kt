@@ -5,12 +5,9 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
-import com.applicaster.analytics.AnalyticsAgentUtil
 import com.applicaster.plugin_manager.playersmanager.Playable
 import com.bitmovin.player.BitmovinPlayer
 import com.bitmovin.player.config.media.SourceConfiguration
-import com.bitmovin.player.config.media.SourceItem
-import com.bitmovin.player.config.vr.VRContentType
 import kotlinx.android.synthetic.main.activity_player.*
 
 class TAPlayerActivity : AppCompatActivity() {
@@ -23,7 +20,6 @@ class TAPlayerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -100,7 +96,7 @@ class TAPlayerActivity : AppCompatActivity() {
             sourceConfiguration.startOffset = currentProgress
             bitmovinPlayer?.config?.playbackConfiguration?.isAutoplayEnabled = true
             bitmovinPlayer?.load(sourceConfiguration)
-            EventListenerInteractor.addListeners(bitmovinPlayer)
+            EventListenerInteractor.addListeners(bitmovinPlayer, playable?.playableId ?: "")
         }
     }
 

@@ -48,7 +48,7 @@ class PlayerContract : BasePlayer() {
     override fun attachInline(viewGroup: ViewGroup) {
         super.attachInline(viewGroup)
         viewGroup.addView(videoView)
-        EventListenerInteractor.addListeners(videoView.player)
+        EventListenerInteractor.addListeners(videoView.player, firstPlayable.playableId)
     }
 
     override fun removeInline(viewGroup: ViewGroup) {
