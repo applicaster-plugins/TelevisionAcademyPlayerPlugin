@@ -9,6 +9,7 @@ import com.applicaster.model.APVodItem
 import com.applicaster.player.defaultplayer.BasePlayer
 import com.applicaster.plugin_manager.playersmanager.Playable
 import com.applicaster.plugin_manager.playersmanager.PlayableConfiguration
+import com.applicaster.plugin_manager.playersmanager.PlayerContract
 import com.bitmovin.player.BitmovinPlayerView
 import com.bitmovin.player.config.media.SourceConfiguration
 import java.util.*
@@ -91,6 +92,8 @@ class PlayerContract : BasePlayer() {
         super.setPluginConfigurationParams(params)
         ConfigurationRepository.parseConfigurationFields(params)
     }
+
+    override fun getPlayerType() = PlayerContract.PlayerType.Default
 
     private fun getContentPlayable(): Playable =
         if (ConfigurationRepository.testVideoUrl.isEmpty()) {
