@@ -11,5 +11,4 @@ object ConfigurationRepository {
             testVideoUrl = it.toString()
         }
     }
-
 }

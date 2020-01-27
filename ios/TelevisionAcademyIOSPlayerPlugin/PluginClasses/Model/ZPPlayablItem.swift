@@ -9,15 +9,7 @@
 import Foundation
 import ZappPlugins
 
-class Playable: NSObject, ZPPlayable {
-
-    static func createVASTVideo() -> ZPPlayable {
-        let item = Playable()
-        item.videoURL = "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
-        item.name = "Test Video"
-        item.extensionsDictionary = ["elapsed_time": 10]
-        return item
-    }
+class ZPPlayablItem: NSObject, ZPPlayable {
 
     public var name = ""
     public var playDescription = ""
@@ -66,4 +58,32 @@ class Playable: NSObject, ZPPlayable {
     var identifier: NSString?
 
     var extensionsDictionary: NSDictionary?
+}
+
+// MARK:- Fast Initialization
+
+extension ZPPlayablItem {
+
+    static func createVASTVideo() -> ZPPlayable {
+        return self.pluginPlayableItem(
+            for: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
+            param: ["elapsed_time": 10]
+        )
+    }
+
+    static func createTest(for url: String) -> ZPPlayable {
+        return self.pluginPlayableItem(
+            for: url
+        )
+    }
+
+    static func pluginPlayableItem(for url: String, param: [String: Any]? = nil) -> ZPPlayable {
+        let item = ZPPlayablItem()
+        item.videoURL = url
+        item.name = "Test Video"
+        item.extensionsDictionary = param as NSDictionary?
+
+        return item
+    }
+
 }

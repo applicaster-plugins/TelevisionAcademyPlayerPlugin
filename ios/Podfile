@@ -5,12 +5,12 @@ install! 'cocoapods', :deterministic_uuids => false
 source 'git@github.com:applicaster/CocoaPods.git'
 source 'git@github.com:applicaster/PluginsBuilderCocoaPods.git'
 source 'git@github.com:CocoaPods/Specs.git'
-source 'git@github.com:AlexYehorov/bitmovin-player-ios-sdk-cocoapod.git'
+source 'git@github.com:bitmovin/bitmovin-player-ios-sdk-cocoapod.git'
 
 target 'TelevisionAcademyIOSPlayerPlugin' do
-  pod 'PlayerEvents', git: 'https://github.com/applicaster/PlayerEvents-iOS.git'
   pod 'ZappPlugins'
-	pod 'BitmovinPlayer', git: 'https://github.com/AlexYehorov/bitmovin-player-ios-sdk-cocoapod.git', tag:'2.27.0'
+  pod 'PlayerEvents', git: 'https://github.com/applicaster/PlayerEvents-iOS.git'
+  pod 'BitmovinPlayer', git: 'https://github.com/bitmovin/bitmovin-player-ios-sdk-cocoapod.git', tag:'2.37.0'
 end
 
 post_install do |installer|
