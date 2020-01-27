@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 	s.name = "DefaultPlayer"
-	s.version = "0.1.17"
+	s.version = "0.2.5"
 	s.platform = :tvos, :ios
 	s.swift_versions = ['5.0']
 	s.summary = "ZappPlugins"
@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
 	s.license = ''
 	s.author = "Applicaster LTD."
 	s.source = {
-		 :git => 'git@github.com:applicaster/DefaultPlayer-iOS.git',
+		 :git => 'git@github.com:applicaster-plugins/TelevisionAcademyPlayerPlugin.git',
 		 :tag => s.version.to_s
   }
 	s.dependency 'React'
@@ -26,8 +26,8 @@ Pod::Spec.new do |s|
 	 s.ios.deployment_target = "10.0"
 
 	 s.source_files  = [
-		'RNBitmovinPlayer.m',
-		'RNBitmovinPlayerManager.m'
+		'tvos/plugin/ios/BitmovinRNPlayer/**/*.{swift}',
+		'tvos/plugin/ios/BitmovinRNPlayer/PlayerBridge.m'
 	 ]
 	 s.exclude_files = [
 

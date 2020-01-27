@@ -13,11 +13,11 @@
     }
   ],
   "dependency_name": "@applicaster/quick-brick-television-academy-bitmovin-player",
-  "dependency_version": "0.2.3",
+  "dependency_version": "0.2.5",
   "platform": "android",
   "author_name": "Vlad Sumtsov",
   "author_email": "vlad.sumtsov@corewillsoft.com",
-  "manifest_version": "0.2.3",
+  "manifest_version": "0.2.5",
   "name": "Television Academy Player TV",
   "description": "Television Academy Bitmovin Player plugin for Android TV on Quick Brick",
   "type": "player",
@@ -33,7 +33,7 @@
   "react_bundle_url": "",
   "extra_dependencies": [],
   "npm_dependencies": [
-    "@applicaster/quick-brick-television-academy-bitmovin-player@0.2.3"
+    "@applicaster/quick-brick-television-academy-bitmovin-player@0.2.5"
   ],
   "project_dependencies": [
     {

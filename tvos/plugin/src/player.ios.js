@@ -1,3 +1,3 @@
-import VideoPlayer from "./ios";
+import {VideoPlayer} from "./ios";
 
 export default VideoPlayer;
