@@ -9,8 +9,8 @@
   "author_name": "Vlad Sumtsov",
   "author_email": "vlad.sumtsov@corewillsoft.com",
   "dependency_name": "@applicaster/quick-brick-television-academy-bitmovin-player",
-  "dependency_version": "0.2.3",
-  "manifest_version": "0.2.3",
+  "dependency_version": "0.2.5",
+  "manifest_version": "0.2.5",
   "name": "Television Academy Player TV",
   "description": "Television Academy Bitmovin Player plugin for Apple TV on Quick Brick",
   "type": "player",
@@ -30,6 +30,22 @@
   ],
   "npm_dependencies": [],
   "project_dependencies": [],
-  "custom_configuration_fields": [],
+  "custom_configuration_fields": [
+    {
+      "key": "baseSkylarkUrl",
+      "type": "text",
+      "tooltip_text": "Url for skylark to put video metadata. Example: https://publicapi.feature.atas.ostm.io/api/v1"
+    },
+    {
+      "type": "text",
+      "key": "test_video_url",
+      "tooltip_text": "Test URL to check Bitmovin player functionality."
+    },
+    {
+      "type": "text",
+      "key": "plist.BitmovinPlayerLicenseKey",
+      "tooltip_text": "Bitmovin player license key."
+    }
+  ],
   "targets": ["tv"]
 }

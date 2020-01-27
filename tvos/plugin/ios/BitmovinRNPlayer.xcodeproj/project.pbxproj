@@ -1,0 +1,644 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		77EB1F020AA34CEB66E21C3D /* Pods_BitmovinRNPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C13909C75DC4DE7EFE1F414 /* Pods_BitmovinRNPlayer.framework */; };
+		F54F0CCF23DF2395005FAF49 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54F0CCE23DF2395005FAF49 /* AppDelegate.swift */; };
+		F54F0CD123DF2395005FAF49 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54F0CD023DF2395005FAF49 /* ViewController.swift */; };
+		F54F0CD423DF2395005FAF49 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F54F0CD223DF2395005FAF49 /* Main.storyboard */; };
+		F54F0CD623DF2397005FAF49 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F54F0CD523DF2397005FAF49 /* Assets.xcassets */; };
+		F54F0CE123DF2397005FAF49 /* BitmovinRNPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54F0CE023DF2397005FAF49 /* BitmovinRNPlayerTests.swift */; };
+		F54F0CEC23DF2397005FAF49 /* BitmovinRNPlayerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54F0CEB23DF2397005FAF49 /* BitmovinRNPlayerUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F54F0CDD23DF2397005FAF49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F54F0CC323DF2395005FAF49 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F54F0CCA23DF2395005FAF49;
+			remoteInfo = BitmovinRNPlayer;
+		};
+		F54F0CE823DF2397005FAF49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F54F0CC323DF2395005FAF49 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F54F0CCA23DF2395005FAF49;
+			remoteInfo = BitmovinRNPlayer;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0D599FBC21BE5FD19149815B /* Pods-BitmovinRNPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitmovinRNPlayer.debug.xcconfig"; path = "Target Support Files/Pods-BitmovinRNPlayer/Pods-BitmovinRNPlayer.debug.xcconfig"; sourceTree = "<group>"; };
+		6C13909C75DC4DE7EFE1F414 /* Pods_BitmovinRNPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BitmovinRNPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A31BD92653341ABD4E350046 /* Pods-BitmovinRNPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitmovinRNPlayer.release.xcconfig"; path = "Target Support Files/Pods-BitmovinRNPlayer/Pods-BitmovinRNPlayer.release.xcconfig"; sourceTree = "<group>"; };
+		F54F0CCB23DF2395005FAF49 /* BitmovinRNPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BitmovinRNPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F54F0CCE23DF2395005FAF49 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F54F0CD023DF2395005FAF49 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F54F0CD323DF2395005FAF49 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		F54F0CD523DF2397005FAF49 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F54F0CD723DF2397005FAF49 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F54F0CDC23DF2397005FAF49 /* BitmovinRNPlayerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BitmovinRNPlayerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F54F0CE023DF2397005FAF49 /* BitmovinRNPlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitmovinRNPlayerTests.swift; sourceTree = "<group>"; };
+		F54F0CE223DF2397005FAF49 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F54F0CE723DF2397005FAF49 /* BitmovinRNPlayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BitmovinRNPlayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F54F0CEB23DF2397005FAF49 /* BitmovinRNPlayerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitmovinRNPlayerUITests.swift; sourceTree = "<group>"; };
+		F54F0CED23DF2397005FAF49 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F54F0CC823DF2395005FAF49 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77EB1F020AA34CEB66E21C3D /* Pods_BitmovinRNPlayer.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F54F0CD923DF2397005FAF49 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F54F0CE423DF2397005FAF49 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5D534F92D3B94BD6C9AE72BE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6C13909C75DC4DE7EFE1F414 /* Pods_BitmovinRNPlayer.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		AB41F4567291BD333E610FDE /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				0D599FBC21BE5FD19149815B /* Pods-BitmovinRNPlayer.debug.xcconfig */,
+				A31BD92653341ABD4E350046 /* Pods-BitmovinRNPlayer.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		F54F0CC223DF2395005FAF49 = {
+			isa = PBXGroup;
+			children = (
+				F54F0CCD23DF2395005FAF49 /* BitmovinRNPlayer */,
+				F54F0CDF23DF2397005FAF49 /* BitmovinRNPlayerTests */,
+				F54F0CEA23DF2397005FAF49 /* BitmovinRNPlayerUITests */,
+				F54F0CCC23DF2395005FAF49 /* Products */,
+				AB41F4567291BD333E610FDE /* Pods */,
+				5D534F92D3B94BD6C9AE72BE /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		F54F0CCC23DF2395005FAF49 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F54F0CCB23DF2395005FAF49 /* BitmovinRNPlayer.app */,
+				F54F0CDC23DF2397005FAF49 /* BitmovinRNPlayerTests.xctest */,
+				F54F0CE723DF2397005FAF49 /* BitmovinRNPlayerUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F54F0CCD23DF2395005FAF49 /* BitmovinRNPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				F54F0CCE23DF2395005FAF49 /* AppDelegate.swift */,
+				F54F0CD023DF2395005FAF49 /* ViewController.swift */,
+				F54F0CD223DF2395005FAF49 /* Main.storyboard */,
+				F54F0CD523DF2397005FAF49 /* Assets.xcassets */,
+				F54F0CD723DF2397005FAF49 /* Info.plist */,
+			);
+			path = BitmovinRNPlayer;
+			sourceTree = "<group>";
+		};
+		F54F0CDF23DF2397005FAF49 /* BitmovinRNPlayerTests */ = {
+			isa = PBXGroup;
+			children = (
+				F54F0CE023DF2397005FAF49 /* BitmovinRNPlayerTests.swift */,
+				F54F0CE223DF2397005FAF49 /* Info.plist */,
+			);
+			path = BitmovinRNPlayerTests;
+			sourceTree = "<group>";
+		};
+		F54F0CEA23DF2397005FAF49 /* BitmovinRNPlayerUITests */ = {
+			isa = PBXGroup;
+			children = (
+				F54F0CEB23DF2397005FAF49 /* BitmovinRNPlayerUITests.swift */,
+				F54F0CED23DF2397005FAF49 /* Info.plist */,
+			);
+			path = BitmovinRNPlayerUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F54F0CCA23DF2395005FAF49 /* BitmovinRNPlayer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F54F0CF023DF2397005FAF49 /* Build configuration list for PBXNativeTarget "BitmovinRNPlayer" */;
+			buildPhases = (
+				BC681E7E2119374FE0E3EC0E /* [CP] Check Pods Manifest.lock */,
+				F54F0CC723DF2395005FAF49 /* Sources */,
+				F54F0CC823DF2395005FAF49 /* Frameworks */,
+				F54F0CC923DF2395005FAF49 /* Resources */,
+				002163616AC29574685E5E66 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BitmovinRNPlayer;
+			productName = BitmovinRNPlayer;
+			productReference = F54F0CCB23DF2395005FAF49 /* BitmovinRNPlayer.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F54F0CDB23DF2397005FAF49 /* BitmovinRNPlayerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F54F0CF323DF2397005FAF49 /* Build configuration list for PBXNativeTarget "BitmovinRNPlayerTests" */;
+			buildPhases = (
+				F54F0CD823DF2397005FAF49 /* Sources */,
+				F54F0CD923DF2397005FAF49 /* Frameworks */,
+				F54F0CDA23DF2397005FAF49 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F54F0CDE23DF2397005FAF49 /* PBXTargetDependency */,
+			);
+			name = BitmovinRNPlayerTests;
+			productName = BitmovinRNPlayerTests;
+			productReference = F54F0CDC23DF2397005FAF49 /* BitmovinRNPlayerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		F54F0CE623DF2397005FAF49 /* BitmovinRNPlayerUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F54F0CF623DF2397005FAF49 /* Build configuration list for PBXNativeTarget "BitmovinRNPlayerUITests" */;
+			buildPhases = (
+				F54F0CE323DF2397005FAF49 /* Sources */,
+				F54F0CE423DF2397005FAF49 /* Frameworks */,
+				F54F0CE523DF2397005FAF49 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F54F0CE923DF2397005FAF49 /* PBXTargetDependency */,
+			);
+			name = BitmovinRNPlayerUITests;
+			productName = BitmovinRNPlayerUITests;
+			productReference = F54F0CE723DF2397005FAF49 /* BitmovinRNPlayerUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F54F0CC323DF2395005FAF49 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1010;
+				LastUpgradeCheck = 1010;
+				ORGANIZATIONNAME = "Vladyslav Sumtsov";
+				TargetAttributes = {
+					F54F0CCA23DF2395005FAF49 = {
+						CreatedOnToolsVersion = 10.1;
+					};
+					F54F0CDB23DF2397005FAF49 = {
+						CreatedOnToolsVersion = 10.1;
+						TestTargetID = F54F0CCA23DF2395005FAF49;
+					};
+					F54F0CE623DF2397005FAF49 = {
+						CreatedOnToolsVersion = 10.1;
+						TestTargetID = F54F0CCA23DF2395005FAF49;
+					};
+				};
+			};
+			buildConfigurationList = F54F0CC623DF2395005FAF49 /* Build configuration list for PBXProject "BitmovinRNPlayer" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F54F0CC223DF2395005FAF49;
+			productRefGroup = F54F0CCC23DF2395005FAF49 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F54F0CCA23DF2395005FAF49 /* BitmovinRNPlayer */,
+				F54F0CDB23DF2397005FAF49 /* BitmovinRNPlayerTests */,
+				F54F0CE623DF2397005FAF49 /* BitmovinRNPlayerUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F54F0CC923DF2395005FAF49 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F54F0CD623DF2397005FAF49 /* Assets.xcassets in Resources */,
+				F54F0CD423DF2395005FAF49 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F54F0CDA23DF2397005FAF49 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F54F0CE523DF2397005FAF49 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		002163616AC29574685E5E66 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BitmovinRNPlayer/Pods-BitmovinRNPlayer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BitmovinRNPlayer/Pods-BitmovinRNPlayer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BitmovinRNPlayer/Pods-BitmovinRNPlayer-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		BC681E7E2119374FE0E3EC0E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BitmovinRNPlayer-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F54F0CC723DF2395005FAF49 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F54F0CD123DF2395005FAF49 /* ViewController.swift in Sources */,
+				F54F0CCF23DF2395005FAF49 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F54F0CD823DF2397005FAF49 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F54F0CE123DF2397005FAF49 /* BitmovinRNPlayerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F54F0CE323DF2397005FAF49 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F54F0CEC23DF2397005FAF49 /* BitmovinRNPlayerUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F54F0CDE23DF2397005FAF49 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F54F0CCA23DF2395005FAF49 /* BitmovinRNPlayer */;
+			targetProxy = F54F0CDD23DF2397005FAF49 /* PBXContainerItemProxy */;
+		};
+		F54F0CE923DF2397005FAF49 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F54F0CCA23DF2395005FAF49 /* BitmovinRNPlayer */;
+			targetProxy = F54F0CE823DF2397005FAF49 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		F54F0CD223DF2395005FAF49 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F54F0CD323DF2395005FAF49 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F54F0CEE23DF2397005FAF49 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = appletvos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TVOS_DEPLOYMENT_TARGET = 12.1;
+			};
+			name = Debug;
+		};
+		F54F0CEF23DF2397005FAF49 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = appletvos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TVOS_DEPLOYMENT_TARGET = 12.1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F54F0CF123DF2397005FAF49 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0D599FBC21BE5FD19149815B /* Pods-BitmovinRNPlayer.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = BitmovinRNPlayer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.applicaster.BitmovinRNPlayer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 3;
+			};
+			name = Debug;
+		};
+		F54F0CF223DF2397005FAF49 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A31BD92653341ABD4E350046 /* Pods-BitmovinRNPlayer.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = BitmovinRNPlayer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.applicaster.BitmovinRNPlayer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 3;
+			};
+			name = Release;
+		};
+		F54F0CF423DF2397005FAF49 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = BitmovinRNPlayerTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.applicaster.BitmovinRNPlayerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BitmovinRNPlayer.app/BitmovinRNPlayer";
+			};
+			name = Debug;
+		};
+		F54F0CF523DF2397005FAF49 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = BitmovinRNPlayerTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.applicaster.BitmovinRNPlayerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BitmovinRNPlayer.app/BitmovinRNPlayer";
+			};
+			name = Release;
+		};
+		F54F0CF723DF2397005FAF49 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = BitmovinRNPlayerUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.applicaster.BitmovinRNPlayerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_TARGET_NAME = BitmovinRNPlayer;
+			};
+			name = Debug;
+		};
+		F54F0CF823DF2397005FAF49 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = BitmovinRNPlayerUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.applicaster.BitmovinRNPlayerUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = 3;
+				TEST_TARGET_NAME = BitmovinRNPlayer;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F54F0CC623DF2395005FAF49 /* Build configuration list for PBXProject "BitmovinRNPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F54F0CEE23DF2397005FAF49 /* Debug */,
+				F54F0CEF23DF2397005FAF49 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F54F0CF023DF2397005FAF49 /* Build configuration list for PBXNativeTarget "BitmovinRNPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F54F0CF123DF2397005FAF49 /* Debug */,
+				F54F0CF223DF2397005FAF49 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F54F0CF323DF2397005FAF49 /* Build configuration list for PBXNativeTarget "BitmovinRNPlayerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F54F0CF423DF2397005FAF49 /* Debug */,
+				F54F0CF523DF2397005FAF49 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F54F0CF623DF2397005FAF49 /* Build configuration list for PBXNativeTarget "BitmovinRNPlayerUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F54F0CF723DF2397005FAF49 /* Debug */,
+				F54F0CF823DF2397005FAF49 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F54F0CC323DF2395005FAF49 /* Project object */;
+}
