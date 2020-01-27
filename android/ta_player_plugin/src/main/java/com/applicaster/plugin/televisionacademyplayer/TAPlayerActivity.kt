@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import com.applicaster.analytics.AnalyticsAgentUtil
 import com.applicaster.plugin_manager.playersmanager.Playable
 import com.bitmovin.player.BitmovinPlayer
 import com.bitmovin.player.config.media.SourceConfiguration
@@ -58,8 +59,7 @@ class TAPlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         bitmovinPlayerView.onPause()
-//        TODO: Uncomment it if needed more analytic data
-//        AnalyticsAgentUtil.logPlayerEnterBackground()
+        AnalyticsAgentUtil.logPlayerEnterBackground()
         super.onPause()
     }
 
@@ -70,11 +70,10 @@ class TAPlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         bitmovinPlayerView.onDestroy()
-//        TODO: Uncomment it if needed more analytic data
-//        when {
-//            playable?.isLive == true -> AnalyticsAgentUtil.PLAY_CHANNEL
-//            else -> AnalyticsAgentUtil.PLAY_VOD_ITEM
-//        }.let { AnalyticsAgentUtil.endTimedEvent(it) }
+        when {
+            playable?.isLive == true -> AnalyticsAgentUtil.PLAY_CHANNEL
+            else -> AnalyticsAgentUtil.PLAY_VOD_ITEM
+        }.let { AnalyticsAgentUtil.endTimedEvent(it) }
         EventListenerInteractor.removeListeners(bitmovinPlayer)
         super.onDestroy()
     }

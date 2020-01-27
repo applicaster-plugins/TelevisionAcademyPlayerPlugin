@@ -29,8 +29,7 @@ class PlayerContract : BasePlayer() {
     override fun init(playableList: MutableList<Playable>, context: Context) {
         super.init(playableList, context)
         videoView = BitmovinPlayerView(context)
-//        TODO: Uncomment it if needed more analytic data
-//        initializeAnalyticsEvent()
+        initializeAnalyticsEvent()
     }
 
     override fun playInFullscreen(
