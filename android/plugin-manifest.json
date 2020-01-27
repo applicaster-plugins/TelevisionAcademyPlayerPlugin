@@ -1,7 +1,8 @@
 {
   "api": {
     "require_startup_execution": false,
-    "class_name": "com.applicaster.plugin.televisionacademyplayer.PlayerContract"
+    "class_name": "com.applicaster.plugin.televisionacademyplayer.PlayerContract",
+    "proguard_rules": "-keep public class com.applicaster.plugin.televisionacademyplayer.PlayerContract {\n    public <fields>;\n    public <methods>;\n}\n"
   },
   "dependency_repository_url": [
     {
