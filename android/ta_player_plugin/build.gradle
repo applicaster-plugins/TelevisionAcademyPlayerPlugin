@@ -33,6 +33,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.android.support:support-compat:$androidSupportVersion"
     implementation 'com.bitmovin.player:playercore:2.37.0'
+    implementation 'com.applicaster:PlayerEvents:0.0.+'
 
     testImplementation 'junit:junit:4.12'
 

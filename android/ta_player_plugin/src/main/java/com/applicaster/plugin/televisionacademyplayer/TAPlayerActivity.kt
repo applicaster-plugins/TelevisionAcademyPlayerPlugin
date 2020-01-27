@@ -9,8 +9,6 @@ import com.applicaster.analytics.AnalyticsAgentUtil
 import com.applicaster.plugin_manager.playersmanager.Playable
 import com.bitmovin.player.BitmovinPlayer
 import com.bitmovin.player.config.media.SourceConfiguration
-import com.bitmovin.player.config.media.SourceItem
-import com.bitmovin.player.config.vr.VRContentType
 import kotlinx.android.synthetic.main.activity_player.*
 
 class TAPlayerActivity : AppCompatActivity() {
@@ -23,7 +21,6 @@ class TAPlayerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -62,8 +59,7 @@ class TAPlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         bitmovinPlayerView.onPause()
-//        TODO: Uncomment it if needed more analytic data
-//        AnalyticsAgentUtil.logPlayerEnterBackground()
+        AnalyticsAgentUtil.logPlayerEnterBackground()
         super.onPause()
     }
 
@@ -74,11 +70,10 @@ class TAPlayerActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         bitmovinPlayerView.onDestroy()
-//        TODO: Uncomment it if needed more analytic data
-//        when {
-//            playable?.isLive == true -> AnalyticsAgentUtil.PLAY_CHANNEL
-//            else -> AnalyticsAgentUtil.PLAY_VOD_ITEM
-//        }.let { AnalyticsAgentUtil.endTimedEvent(it) }
+        when {
+            playable?.isLive == true -> AnalyticsAgentUtil.PLAY_CHANNEL
+            else -> AnalyticsAgentUtil.PLAY_VOD_ITEM
+        }.let { AnalyticsAgentUtil.endTimedEvent(it) }
         EventListenerInteractor.removeListeners(bitmovinPlayer)
         super.onDestroy()
     }
@@ -100,7 +95,7 @@ class TAPlayerActivity : AppCompatActivity() {
             sourceConfiguration.startOffset = currentProgress
             bitmovinPlayer?.config?.playbackConfiguration?.isAutoplayEnabled = true
             bitmovinPlayer?.load(sourceConfiguration)
-            EventListenerInteractor.addListeners(bitmovinPlayer)
+            EventListenerInteractor.addListeners(bitmovinPlayer, playable?.playableId ?: "")
         }
     }
 

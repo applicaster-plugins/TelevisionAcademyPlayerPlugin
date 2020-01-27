@@ -9,6 +9,7 @@ import com.applicaster.model.APVodItem
 import com.applicaster.player.defaultplayer.BasePlayer
 import com.applicaster.plugin_manager.playersmanager.Playable
 import com.applicaster.plugin_manager.playersmanager.PlayableConfiguration
+import com.applicaster.plugin_manager.playersmanager.PlayerContract
 import com.bitmovin.player.BitmovinPlayerView
 import com.bitmovin.player.config.media.SourceConfiguration
 import java.util.*
@@ -28,8 +29,7 @@ class PlayerContract : BasePlayer() {
     override fun init(playableList: MutableList<Playable>, context: Context) {
         super.init(playableList, context)
         videoView = BitmovinPlayerView(context)
-//        TODO: Uncomment it if needed more analytic data
-//        initializeAnalyticsEvent()
+        initializeAnalyticsEvent()
     }
 
     override fun playInFullscreen(
@@ -48,7 +48,7 @@ class PlayerContract : BasePlayer() {
     override fun attachInline(viewGroup: ViewGroup) {
         super.attachInline(viewGroup)
         viewGroup.addView(videoView)
-        EventListenerInteractor.addListeners(videoView.player)
+        EventListenerInteractor.addListeners(videoView.player, firstPlayable.playableId)
     }
 
     override fun removeInline(viewGroup: ViewGroup) {
@@ -91,6 +91,8 @@ class PlayerContract : BasePlayer() {
         super.setPluginConfigurationParams(params)
         ConfigurationRepository.parseConfigurationFields(params)
     }
+
+    override fun getPlayerType() = PlayerContract.PlayerType.Default
 
     private fun getContentPlayable(): Playable =
         if (ConfigurationRepository.testVideoUrl.isEmpty()) {
