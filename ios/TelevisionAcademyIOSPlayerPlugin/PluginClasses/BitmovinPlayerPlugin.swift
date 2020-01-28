@@ -65,12 +65,13 @@ extension BitmovinPlayerPlugin: ZPPlayerProtocol {
     }
 
     public func pluggablePlayerIsPlaying() -> Bool {
-        return self.playerViewController.player.isPlaying 
+        guard let playerVar = self.playerViewController.player else { return false }
+        return playerVar.isPlaying
     }
 
     public func presentPlayerFullScreen(_ rootViewController: UIViewController, configuration: ZPPlayerConfiguration?) {
         presentPlayerFullScreen(rootViewController, configuration: configuration) {
-            self.playerViewController.player.play()
+            self.playerViewController.player?.play()
         }
     }
 
