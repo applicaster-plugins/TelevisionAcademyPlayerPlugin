@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import {DeviceEventEmitter, Dimensions, requireNativeComponent, StyleSheet, ToastAndroid, View} from "react-native";
+import {DeviceEventEmitter, Dimensions, requireNativeComponent, StyleSheet, View} from "react-native";
 import {sendQuickBrickEvent} from "@applicaster/zapp-react-native-bridge/QuickBrick";
 
 const PlayerView = requireNativeComponent("PlayerBridge");
@@ -37,7 +37,10 @@ export class VideoPlayer extends React.Component<Props, State> {
   }
 
   onKeyDown(event) {
-
+    this.setState({
+      playerEvent: event
+    });
+    return true;
   }
 
   componentDidMount() {
@@ -58,6 +61,7 @@ export class VideoPlayer extends React.Component<Props, State> {
 
   render() {
     const { playableItem, pluginConfiguration } = this.props;
+    const { playerEvent } = this.state;
     let configurations = {};
     if (pluginConfiguration) {
       configurations = pluginConfiguration["configuration_json"] || {}
@@ -72,6 +76,7 @@ export class VideoPlayer extends React.Component<Props, State> {
             playableItem={playableItem}
             style={{ height, width }}
             pluginConfiguration={configurations}
+            onKeyChanged={playerEvent}
           />
           {settingsView}
         </View>
