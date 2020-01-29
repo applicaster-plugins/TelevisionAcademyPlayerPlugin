@@ -18,8 +18,8 @@ class PlayerViewController: UIViewController {
     }
 
     // player utils
-    var player: BitmovinPlayer!
-    private var playerView: BMPBitmovinPlayerView!
+    var player: BitmovinPlayer?
+    private var playerView: BMPBitmovinPlayerView?
     private var videoStartTime = Date()
     private var viewSwitchCounter = 0
 
@@ -57,7 +57,7 @@ class PlayerViewController: UIViewController {
     }
 
     deinit {
-        player.destroy()
+        player?.destroy()
         player = nil
         playerView = nil
     }
@@ -139,12 +139,13 @@ extension PlayerViewController: CustomMessageHandlerDelegate {
 extension PlayerViewController: PlayerListener {
 
     func onReady(_ event: ReadyEvent) {
-
-        guard let item = self.player.config.sourceItem as? PlayableSourceItem else { return }
+        
+        guard let playerVar = player,
+            let item = playerVar.config.sourceItem as? PlayableSourceItem else { return }
 
         if let elapsedTime = item.elapsedTime {
             let time = elapsedTime/Double(Constants.miliseconds.rawValue)
-            player.seek(time: time)
+            playerVar.seek(time: time)
             didStartPlaybackSession()
         }
 
@@ -153,7 +154,7 @@ extension PlayerViewController: PlayerListener {
         guard let currentPlayable = item.playable else { return }
 
         let analyticParamsBuilder = AnalyticParamsBuilder()
-        analyticParamsBuilder.duration = player.duration
+        analyticParamsBuilder.duration = playerVar.duration
         analyticParamsBuilder.isLive = currentPlayable.isLive()
 
         let params = currentPlayable.additionalAnalyticsParams.merge(analyticParamsBuilder.parameters)
@@ -162,10 +163,11 @@ extension PlayerViewController: PlayerListener {
     }
 
     func onPlay(_ event: PlayEvent) {
-        print("onPlay \(event.time)")
+
+        guard let playerVar = player else { return }
 
         let miliseconds = event.time * Double(Constants.miliseconds.rawValue)
-        let length = player.duration * Double(Constants.miliseconds.rawValue)
+        let length = playerVar.duration * Double(Constants.miliseconds.rawValue)
         let uid = getCurrentPlayable?.identifier
 
         playerEventsManager.onPlayerEvent("play", properties: [
@@ -177,10 +179,10 @@ extension PlayerViewController: PlayerListener {
 
     func onPaused(_ event: PausedEvent) {
 
-        print("onPaused \(event.time)")
+        guard let playerVar = player else { return }
 
         let miliseconds = event.time * Double(Constants.miliseconds.rawValue)
-        let length = player.duration * Double(Constants.miliseconds.rawValue)
+        let length = playerVar.duration * Double(Constants.miliseconds.rawValue)
         let uid = getCurrentPlayable?.identifier
 
         playerEventsManager.onPlayerEvent("pause", properties: [
@@ -208,13 +210,15 @@ extension PlayerViewController: PlayerListener {
 
     func onTimeChanged(_ event: TimeChangedEvent) {
 
+        guard let playerVar = player else { return }
+
         if let timerVar = timer,
             timerVar.isValid { return }
 
         timer = Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
 
         let miliseconds = event.currentTime * Double(Constants.miliseconds.rawValue)
-        let length = player.duration * Double(Constants.miliseconds.rawValue)
+        let length = playerVar.duration * Double(Constants.miliseconds.rawValue)
         let uid = getCurrentPlayable?.identifier
 
         playerEventsManager.onPlayerEvent("heartbeat", properties: [
@@ -247,7 +251,10 @@ extension PlayerViewController: PlayerListener {
     }
 
     func onPlaybackFinished(_ event: PlaybackFinishedEvent) {
-        let length = player.duration * Double(Constants.miliseconds.rawValue)
+
+        guard let playerVar = player else { return }
+
+        let length = playerVar.duration * Double(Constants.miliseconds.rawValue)
         let uid = getCurrentPlayable?.identifier
 
         playerEventsManager.onPlayerEvent("heartbeat", properties: [
@@ -263,15 +270,15 @@ extension PlayerViewController: PlayerListener {
 extension PlayerViewController {
 
     func pause() {
-        player.pause()
+        player?.pause()
     }
 
     func stop() {
-        player.pause()
+        player?.pause()
     }
 
     func play() {
-        player.play()
+        player?.play()
     }
 
     func setInlineView(rootViewController: UIViewController, container: UIView) {
@@ -290,12 +297,15 @@ extension PlayerViewController {
     }
 
     var getCurrentPlayable: ZPPlayable? {
-        guard let item = self.player.config.sourceItem as? PlayableSourceItem else { return nil }
+        guard let playerVar = player else { return nil }
+
+        guard let item = playerVar.config.sourceItem as? PlayableSourceItem else { return nil }
         return item.playable
     }
 
     var getPlaybackState: Progress? {
-        return Progress(progress: player.currentTime, duration: player.duration)
+        guard let playerVar = player else { return nil }
+        return Progress(progress: playerVar.currentTime, duration: playerVar.duration)
     }
 }
 
