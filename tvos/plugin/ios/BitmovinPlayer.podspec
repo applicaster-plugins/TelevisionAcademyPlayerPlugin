@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 	s.name = "DefaultPlayer"
-	s.version = "0.2.6"
+	s.version = "0.2.7"
 	s.platform = :tvos, :ios
 	s.swift_versions = ['5.0']
 	s.summary = "ZappPlugins"

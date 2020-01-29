@@ -42,7 +42,7 @@ extension PlayerView {
 
 
 //    ZPBaseLoginProvider
-    
+
 
     let jsonData = try? JSONSerialization.data(withJSONObject: jsonBody, options: .prettyPrinted)
     let putApi = (baseSkylarkUrlVar as String) + "/watchlist/" + item.identifier
@@ -178,31 +178,6 @@ extension PlayerView {
     default:
       break
     }
-
-    //    switch key {
-    //
-    //    case .KEYCODE_DPAD_CENTER, .KEYCODE_ENTER, .KEYCODE_NUMPAD_ENTER, .KEYCODE_SPACE, .KEYCODE_MEDIA_PLAY_PAUSE:
-    //      togglePlay()
-    //
-    //    case .KEYCODE_MEDIA_PLAY:
-    //      self.bitmovinPlayer.play()
-    //
-    //    case .KEYCODE_MEDIA_PAUSE:
-    //      self.bitmovinPlayer.pause()
-    //
-    //    case .KEYCODE_MEDIA_STOP:
-    //      stopPlayback()
-    //
-    //    case .KEYCODE_DPAD_RIGHT, .KEYCODE_MEDIA_FAST_FORWARD:
-    //      seekForward()
-    //
-    //    case .KEYCODE_DPAD_LEFT, .KEYCODE_MEDIA_REWIND:
-    //      seekBackward()
-    //
-    //    case .KEYCODE_MENU:
-    //      uploadVideoInfo()
-    //    }
-
   }
 
   private func togglePlay() {
