@@ -120,8 +120,10 @@ class PlayerViewController: UIViewController {
 extension PlayerViewController: CustomMessageHandlerDelegate {
     func receivedSynchronousMessage(_ message: String, withData data: String?) -> String? {
         if message == "closePlayer" {
+            player?.pause()
             dismiss(animated: true)  {
-
+                self.player = nil
+                self.playerView = nil
             }
         }
 
