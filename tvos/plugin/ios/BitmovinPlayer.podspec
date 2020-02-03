@@ -20,14 +20,14 @@ Pod::Spec.new do |s|
 		 'ENABLE_TESTABILITY' => 'YES',
 		 'OTHER_CFLAGS'  => '-fembed-bitcode',
 		 'SWIFT_VERSION' => '5.0',
+		 'SWIFT_OBJC_BRIDGING_HEADER' => 'tvos/plugin/ios/BitmovinRNPlayer/Player-Bridging-Header.h'
 		}
 
 	 s.tvos.deployment_target = "10.0"
 	 s.ios.deployment_target = "10.0"
 
 	 s.source_files  = [
-		'tvos/plugin/ios/BitmovinRNPlayer/**/*.{swift}',
-		'tvos/plugin/ios/BitmovinRNPlayer/PlayerBridge.m'
+		'tvos/plugin/ios/BitmovinRNPlayer/*.{m,swift}'
 	 ]
 	 s.exclude_files = [
 

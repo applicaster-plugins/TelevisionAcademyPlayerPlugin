@@ -17,7 +17,7 @@ extension PlayerView: PlayerListener, UserInterfaceListener {
 
     if let elapsedTime = item.elapsedTime {
       let time = elapsedTime/Double(CommonConstants.miliseconds.rawValue)
-      bitmovinPlayer.seek(time: time)
+      self.bitmovinPlayer?.seek(time: time)
     }
 
     self.uploadVideoInfo()
