@@ -12,8 +12,8 @@ import BitmovinPlayer
 class PlayerView: UIView {
 
   // player
-  var bitmovinPlayer: BitmovinPlayer!
-  var bitmovinPlayerView: BMPBitmovinPlayerView!
+  var bitmovinPlayer: BitmovinPlayer?
+  var bitmovinPlayerView: BMPBitmovinPlayerView?
 
   // skylark API
   var baseSkylarkUrl: NSString? = nil
@@ -120,7 +120,7 @@ extension PlayerView {
       playerView.add(listener: self)
 
       self.addSubview(playerView)
-      self.bringSubview(toFront: playerView)
+      self.bringSubviewToFront(playerView)
 
       self.bitmovinPlayer = player
       self.bitmovinPlayerView = playerView

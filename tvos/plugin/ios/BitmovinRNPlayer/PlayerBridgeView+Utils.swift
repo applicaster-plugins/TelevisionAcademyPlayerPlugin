@@ -8,14 +8,19 @@
 
 import Foundation
 import BitmovinPlayer
+//import ApplicasterSDK
 
 extension PlayerView {
 
   var currentPlayable: PlayableSourceItem? {
-    return self.bitmovinPlayer.config.sourceItem as? PlayableSourceItem
+    return self.bitmovinPlayer?.config.sourceItem as? PlayableSourceItem
   }
 
   func trackTime(force: Bool, newTime: Double? = nil) {
+
+    guard let playerVar = self.bitmovinPlayer else {
+      return
+    }
 
     var lastTrack: Double = 0.0
 
@@ -32,14 +37,17 @@ extension PlayerView {
     guard let item = self.currentPlayable,
       let baseSkylarkUrlVar = self.baseSkylarkUrl else { return }
 
-    let duration = round(self.bitmovinPlayer.duration)
-    let currentTime = newTime ?? round(self.bitmovinPlayer.currentTime)
+    let duration = round(playerVar.duration)
+    let currentTime = newTime ?? round(playerVar.currentTime)
 
     let jsonBody = [
       "content_length": duration,
       "playhead_position": currentTime
     ]
 
+//    if let loginProvider = ZPLoginManager.sharedInstance.create() as? ZPLoginProviderUserDataProtocol {
+//      loginProvider.getUserToken()
+//    }
 
 //    ZPBaseLoginProvider
 
@@ -160,7 +168,7 @@ extension PlayerView {
 
   func performRemoteControlKey(key: Int) {
 
-    guard let key = UIPressType.init(rawValue: key) else { return }
+    guard let key = UIPress.PressType.init(rawValue: key) else { return }
 
     switch key {
     case .select, .playPause:
@@ -194,17 +202,6 @@ extension PlayerView {
     player.play()
     trackTime(force: true)
   }
-
-  //  private func stopPlayback() {
-  //
-  //    guard let player = self.bitmovinPlayer  else {
-  //      return
-  //    }
-  //
-  //    player.pause()
-  //    player.seek(time: 0.0)
-  //    trackTime(force: true, newTime: 0.0)
-  //  }
 
   private func seekForward() {
 
