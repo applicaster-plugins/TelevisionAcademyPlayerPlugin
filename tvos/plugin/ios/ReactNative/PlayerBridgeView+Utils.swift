@@ -163,7 +163,7 @@ extension PlayerView {
         return
     }
 
-    showSettingsEvent!(["showSettingsEvent": json])
+//     showSettingsEvent!(["showSettingsEvent": json])
   }
 
   func performRemoteControlKey(key: Int) {

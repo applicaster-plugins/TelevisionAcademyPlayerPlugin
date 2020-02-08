@@ -43,7 +43,6 @@ export default class SettingsView extends PureComponent {
 
   render() {
     const { settings, keyAction, onSettingSelected } = this.props;
-    // ToastAndroid.show("keyAction = " + keyAction, ToastAndroid.SHORT);
 
     let { showSettings, selectedIndex } = this.state;
 

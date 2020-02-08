@@ -3,17 +3,19 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		77EB1F020AA34CEB66E21C3D /* Pods_BitmovinRNPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C13909C75DC4DE7EFE1F414 /* Pods_BitmovinRNPlayer.framework */; };
-		F54F0CCF23DF2395005FAF49 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54F0CCE23DF2395005FAF49 /* AppDelegate.swift */; };
-		F54F0CD123DF2395005FAF49 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54F0CD023DF2395005FAF49 /* ViewController.swift */; };
-		F54F0CD423DF2395005FAF49 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F54F0CD223DF2395005FAF49 /* Main.storyboard */; };
-		F54F0CD623DF2397005FAF49 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F54F0CD523DF2397005FAF49 /* Assets.xcassets */; };
 		F54F0CE123DF2397005FAF49 /* BitmovinRNPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54F0CE023DF2397005FAF49 /* BitmovinRNPlayerTests.swift */; };
-		F54F0CEC23DF2397005FAF49 /* BitmovinRNPlayerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54F0CEB23DF2397005FAF49 /* BitmovinRNPlayerUITests.swift */; };
+		F5B5C21F23EAF1A5004BCCFF /* PlayerBridgeView+PlayerListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B5C21723EAF1A4004BCCFF /* PlayerBridgeView+PlayerListener.swift */; };
+		F5B5C22023EAF1A5004BCCFF /* PlayerBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B5C21923EAF1A4004BCCFF /* PlayerBridge.m */; };
+		F5B5C22123EAF1A5004BCCFF /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B5C21A23EAF1A4004BCCFF /* PlayerView.swift */; };
+		F5B5C22223EAF1A5004BCCFF /* PlayerBridgeView+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B5C21B23EAF1A4004BCCFF /* PlayerBridgeView+Utils.swift */; };
+		F5B5C22323EAF1A5004BCCFF /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B5C21C23EAF1A5004BCCFF /* Constants.swift */; };
+		F5B5C22423EAF1A5004BCCFF /* PlayableSourceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B5C21D23EAF1A5004BCCFF /* PlayableSourceItem.swift */; };
+		F5B5C22523EAF1A5004BCCFF /* PlayerBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B5C21E23EAF1A5004BCCFF /* PlayerBridge.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,17 +40,18 @@
 		6C13909C75DC4DE7EFE1F414 /* Pods_BitmovinRNPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BitmovinRNPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A31BD92653341ABD4E350046 /* Pods-BitmovinRNPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BitmovinRNPlayer.release.xcconfig"; path = "Target Support Files/Pods-BitmovinRNPlayer/Pods-BitmovinRNPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		F54F0CCB23DF2395005FAF49 /* BitmovinRNPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BitmovinRNPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		F54F0CCE23DF2395005FAF49 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		F54F0CD023DF2395005FAF49 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		F54F0CD323DF2395005FAF49 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		F54F0CD523DF2397005FAF49 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		F54F0CD723DF2397005FAF49 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F54F0CDC23DF2397005FAF49 /* BitmovinRNPlayerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BitmovinRNPlayerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F54F0CE023DF2397005FAF49 /* BitmovinRNPlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitmovinRNPlayerTests.swift; sourceTree = "<group>"; };
 		F54F0CE223DF2397005FAF49 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F54F0CE723DF2397005FAF49 /* BitmovinRNPlayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BitmovinRNPlayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F54F0CEB23DF2397005FAF49 /* BitmovinRNPlayerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitmovinRNPlayerUITests.swift; sourceTree = "<group>"; };
-		F54F0CED23DF2397005FAF49 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F5B5C21623EAF1A4004BCCFF /* BitmovinRNPlayer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BitmovinRNPlayer-Bridging-Header.h"; sourceTree = "<group>"; };
+		F5B5C21723EAF1A4004BCCFF /* PlayerBridgeView+PlayerListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlayerBridgeView+PlayerListener.swift"; sourceTree = "<group>"; };
+		F5B5C21923EAF1A4004BCCFF /* PlayerBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerBridge.m; sourceTree = "<group>"; };
+		F5B5C21A23EAF1A4004BCCFF /* PlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
+		F5B5C21B23EAF1A4004BCCFF /* PlayerBridgeView+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlayerBridgeView+Utils.swift"; sourceTree = "<group>"; };
+		F5B5C21C23EAF1A5004BCCFF /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		F5B5C21D23EAF1A5004BCCFF /* PlayableSourceItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayableSourceItem.swift; sourceTree = "<group>"; };
+		F5B5C21E23EAF1A5004BCCFF /* PlayerBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerBridge.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,16 +94,14 @@
 				0D599FBC21BE5FD19149815B /* Pods-BitmovinRNPlayer.debug.xcconfig */,
 				A31BD92653341ABD4E350046 /* Pods-BitmovinRNPlayer.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
 		F54F0CC223DF2395005FAF49 = {
 			isa = PBXGroup;
 			children = (
-				F54F0CCD23DF2395005FAF49 /* BitmovinRNPlayer */,
+				F55286A323E9ACED00D96038 /* ReactNative */,
 				F54F0CDF23DF2397005FAF49 /* BitmovinRNPlayerTests */,
-				F54F0CEA23DF2397005FAF49 /* BitmovinRNPlayerUITests */,
 				F54F0CCC23DF2395005FAF49 /* Products */,
 				AB41F4567291BD333E610FDE /* Pods */,
 				5D534F92D3B94BD6C9AE72BE /* Frameworks */,
@@ -117,18 +118,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		F54F0CCD23DF2395005FAF49 /* BitmovinRNPlayer */ = {
-			isa = PBXGroup;
-			children = (
-				F54F0CCE23DF2395005FAF49 /* AppDelegate.swift */,
-				F54F0CD023DF2395005FAF49 /* ViewController.swift */,
-				F54F0CD223DF2395005FAF49 /* Main.storyboard */,
-				F54F0CD523DF2397005FAF49 /* Assets.xcassets */,
-				F54F0CD723DF2397005FAF49 /* Info.plist */,
-			);
-			path = BitmovinRNPlayer;
-			sourceTree = "<group>";
-		};
 		F54F0CDF23DF2397005FAF49 /* BitmovinRNPlayerTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -138,13 +127,19 @@
 			path = BitmovinRNPlayerTests;
 			sourceTree = "<group>";
 		};
-		F54F0CEA23DF2397005FAF49 /* BitmovinRNPlayerUITests */ = {
+		F55286A323E9ACED00D96038 /* ReactNative */ = {
 			isa = PBXGroup;
 			children = (
-				F54F0CEB23DF2397005FAF49 /* BitmovinRNPlayerUITests.swift */,
-				F54F0CED23DF2397005FAF49 /* Info.plist */,
+				F5B5C21C23EAF1A5004BCCFF /* Constants.swift */,
+				F5B5C21D23EAF1A5004BCCFF /* PlayableSourceItem.swift */,
+				F5B5C21923EAF1A4004BCCFF /* PlayerBridge.m */,
+				F5B5C21E23EAF1A5004BCCFF /* PlayerBridge.swift */,
+				F5B5C21723EAF1A4004BCCFF /* PlayerBridgeView+PlayerListener.swift */,
+				F5B5C21B23EAF1A4004BCCFF /* PlayerBridgeView+Utils.swift */,
+				F5B5C21A23EAF1A4004BCCFF /* PlayerView.swift */,
+				F5B5C21623EAF1A4004BCCFF /* BitmovinRNPlayer-Bridging-Header.h */,
 			);
-			path = BitmovinRNPlayerUITests;
+			path = ReactNative;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -217,6 +212,7 @@
 				TargetAttributes = {
 					F54F0CCA23DF2395005FAF49 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1120;
 					};
 					F54F0CDB23DF2397005FAF49 = {
 						CreatedOnToolsVersion = 10.1;
@@ -253,8 +249,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F54F0CD623DF2397005FAF49 /* Assets.xcassets in Resources */,
-				F54F0CD423DF2395005FAF49 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,8 +315,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F54F0CD123DF2395005FAF49 /* ViewController.swift in Sources */,
-				F54F0CCF23DF2395005FAF49 /* AppDelegate.swift in Sources */,
+				F5B5C22223EAF1A5004BCCFF /* PlayerBridgeView+Utils.swift in Sources */,
+				F5B5C21F23EAF1A5004BCCFF /* PlayerBridgeView+PlayerListener.swift in Sources */,
+				F5B5C22523EAF1A5004BCCFF /* PlayerBridge.swift in Sources */,
+				F5B5C22323EAF1A5004BCCFF /* Constants.swift in Sources */,
+				F5B5C22423EAF1A5004BCCFF /* PlayableSourceItem.swift in Sources */,
+				F5B5C22123EAF1A5004BCCFF /* PlayerView.swift in Sources */,
+				F5B5C22023EAF1A5004BCCFF /* PlayerBridge.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,7 +337,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F54F0CEC23DF2397005FAF49 /* BitmovinRNPlayerUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,17 +354,6 @@
 			targetProxy = F54F0CE823DF2397005FAF49 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		F54F0CD223DF2395005FAF49 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				F54F0CD323DF2395005FAF49 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		F54F0CEE23DF2397005FAF49 /* Debug */ = {
@@ -489,6 +476,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = BitmovinRNPlayer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -497,6 +485,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.applicaster.BitmovinRNPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ReactNative/BitmovinRNPlayer-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 3;
 			};
@@ -508,6 +498,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = BitmovinRNPlayer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -516,6 +507,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.applicaster.BitmovinRNPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "ReactNative/BitmovinRNPlayer-Bridging-Header.h";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = 3;
 			};

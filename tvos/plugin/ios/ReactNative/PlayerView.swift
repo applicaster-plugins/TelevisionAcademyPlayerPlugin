@@ -6,6 +6,8 @@
 //  Copyright © 2020 Facebook. All rights reserved.
 //
 
+import Foundation
+import React
 import UIKit
 import BitmovinPlayer
 
@@ -17,18 +19,24 @@ class PlayerView: UIView {
 
   // skylark API
   var baseSkylarkUrl: NSString? = nil
+  var testVideoSrc: NSString? = nil
+
   var lastTrackDate: Date? = nil
   var task: URLSessionDataTask? = nil
   let trackTimeStep: Double = 5.0
 
   // react native bridge
-  @objc var showSettingsEvent: RCTDirectEventBlock?
+//   @objc var showSettingsEvent: RCTDirectEventBlock?
+
+  deinit {
+    self.bitmovinPlayer?.destroy()
+  }
 
   @objc var playableItem: NSDictionary? {
     didSet {
 
       guard let config = playableItem else { return }
-      
+
       guard let content = config[BridgeConstants.content.rawValue] as? NSDictionary,
         let sourceId = config[BridgeConstants.id.rawValue] as? NSString,
         let videoSrc = content[BridgeConstants.source.rawValue] as? NSString else {
@@ -42,7 +50,8 @@ class PlayerView: UIView {
         elapsedTime = elapsedTimeVar
       }
 
-      startPlayer(videoSrc as String, elapsedTime: elapsedTime, identifier: sourceId as String)
+      let src = self.testVideoSrc ?? videoSrc
+      startPlayer(src as String, elapsedTime: elapsedTime, identifier: sourceId as String)
     }
   }
 
@@ -58,7 +67,7 @@ class PlayerView: UIView {
     }
 
   }
-  
+
   @objc var pluginConfiguration: NSDictionary? {
     didSet {
 
@@ -72,11 +81,10 @@ class PlayerView: UIView {
       guard let testVideoSrc = config[BridgeConstants.testVideoSrc.rawValue] as? NSString else {
         return
       }
-
-      self.startPlayer(testVideoSrc as String, elapsedTime: nil, identifier: "test")
+      self.testVideoSrc = testVideoSrc
     }
   }
-  
+
   @objc var onSettingSelected: NSDictionary? {
     didSet {
 
@@ -94,9 +102,16 @@ class PlayerView: UIView {
       } else if type == BridgeConstants.LANGUAGE_SUBTITLE_TYPE {
         self.setSubtitle(subtitle: value as String)
       }
-
     }
   }
+
+  public init(eventDispatcher: RCTEventDispatcher) {
+    super.init(frame: .zero)
+  }
+
+  required public init?(coder aDecoder: NSCoder) {
+    return nil
+   }
 }
 
 //MARK:- Player
@@ -138,11 +153,11 @@ extension PlayerView {
       player.setAudio(trackIdentifier: audioQuality)
     }
   }
-  
+
   private func setVideoQuality(videoQuality: String) {
 //    self.bitmovinPlayer.maxSelectableBitrate =
   }
-  
+
   private func setSubtitle(subtitle: String) {
 
     guard let player = self.bitmovinPlayer else {

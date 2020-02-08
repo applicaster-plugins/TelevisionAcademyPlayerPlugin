@@ -9,8 +9,8 @@
   "author_name": "Vlad Sumtsov",
   "author_email": "vlad.sumtsov@corewillsoft.com",
   "dependency_name": "@applicaster/quick-brick-television-academy-bitmovin-player",
-  "dependency_version": "0.2.7",
-  "manifest_version": "0.2.7",
+  "dependency_version": "0.0.1",
+  "manifest_version": "0.0.1",
   "name": "Television Academy Player TV",
   "description": "Television Academy Bitmovin Player plugin for Apple TV on Quick Brick",
   "type": "player",
@@ -25,7 +25,7 @@
   "react_bundle_url": "https://",
   "extra_dependencies": [
     {
-      "DefaultPlayer": ":path => './quick_brick/node_modules/@applicaster/quick-brick-television-academy-bitmovin-player/ios/BitmovinPlayer.podspec'"
+      "BitmovinRNPlayer": ":path => './quick_brick/node_modules/@applicaster/quick-brick-television-academy-bitmovin-player/ios/BitmovinPlayer.podspec'"
     }
   ],
   "npm_dependencies": [],
