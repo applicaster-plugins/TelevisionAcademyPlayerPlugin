@@ -78,6 +78,7 @@ plugin/android/.idea
 .DS_Store
 .idea
 *.iml
+*.xcworkspace
 
 plugin/ios/Pods/
 plugin/android/android.iml

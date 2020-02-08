@@ -1,9 +1,9 @@
 // @flow
 import * as React from "react";
-import {DeviceEventEmitter, Dimensions, requireNativeComponent, StyleSheet, View} from "react-native";
+import {DeviceEventEmitter, Dimensions, requireNativeComponent, StyleSheet, View,} from "react-native";
 import {sendQuickBrickEvent} from "@applicaster/zapp-react-native-bridge/QuickBrick";
 
-const PlayerView = requireNativeComponent("PlayerBridge");
+const PlayerBridge = requireNativeComponent("PlayerBridge");
 
 type Props = {
   source: { uri: string },
@@ -61,24 +61,25 @@ export class VideoPlayer extends React.Component<Props, State> {
 
   render() {
     const { playableItem, pluginConfiguration } = this.props;
-    const { playerEvent } = this.state;
     let configurations = {};
     if (pluginConfiguration) {
       configurations = pluginConfiguration["configuration_json"] || {}
     }
 
+    //Temp solution. Need to understand how recieve configuration_json
+    configurations = {
+      "baseSkylarkUrl": "https://publicapi.feature.atas.ostm.io/api/v1",
+      "testVideoSrc": "http://bitmovin-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
+    };
+
     const { height, width } = Dimensions.get("window");
-    let settingsView = null;
     return (
       <React.Fragment>
         <View style={styles.container}>
-          <PlayerView
-            playableItem={playableItem}
+          <PlayerBridge
             style={{ height, width }}
-            pluginConfiguration={configurations}
-            onKeyChanged={playerEvent}
-          />
-          {settingsView}
+            playableItem={playableItem}
+            pluginConfiguration={configurations}/>
         </View>
       </React.Fragment>
     );
