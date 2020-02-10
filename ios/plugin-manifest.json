@@ -16,7 +16,7 @@
       "name": "Television Academy Player",
       "description": "iOS Plugin for Television Academy",
       "type": "player",
-      "screen": false,
+      "screen": true,
       "identifier": "TelevisionAcademyPlayerPlugin",
       "ui_builder_support": true,
       "dependency_name": "TelevisionAcademyIOSPlayerPlugin",
@@ -36,5 +36,22 @@
                   "key": "plist.BitmovinPlayerLicenseKey",
                   "tooltip_text": "Bitmovin player license key."
             }
-      ]
+      ],
+      "targets": ["mobile"],
+  "hooks": {
+    "fields": [
+      {
+        "group": true,
+        "label": "Before Load",
+        "folded": true,
+        "fields": [
+          {
+            "key": "preload_plugins",
+            "type": "preload_plugins_selector",
+            "label": "Select Plugins"
+          }
+        ]
+      }
+    ]
+  }
 }

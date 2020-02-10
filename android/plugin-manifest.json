@@ -16,7 +16,7 @@
   "name": "Television Academy Player",
   "description": "Android Plugin for Television Academy",
   "type": "player",
-  "screen": false,
+  "screen": true,
   "identifier": "TelevisionAcademyPlayerPlugin",
   "ui_builder_support": true,
   "dependency_name": "com.applicaster:television-academy-player-plugin",
@@ -34,5 +34,22 @@
       "key": "test_video_url",
       "tooltip_text": "Test URL to check Bitmovin player functionality."
     }
-  ]
+  ],
+  "targets": ["mobile"],
+  "hooks": {
+    "fields": [
+      {
+        "group": true,
+        "label": "Before Load",
+        "folded": true,
+        "fields": [
+          {
+            "key": "preload_plugins",
+            "type": "preload_plugins_selector",
+            "label": "Select Plugins"
+          }
+        ]
+      }
+    ]
+  }
 }
