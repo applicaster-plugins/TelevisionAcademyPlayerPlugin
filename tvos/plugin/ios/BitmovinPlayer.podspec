@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 	s.name = "BitmovinRNPlayer"
-	s.version = "0.0.2"
+	s.version = "0.3.0"
 	s.platform = :tvos, :ios
 	s.swift_versions = ['5.1']
 	s.summary = "ZappPlugins"
