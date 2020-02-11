@@ -82,6 +82,9 @@ class PlayerView: UIView {
         return
       }
       self.testVideoSrc = testVideoSrc
+      if (self.testVideoSrc?.length == 0) {
+        self.testVideoSrc = nil
+      }
     }
   }
 
