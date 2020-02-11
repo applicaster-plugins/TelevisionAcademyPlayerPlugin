@@ -2,6 +2,7 @@
 import * as React from "react";
 import {DeviceEventEmitter, Dimensions, requireNativeComponent, StyleSheet, View,} from "react-native";
 import {sendQuickBrickEvent} from "@applicaster/zapp-react-native-bridge/QuickBrick";
+import {sessionStorage} from "@applicaster/zapp-react-native-bridge/ZappStorage/SessionStorage";
 
 const PlayerBridge = requireNativeComponent("PlayerBridge");
 
@@ -16,6 +17,8 @@ type Props = {
 };
 
 type State = {};
+
+const NAMESPACE = "TelevisionAcademyPlayerPluginTV";
 
 export class VideoPlayer extends React.Component<Props, State> {
   constructor(props) {
@@ -49,6 +52,7 @@ export class VideoPlayer extends React.Component<Props, State> {
     DeviceEventEmitter.addListener("emitterOnError", this.onError);
     DeviceEventEmitter.addListener("onTvKeyDown", this.onKeyDown);
     sendQuickBrickEvent("blockTVKeyEmit", { blockTVKeyEmit: false });
+    this.timeout = setTimeout(this.retrievePluginConfiguration, 1);
   }
 
   componentWillUnmount() {
@@ -57,33 +61,40 @@ export class VideoPlayer extends React.Component<Props, State> {
     DeviceEventEmitter.removeListener("emitterOnError", this.onError);
     DeviceEventEmitter.removeListener("onTvKeyDown", this.onKeyDown);
     sendQuickBrickEvent("blockTVKeyEmit", { blockTVKeyEmit: true });
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
   }
 
   render() {
-    const { playableItem, pluginConfiguration } = this.props;
-    let configurations = {};
-    if (pluginConfiguration) {
-      configurations = pluginConfiguration["configuration_json"] || {}
-    }
-
-    //Temp solution. Need to understand how recieve configuration_json
-    configurations = {
-      "baseSkylarkUrl": "https://publicapi.feature.atas.ostm.io/api/v1",
-      "testVideoSrc": "http://bitmovin-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
-    };
-
+    const { playableItem } = this.props;
+    const { pluginConfiguration } = this.state;
     const { height, width } = Dimensions.get("window");
+
+    if (!pluginConfiguration) {
+      return <View/>
+    }
     return (
       <React.Fragment>
         <View style={styles.container}>
           <PlayerBridge
             style={{ height, width }}
             playableItem={playableItem}
-            pluginConfiguration={configurations}/>
+            pluginConfiguration={pluginConfiguration}/>
         </View>
       </React.Fragment>
     );
   }
+
+  retrievePluginConfiguration = async () => {
+    try {
+      const baseSkylarkUrl = await sessionStorage.getItem("baseSkylarkUrl", NAMESPACE);
+      const testVideoSrc = await sessionStorage.getItem("test_video_url", NAMESPACE);
+      this.setState({ pluginConfiguration: { baseSkylarkUrl, testVideoSrc } })
+    } catch (e) {
+      this.setState({ pluginConfiguration: {} })
+    }
+  };
 }
 
 const styles = StyleSheet.create({
