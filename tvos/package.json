@@ -1,0 +1,27 @@
+{
+  "name": "television-academy-quick-brick-player",
+  "private": true,
+  "workspaces": [
+    "plugin",
+    "development-app"
+  ],
+  "version": "0.3.0",
+  "description": "",
+  "main": "./src/index.js",
+  "scripts": {
+    "clean": "rm -rf ./node_modules ./plugin/node_modules yarn.lock && yarn",
+    "reset_dev_app": "rm -rf ./development-app/* ./development-app/.babelrc",
+    "zapplicaster": "node_modules/.bin/zapplicaster-cli prepare --yarn --destination-path development-app",
+    "start": "node_modules/.bin/react-native start --projectRoot ./development-app",
+    "publish_plugin": "yarn workspace @applicaster/quick-brick-television-academy-bitmovin-player publish"
+  },
+  "author": "vlad.sumtsov@corewillsoft.com",
+  "license": "MIT",
+  "devDependencies": {
+    "@applicaster/zapplicaster-cli": "^2.1.1"
+  },
+  "dependencies": {
+    "react": "16.8.3",
+    "react-native": "0.59.10"
+  }
+}
