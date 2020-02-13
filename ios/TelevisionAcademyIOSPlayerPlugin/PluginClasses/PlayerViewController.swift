@@ -18,8 +18,8 @@ class PlayerViewController: UIViewController {
     }
 
     // player utils
-    var player: BitmovinPlayer!
-    var playerView: BMPBitmovinPlayerView!
+    var player: BitmovinPlayer?
+    private var playerView: BMPBitmovinPlayerView?
     private var videoStartTime = Date()
     private var viewSwitchCounter = 0
 
@@ -34,6 +34,17 @@ class PlayerViewController: UIViewController {
     // analytics
     weak var analyticEventDelegate: PlaybackAnalyticEventsDelegate?
 
+    // player ui
+    fileprivate var customMessageHandler: CustomMessageHandler?
+
+    fileprivate var bitmovinUserInterfaceConfiguration: BitmovinUserInterfaceConfiguration {
+        let bitmovinUserInterfaceConfiguration = BitmovinUserInterfaceConfiguration()
+        customMessageHandler = CustomMessageHandler()
+        customMessageHandler?.delegate = self
+        bitmovinUserInterfaceConfiguration.customMessageHandler = customMessageHandler
+        return bitmovinUserInterfaceConfiguration
+    }
+
     required init(with items: [ZPPlayable]?, configurationJSON: NSDictionary?) {
         videos = items ?? []
         configuration = configurationJSON ?? [:]
@@ -46,7 +57,7 @@ class PlayerViewController: UIViewController {
     }
 
     deinit {
-        player.destroy()
+        player?.destroy()
         player = nil
         playerView = nil
     }
@@ -59,6 +70,19 @@ class PlayerViewController: UIViewController {
 
     private func setupPlayer() {
 
+        let config = PlayerConfiguration()
+
+        guard let cssURL = Bundle.main.url(forResource: "bitmovinplayer-ui", withExtension: "min.css"),
+            let jsURL = Bundle.main.url(forResource: "bitmovinplayer-ui", withExtension: "min.js") else {
+                print("Please specify the needed resources marked with TODO in ViewController.swift file.")
+                dismiss(animated: true, completion: nil)
+                return
+        }
+        config.styleConfiguration.playerUiCss = cssURL
+        config.styleConfiguration.playerUiJs = jsURL
+        config.styleConfiguration.userInterfaceConfiguration = bitmovinUserInterfaceConfiguration
+
+
         let sourceItems =
             videos.map { (playable) -> PlayableSourceItem in
                 let source = PlayableSourceItem(url: URL(string: playable.contentVideoURLPath())!)!
@@ -69,17 +93,15 @@ class PlayerViewController: UIViewController {
                 return source
         }
 
-        let config = PlayerConfiguration()
         config.playbackConfiguration.isAutoplayEnabled = true
         config.sourceItem = sourceItems.first
-        
+
         let player = BitmovinPlayer(configuration: config)
         player.add(listener: self)
 
         let playerView = BMPBitmovinPlayerView(player: player, frame: .zero)
         playerView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         playerView.frame = view.bounds
-        playerView.add(listener: self)
 
         view.addSubview(playerView)
         view.bringSubviewToFront(playerView)
@@ -94,28 +116,38 @@ class PlayerViewController: UIViewController {
     }
 }
 
-//MARK:- UserInterfaceListener
+// MARK: - CustomMessageHandlerDelegate
+extension PlayerViewController: CustomMessageHandlerDelegate {
+    func receivedSynchronousMessage(_ message: String, withData data: String?) -> String? {
+        if message == "closePlayer" {
+            player?.pause()
+            dismiss(animated: true)  {
+                self.player = nil
+                self.playerView = nil
+            }
+        }
 
-extension PlayerViewController: UserInterfaceListener {
-    func onControlsShow(_ event: ControlsShowEvent) {
-        // Show the close button
+        return nil
     }
-    func onControlsHide(_ event: ControlsHideEvent) {
-        // Hide the close button
+
+    func receivedAsynchronousMessage(_ message: String, withData data: String?) {
+        print("received Asynchronouse Messagse", message, data ?? "")
     }
 }
+
 
 //MARK:- PlayerListener
 
 extension PlayerViewController: PlayerListener {
 
     func onReady(_ event: ReadyEvent) {
-
-        guard let item = self.player.config.sourceItem as? PlayableSourceItem else { return }
+        
+        guard let playerVar = player,
+            let item = playerVar.config.sourceItem as? PlayableSourceItem else { return }
 
         if let elapsedTime = item.elapsedTime {
             let time = elapsedTime/Double(Constants.miliseconds.rawValue)
-            player.seek(time: time)
+            playerVar.seek(time: time)
             didStartPlaybackSession()
         }
 
@@ -124,7 +156,7 @@ extension PlayerViewController: PlayerListener {
         guard let currentPlayable = item.playable else { return }
 
         let analyticParamsBuilder = AnalyticParamsBuilder()
-        analyticParamsBuilder.duration = player.duration
+        analyticParamsBuilder.duration = playerVar.duration
         analyticParamsBuilder.isLive = currentPlayable.isLive()
 
         let params = currentPlayable.additionalAnalyticsParams.merge(analyticParamsBuilder.parameters)
@@ -133,11 +165,12 @@ extension PlayerViewController: PlayerListener {
     }
 
     func onPlay(_ event: PlayEvent) {
-        print("onPlay \(event.time)")
+
+        guard let playerVar = player else { return }
 
         let miliseconds = event.time * Double(Constants.miliseconds.rawValue)
-        let length = player.duration * Double(Constants.miliseconds.rawValue)
-        let uid = getCurrentPlayable()?.identifier
+        let length = playerVar.duration * Double(Constants.miliseconds.rawValue)
+        let uid = getCurrentPlayable?.identifier
 
         playerEventsManager.onPlayerEvent("play", properties: [
             "elapsed_time" : miliseconds,
@@ -148,11 +181,11 @@ extension PlayerViewController: PlayerListener {
 
     func onPaused(_ event: PausedEvent) {
 
-        print("onPaused \(event.time)")
+        guard let playerVar = player else { return }
 
         let miliseconds = event.time * Double(Constants.miliseconds.rawValue)
-        let length = player.duration * Double(Constants.miliseconds.rawValue)
-        let uid = getCurrentPlayable()?.identifier
+        let length = playerVar.duration * Double(Constants.miliseconds.rawValue)
+        let uid = getCurrentPlayable?.identifier
 
         playerEventsManager.onPlayerEvent("pause", properties: [
             "elapsed_time" : miliseconds,
@@ -162,8 +195,8 @@ extension PlayerViewController: PlayerListener {
 
         // analytics
 
-        guard let item = getCurrentPlayable(),
-            let playbackState = getPlaybackState() else {
+        guard let item = getCurrentPlayable,
+            let playbackState = getPlaybackState else {
                 return
         }
 
@@ -179,14 +212,16 @@ extension PlayerViewController: PlayerListener {
 
     func onTimeChanged(_ event: TimeChangedEvent) {
 
+        guard let playerVar = player else { return }
+
         if let timerVar = timer,
             timerVar.isValid { return }
 
         timer = Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
 
         let miliseconds = event.currentTime * Double(Constants.miliseconds.rawValue)
-        let length = player.duration * Double(Constants.miliseconds.rawValue)
-        let uid = getCurrentPlayable()?.identifier
+        let length = playerVar.duration * Double(Constants.miliseconds.rawValue)
+        let uid = getCurrentPlayable?.identifier
 
         playerEventsManager.onPlayerEvent("heartbeat", properties: [
             "elapsed_time" : miliseconds,
@@ -199,8 +234,8 @@ extension PlayerViewController: PlayerListener {
 
         // analytics
 
-        guard let item = getCurrentPlayable(),
-            let playbackState = getPlaybackState() else {
+        guard let item = getCurrentPlayable,
+            let playbackState = getPlaybackState else {
                 return
         }
 
@@ -218,8 +253,11 @@ extension PlayerViewController: PlayerListener {
     }
 
     func onPlaybackFinished(_ event: PlaybackFinishedEvent) {
-        let length = player.duration * Double(Constants.miliseconds.rawValue)
-        let uid = getCurrentPlayable()?.identifier
+
+        guard let playerVar = player else { return }
+
+        let length = playerVar.duration * Double(Constants.miliseconds.rawValue)
+        let uid = getCurrentPlayable?.identifier
 
         playerEventsManager.onPlayerEvent("heartbeat", properties: [
             "elapsed_time" : 0,
@@ -234,15 +272,15 @@ extension PlayerViewController: PlayerListener {
 extension PlayerViewController {
 
     func pause() {
-        player.pause()
+        player?.pause()
     }
 
     func stop() {
-        player.pause()
+        player?.pause()
     }
 
     func play() {
-        player.play()
+        player?.play()
     }
 
     func setInlineView(rootViewController: UIViewController, container: UIView) {
@@ -259,25 +297,28 @@ extension PlayerViewController {
 
         playerViewDidTransit(.fullscreen)
     }
-}
 
-//MARK:- General
+    var getCurrentPlayable: ZPPlayable? {
+        guard let playerVar = player else { return nil }
 
-extension PlayerViewController {
-
-    func getCurrentPlayable() -> ZPPlayable? {
-        guard let item = self.player.config.sourceItem as? PlayableSourceItem else { return nil }
+        guard let item = playerVar.config.sourceItem as? PlayableSourceItem else { return nil }
         return item.playable
     }
 
-    func getPlaybackState() -> Progress? {
-        return Progress(progress: player.currentTime, duration: player.duration)
+    var getPlaybackState: Progress? {
+        guard let playerVar = player else { return nil }
+        return Progress(progress: playerVar.currentTime, duration: playerVar.duration)
     }
+}
+
+//MARK:- Supporting
+
+extension PlayerViewController {
 
     private func playerViewDidTransit(_ playerScreenMode: PlayerScreenMode) {
 
-        guard let item = getCurrentPlayable(),
-            let playbackState = getPlaybackState() else {
+        guard let item = getCurrentPlayable,
+            let playbackState = getPlaybackState else {
                 return
         }
 

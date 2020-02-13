@@ -65,12 +65,13 @@ extension BitmovinPlayerPlugin: ZPPlayerProtocol {
     }
 
     public func pluggablePlayerIsPlaying() -> Bool {
-        return self.playerViewController!.player?.isPlaying ?? false
+        guard let playerVar = self.playerViewController.player else { return false }
+        return playerVar.isPlaying
     }
 
     public func presentPlayerFullScreen(_ rootViewController: UIViewController, configuration: ZPPlayerConfiguration?) {
         presentPlayerFullScreen(rootViewController, configuration: configuration) {
-            self.playerViewController?.player?.play()
+            self.playerViewController.player?.play()
         }
     }
 
@@ -88,8 +89,8 @@ extension BitmovinPlayerPlugin: ZPPlayerProtocol {
         // analytics
         analytics.screenMode = .fullscreen
 
-        if let item = playerViewController.getCurrentPlayable(),
-            let progress = playerViewController.getPlaybackState() {
+        if let item = playerViewController.getCurrentPlayable,
+            let progress = playerViewController.getPlaybackState {
             analytics.complete(item: item, progress: progress)
         }
     }
@@ -111,8 +112,8 @@ extension BitmovinPlayerPlugin: ZPPlayerProtocol {
         playerViewController.setFullscreenView()
 
         // analytics
-        if let item = playerViewController.getCurrentPlayable(),
-            let progress = playerViewController.getPlaybackState() {
+        if let item = playerViewController.getCurrentPlayable,
+            let progress = playerViewController.getPlaybackState {
             analytics.complete(item: item, progress: progress)
         }
     }

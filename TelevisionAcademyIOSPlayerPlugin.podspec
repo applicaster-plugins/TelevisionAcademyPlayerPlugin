@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
     s.name             = "TelevisionAcademyIOSPlayerPlugin"
-    s.version          = '0.1.0'
+    s.version          = '0.1.1'
     s.summary          = "BitmovinPlayer video player framework for Zapp iOS."
     s.description      = <<-DESC
                           BitmovinPlayer video player framework for Zapp iOS.
@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
     s.requires_arc = true
     s.swift_version = '5.0'
     s.static_framework = true
-    s.resources = []
+    s.resources = ['ios/TelevisionAcademyIOSPlayerPlugin/SupportingFiles/*']
     s.source_files = 'ios/TelevisionAcademyIOSPlayerPlugin/PluginClasses/*.swift','ios/TelevisionAcademyIOSPlayerPlugin/PluginClasses/**/*.swift'
     s.dependency 'ZappPlugins'
     s.dependency 'BitmovinPlayer','~> 2.37.0'

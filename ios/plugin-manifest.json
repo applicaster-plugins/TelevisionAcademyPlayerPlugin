@@ -12,15 +12,15 @@
       "platform": "ios",
       "author_name": "Anatolii Afanasiev",
       "author_email": "anatolii.afanasiev@corewillsoft.com",
-      "manifest_version": "0.1.0",
+      "manifest_version": "0.1.1",
       "name": "Television Academy Player",
       "description": "iOS Plugin for Television Academy",
       "type": "player",
-      "screen": false,
+      "screen": true,
       "identifier": "TelevisionAcademyPlayerPlugin",
       "ui_builder_support": true,
       "dependency_name": "TelevisionAcademyIOSPlayerPlugin",
-      "dependency_version": "0.1.0",
+      "dependency_version": "0.1.1",
       "min_zapp_sdk": "12.0.0",
       "deprecated_since_zapp_sdk": "",
       "unsupported_since_zapp_sdk": "",
@@ -36,5 +36,22 @@
                   "key": "plist.BitmovinPlayerLicenseKey",
                   "tooltip_text": "Bitmovin player license key."
             }
-      ]
+      ],
+      "targets": ["mobile"],
+  "hooks": {
+    "fields": [
+      {
+        "group": true,
+        "label": "Before Load",
+        "folded": true,
+        "fields": [
+          {
+            "key": "preload_plugins",
+            "type": "preload_plugins_selector",
+            "label": "Select Plugins"
+          }
+        ]
+      }
+    ]
+  }
 }
