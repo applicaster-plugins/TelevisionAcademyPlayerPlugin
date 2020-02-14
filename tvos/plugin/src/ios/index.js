@@ -23,7 +23,9 @@ const NAMESPACE = "TelevisionAcademyPlayerPluginTV";
 export class VideoPlayer extends React.Component<Props, State> {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      playerEvent: { keyCode: -1, code: "NONE" },
+    };
     this.onLoad = this.onLoad.bind(this);
     this.onError = this.onError.bind(this);
     this.onEnd = this.onEnd.bind(this);
@@ -41,10 +43,17 @@ export class VideoPlayer extends React.Component<Props, State> {
 
   onKeyDown(event) {
     this.setState({
+      ...this.state,
       playerEvent: event
     });
     return true;
   }
+
+  _onEnd = event => {
+    if (this.props.onEnd) {
+      this.props.onEnd(event.nativeEvent);
+    }
+  };
 
   componentDidMount() {
     DeviceEventEmitter.addListener("emitterOnLoad", this.onLoad);
@@ -71,16 +80,23 @@ export class VideoPlayer extends React.Component<Props, State> {
     const { pluginConfiguration } = this.state;
     const { height, width } = Dimensions.get("window");
 
+    const nativeProps = {
+      ...this.props,
+      ...{
+        style: { height, width },
+        playableItem,
+        pluginConfiguration,
+        onVideoEnd: this._onEnd,
+      }
+    };
+
     if (!pluginConfiguration) {
       return <View/>
     }
     return (
       <React.Fragment>
         <View style={styles.container}>
-          <PlayerBridge
-            style={{ height, width }}
-            playableItem={playableItem}
-            pluginConfiguration={pluginConfiguration}/>
+          <PlayerBridge {...nativeProps}/>
         </View>
       </React.Fragment>
     );

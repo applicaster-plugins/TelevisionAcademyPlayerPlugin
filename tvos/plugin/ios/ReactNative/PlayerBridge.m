@@ -15,5 +15,6 @@
 
 RCT_EXPORT_VIEW_PROPERTY(playableItem, NSDictionary);
 RCT_EXPORT_VIEW_PROPERTY(pluginConfiguration, NSDictionary);
+RCT_EXPORT_VIEW_PROPERTY(onVideoEnd, RCTBubblingEventBlock);
 
 @end
