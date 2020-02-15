@@ -10,6 +10,7 @@ import UIKit
 import BitmovinPlayer
 import ZappPlugins
 import PlayerEvents
+import GoogleCast
 
 class PlayerViewController: UIViewController {
 
@@ -50,6 +51,12 @@ class PlayerViewController: UIViewController {
         configuration = configurationJSON ?? [:]
 
         super.init(nibName: nil, bundle: nil)
+
+        // Initialize ChromeCast support for this application
+        BitmovinCastManager.initializeCasting()
+
+        // Initialize logging
+        GCKLogger.sharedInstance().delegate = self
     }
 
     required init?(coder: NSCoder) {
@@ -85,7 +92,13 @@ class PlayerViewController: UIViewController {
 
         let sourceItems =
             videos.map { (playable) -> PlayableSourceItem in
-                let source = PlayableSourceItem(url: URL(string: playable.contentVideoURLPath())!)!
+
+                // Create HLSSource as an HLS stream is provided
+                let hlsSource = HLSSource(url: URL(string: playable.contentVideoURLPath())!)
+
+                // Create a SourceItem
+
+                let source = PlayableSourceItem(hlsSource: hlsSource)
                 source.itemTitle = playable.playableName()
                 source.playable = playable
                 source.elapsedTime = playable.extensionsDictionary?["elapsed_time"] as? Double
@@ -95,6 +108,34 @@ class PlayerViewController: UIViewController {
 
         config.playbackConfiguration.isAutoplayEnabled = true
         config.sourceItem = sourceItems.first
+
+        // Provide a different SourceItem for casting. For local playback we use a HLS stream and for casting a
+        // Widevine protected DASH stream with the same content.
+        config.remoteControlConfiguration.prepareSource = {
+            (type: BMPRemoteControlType, sourceItem: SourceItem?) in
+
+            switch type {
+            case .cast:
+                // Create a different source for casting
+                guard let item = sourceItem,
+                    let streamUrl = item.url(forType: .HLS) else {
+                        return nil
+                }
+
+                // Create DASHSource as a DASH stream is used for casting
+                let dashSource = DASHSource(url: streamUrl)
+                let castSource = SourceItem(dashSource: dashSource)
+                castSource.itemTitle = sourceItem?.itemTitle
+                castSource.itemDescription = sourceItem?.itemDescription
+
+                return castSource
+
+            @unknown default:
+                break
+            }
+
+            return nil
+        }
 
         let player = BitmovinPlayer(configuration: config)
         player.add(listener: self)
@@ -338,5 +379,13 @@ extension PlayerViewController {
 
     @objc private func timerAction() {
         timer?.invalidate()
+    }
+}
+
+//MARK:- GCKLoggerDelegate
+
+extension PlayerViewController: GCKLoggerDelegate {
+    public func log(fromFunction function: UnsafePointer<Int8>, message: String) {
+        print("ChromeCast Log: \(function) \(message)")
     }
 }
