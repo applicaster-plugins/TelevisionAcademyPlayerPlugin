@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.applicaster.plugin.televisionacademyplayer">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -23,6 +24,7 @@
         </activity>
 
         <meta-data
+            tools:replace="android:value"
             android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
             android:value="com.bitmovin.player.cast.BitmovinCastOptionsProvider" />
 
