@@ -19,7 +19,8 @@ project.ext {
     compileSdkVersion = 29
     buildToolsVersion = '29.0.2'
     androidxVersion = '1.0.2'
-    androidSupportVersion = '27.0.2'
+    androidSupportVersion = '27.1.1'
+    playServicesCastVersion = '16.1.2'
 
     modulePrefix = ':'
 

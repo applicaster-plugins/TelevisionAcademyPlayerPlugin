@@ -7,14 +7,17 @@ import com.applicaster.analytics.AnalyticsAgentUtil
 import com.applicaster.model.APChannel
 import com.applicaster.model.APVodItem
 import com.applicaster.player.defaultplayer.BasePlayer
+import com.applicaster.plugin_manager.hook.ApplicationLoaderHookUpI
+import com.applicaster.plugin_manager.hook.HookListener
 import com.applicaster.plugin_manager.playersmanager.Playable
 import com.applicaster.plugin_manager.playersmanager.PlayableConfiguration
 import com.applicaster.plugin_manager.playersmanager.PlayerContract
 import com.bitmovin.player.BitmovinPlayerView
+import com.bitmovin.player.cast.BitmovinCastManager
 import com.bitmovin.player.config.media.SourceConfiguration
 import java.util.*
 
-class PlayerContract : BasePlayer() {
+class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
 
     companion object {
         const val KEY_PLAYABLE = "key_playable"
@@ -121,4 +124,14 @@ class PlayerContract : BasePlayer() {
             else -> AnalyticsAgentUtil.PLAY_VOD_ITEM
         }.let { AnalyticsAgentUtil.endTimedEvent(it) }
     }
+
+    override fun executeOnStartup(context: Context?, listener: HookListener?) {
+        listener?.onHookFinished()
+    }
+
+    override fun executeOnApplicationReady(context: Context?, listener: HookListener?) {
+        BitmovinCastManager.initialize()
+        listener?.onHookFinished()
+    }
+
 }
