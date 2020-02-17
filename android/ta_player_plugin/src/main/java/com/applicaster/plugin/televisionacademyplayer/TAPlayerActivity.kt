@@ -25,6 +25,11 @@ class TAPlayerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
+        window.setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
+        )
         BitmovinCastManager.getInstance().updateContext(this)
         playable = with(intent) { extras?.getSerializable(PlayerContract.KEY_PLAYABLE) as Playable }
         if (savedInstanceState != null) {
@@ -35,13 +40,26 @@ class TAPlayerActivity : AppCompatActivity() {
         initializePlayer()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val menuInflater = menuInflater
-        menuInflater.inflate(R.menu.menu_activity_main, menu)
-        // Adding a Cast Button in the menu bar
-        CastButtonFactory.setUpMediaRouteButton(this, menu, R.id.media_route_menu_item)
-        return true
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            this.window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    or View.SYSTEM_UI_FLAG_FULLSCREEN
+                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        }
     }
+
+//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+//        val menuInflater = menuInflater
+//        menuInflater.inflate(R.menu.ta_menu_activity_main, menu)
+//        var mediaRouteMenuItem = menu.findItem(R.id.ta_media_route_menu_item)
+//        Adding a Cast Button in the menu bar
+//        CastButtonFactory.setUpMediaRouteButton(this, menu, R.id.ta_media_route_menu_item)
+//        return true
+//    }
 
     override fun onStart() {
         super.onStart()
@@ -91,15 +109,17 @@ class TAPlayerActivity : AppCompatActivity() {
             sourceConfiguration.startOffset = currentProgress
             bitmovinPlayer?.config?.playbackConfiguration?.isAutoplayEnabled = true
             bitmovinPlayer?.load(sourceConfiguration)
-            EventListenerInteractor.addListeners(bitmovinPlayer, playable?.playableId ?: "")
+            EventListenerInteractor.addListeners(bitmovinPlayer, playable?.playableId
+                    ?: "")
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putDouble(KEY_CURRENT_PROGRESS, bitmovinPlayer?.currentTime ?: 0.0)
+        outState.putDouble(KEY_CURRENT_PROGRESS, bitmovinPlayer?.currentTime
+                ?: 0.0)
     }
 
     private fun getContentVideoUrl() =
-        if (ConfigurationRepository.testVideoUrl.isEmpty()) playable?.contentVideoURL else ConfigurationRepository.testVideoUrl
+            if (ConfigurationRepository.testVideoUrl.isEmpty()) playable?.contentVideoURL else ConfigurationRepository.testVideoUrl
 }

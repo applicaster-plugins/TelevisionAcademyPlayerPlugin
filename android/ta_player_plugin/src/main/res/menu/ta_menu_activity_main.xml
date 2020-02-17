@@ -4,9 +4,10 @@
 
     <!-- A Cast Button -->
     <item
-        android:id="@+id/media_route_menu_item"
+        android:id="@+id/ta_media_route_menu_item"
         android:orderInCategory="101"
         android:title="@string/media_route_menu_title"
-        app:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"
+        app:actionViewClass="android.support.v7.app.MediaRouteButton"
         app:showAsAction="always" />
+<!--    app:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"-->
 </menu>
