@@ -52,15 +52,6 @@ class TAPlayerActivity : AppCompatActivity() {
         }
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-//        val menuInflater = menuInflater
-//        menuInflater.inflate(R.menu.ta_menu_activity_main, menu)
-//        var mediaRouteMenuItem = menu.findItem(R.id.ta_media_route_menu_item)
-//        Adding a Cast Button in the menu bar
-//        CastButtonFactory.setUpMediaRouteButton(this, menu, R.id.ta_media_route_menu_item)
-//        return true
-//    }
-
     override fun onStart() {
         super.onStart()
         bitmovinPlayerView.onStart()
