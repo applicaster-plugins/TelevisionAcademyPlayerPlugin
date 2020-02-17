@@ -13,14 +13,15 @@
     }
   ],
   "dependency_name": "@applicaster/quick-brick-television-academy-bitmovin-player",
-  "dependency_version": "0.3.10",
+  "dependency_version": "0.3.12",
   "platform": "android",
   "author_name": "Vlad Sumtsov",
   "author_email": "vlad.sumtsov@corewillsoft.com",
-  "manifest_version": "0.3.10",
+  "manifest_version": "0.3.12",
   "name": "Television Academy Player TV",
   "description": "Television Academy Bitmovin Player plugin for Android TV on Quick Brick",
   "type": "player",
+  "screen": true,
   "identifier": "TelevisionAcademyPlayerPluginTV",
   "whitelisted_account_ids": [
     "5dcaba3ee648eb000eaf5c0a"
@@ -33,7 +34,7 @@
   "react_bundle_url": "",
   "extra_dependencies": [],
   "npm_dependencies": [
-    "@applicaster/quick-brick-television-academy-bitmovin-player@0.3.10"
+    "@applicaster/quick-brick-television-academy-bitmovin-player@0.3.12"
   ],
   "project_dependencies": [
     {
@@ -47,12 +48,30 @@
     {
       "key": "testVideoSrc",
       "type": "text",
-      "tooltip_text": "Url which will replace url from dsp for test purposes. Example: https://bitdash-a.akamaihd.net/content/sintel/sintel.mpd"
+      "tooltip_text": "Url which will replace url from dsp for test purposes. Example: https://bitdash-a.akamaihd.net/content/sintel/sintel.mpd",
+      "default": ""
     },
     {
       "key": "baseSkylarkUrl",
       "type": "text",
-      "tooltip_text": "Url for skylark to put video metadata. Example: https://publicapi.feature.atas.ostm.io/api/v1"
+      "tooltip_text": "Url for skylark to put video metadata. Example: https://publicapi.feature.atas.ostm.io/api/v1",
+      "default": ""
     }
-  ]
+  ],
+  "hooks": {
+    "fields": [
+      {
+        "group": true,
+        "label": "Before Load",
+        "folded": true,
+        "fields": [
+          {
+            "key": "preload_plugins",
+            "type": "preload_plugins_selector",
+            "label": "Select Plugins"
+          }
+        ]
+      }
+    ]
+  }
 }
