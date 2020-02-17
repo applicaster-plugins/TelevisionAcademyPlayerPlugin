@@ -12,7 +12,7 @@
   "platform": "android",
   "author_name": "D. Puzak",
   "author_email": "dmytro.puzak@corewillsoft.com",
-  "manifest_version": "0.0.16",
+  "manifest_version": "0.0.17",
   "name": "Television Academy Player",
   "description": "Android Plugin for Television Academy",
   "type": "player",
@@ -20,7 +20,7 @@
   "identifier": "TelevisionAcademyPlayerPlugin",
   "ui_builder_support": true,
   "dependency_name": "com.applicaster:television-academy-player-plugin",
-  "dependency_version": "0.0.16",
+  "dependency_version": "0.0.17",
   "whitelisted_account_ids": [
     "5dcaba3ee648eb000eaf5c0a"
   ],
