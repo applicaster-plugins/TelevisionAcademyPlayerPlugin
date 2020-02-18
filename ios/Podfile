@@ -11,7 +11,7 @@ target 'TelevisionAcademyIOSPlayerPlugin' do
   pod 'ZappPlugins'
   pod 'PlayerEvents', git: 'https://github.com/applicaster/PlayerEvents-iOS.git'
   pod 'BitmovinPlayer', git: 'https://github.com/bitmovin/bitmovin-player-ios-sdk-cocoapod.git', tag:'2.37.0'
-  pod 'google-cast-sdk'
+  pod 'ZappGeneralPluginChromecast', git: 'git@github.com:applicaster/ZappGeneralPluginChromecast-iOS.git'
 end
 
 post_install do |installer|

@@ -30,6 +30,8 @@ class PlayerViewController: UIViewController {
     let playerEventsManager = PlayerEventsManager()
 
     // general tools
+    private var viewAlreadyDidAppear = false
+
     var timer: Timer?
 
     // analytics
@@ -73,6 +75,22 @@ class PlayerViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .black
         setupPlayer()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        guard viewAlreadyDidAppear == false else {
+            return
+        }
+
+        if let delegate = ZAAppConnector.sharedInstance().chromecastDelegate,
+            delegate.isSynced() {
+            delegate.play(self.videos, currentPosition: 0)
+//            self.player?.pause()
+        }
+
+        viewAlreadyDidAppear = true
     }
 
     private func setupPlayer() {

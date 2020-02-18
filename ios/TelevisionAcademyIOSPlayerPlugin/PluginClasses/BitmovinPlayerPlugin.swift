@@ -8,6 +8,7 @@
 
 import Foundation
 import ZappPlugins
+import ZappGeneralPluginChromecast
 
 public class BitmovinPlayerPlugin: NSObject, ZPPluggableScreenProtocol {
 
