@@ -31,7 +31,7 @@ class TAPlayerActivity : AppCompatActivity() {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
         BitmovinCastManager.getInstance().updateContext(this)
-        playable = with(intent) { extras?.getSerializable(PlayerContract.KEY_PLAYABLE) as Playable }
+        playable = with(intent) { extras?.getSerializable(PlayerContract.KEY_PLAYABLE) as? Playable }
         if (savedInstanceState != null) {
             currentProgress = savedInstanceState.getDouble(KEY_CURRENT_PROGRESS, 0.0)
         }
@@ -107,9 +107,10 @@ class TAPlayerActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putDouble(KEY_CURRENT_PROGRESS, bitmovinPlayer?.currentTime
-                ?: 0.0)
+        outState.putDouble(KEY_CURRENT_PROGRESS, bitmovinPlayer?.currentTime ?: 0.0)
+        outState.putSerializable(PlayerContract.KEY_PLAYABLE, playable)
     }
+
 
     private fun getContentVideoUrl() =
             if (ConfigurationRepository.testVideoUrl.isEmpty()) playable?.contentVideoURL else ConfigurationRepository.testVideoUrl

@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.applicaster.plugin.televisionacademyplayer">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -6,7 +7,7 @@
 
     <application>
         <activity
-            android:name=".TAPlayerActivity"/>
+            android:name="com.applicaster.plugin.televisionacademyplayer.TAPlayerActivity"/>
 
         <activity
             android:name="com.bitmovin.player.cast.ExpandedControllerActivity"
@@ -18,11 +19,16 @@
             </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".TAPlayerActivity" />
+                android:value="com.applicaster.plugin.televisionacademyplayer.TAPlayerActivity" />
         </activity>
 
         <meta-data
             android:name="BITMOVIN_PLAYER_LICENSE_KEY"
             android:value="9909b054-c194-416e-b2bc-13f9a781431e" />
+
+        <meta-data
+            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+            android:value="com.bitmovin.player.cast.BitmovinCastOptionsProvider"
+            tools:replace="android:value"/>
     </application>
 </manifest>
