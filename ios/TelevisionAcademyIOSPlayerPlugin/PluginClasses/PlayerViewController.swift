@@ -10,6 +10,7 @@ import UIKit
 import BitmovinPlayer
 import ZappPlugins
 import PlayerEvents
+import GoogleCast
 
 class PlayerViewController: UIViewController {
 
@@ -29,6 +30,8 @@ class PlayerViewController: UIViewController {
     let playerEventsManager = PlayerEventsManager()
 
     // general tools
+    private var viewAlreadyDidAppear = false
+
     var timer: Timer?
 
     // analytics
@@ -50,6 +53,12 @@ class PlayerViewController: UIViewController {
         configuration = configurationJSON ?? [:]
 
         super.init(nibName: nil, bundle: nil)
+
+        // Initialize ChromeCast support for this application
+        BitmovinCastManager.initializeCasting()
+
+        // Initialize logging
+        GCKLogger.sharedInstance().delegate = self
     }
 
     required init?(coder: NSCoder) {
@@ -68,6 +77,22 @@ class PlayerViewController: UIViewController {
         setupPlayer()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        guard viewAlreadyDidAppear == false else {
+            return
+        }
+
+        if let delegate = ZAAppConnector.sharedInstance().chromecastDelegate,
+            delegate.isSynced() {
+            delegate.play(self.videos, currentPosition: 0)
+//            self.player?.pause()
+        }
+
+        viewAlreadyDidAppear = true
+    }
+
     private func setupPlayer() {
 
         let config = PlayerConfiguration()
@@ -82,9 +107,9 @@ class PlayerViewController: UIViewController {
         config.styleConfiguration.playerUiJs = jsURL
         config.styleConfiguration.userInterfaceConfiguration = bitmovinUserInterfaceConfiguration
 
-
         let sourceItems =
             videos.map { (playable) -> PlayableSourceItem in
+
                 let source = PlayableSourceItem(url: URL(string: playable.contentVideoURLPath())!)!
                 source.itemTitle = playable.playableName()
                 source.playable = playable
@@ -338,5 +363,13 @@ extension PlayerViewController {
 
     @objc private func timerAction() {
         timer?.invalidate()
+    }
+}
+
+//MARK:- GCKLoggerDelegate
+
+extension PlayerViewController: GCKLoggerDelegate {
+    public func log(fromFunction function: UnsafePointer<Int8>, message: String) {
+        print("ChromeCast Log: \(function) \(message)")
     }
 }
