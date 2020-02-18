@@ -2,13 +2,17 @@ package com.applicaster.plugin.televisionacademyplayer
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.app.MediaRouteButton
+import android.view.Menu
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import com.applicaster.analytics.AnalyticsAgentUtil
 import com.applicaster.plugin_manager.playersmanager.Playable
 import com.bitmovin.player.BitmovinPlayer
+import com.bitmovin.player.cast.BitmovinCastManager
 import com.bitmovin.player.config.media.SourceConfiguration
+import com.google.android.gms.cast.framework.CastButtonFactory
 import kotlinx.android.synthetic.main.activity_player.*
 
 class TAPlayerActivity : AppCompatActivity() {
@@ -23,10 +27,11 @@ class TAPlayerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
-        playable = with(intent) { extras?.getSerializable(PlayerContract.KEY_PLAYABLE) as Playable }
+        BitmovinCastManager.getInstance().updateContext(this)
+        playable = with(intent) { extras?.getSerializable(PlayerContract.KEY_PLAYABLE) as? Playable }
         if (savedInstanceState != null) {
             currentProgress = savedInstanceState.getDouble(KEY_CURRENT_PROGRESS, 0.0)
         }
@@ -95,15 +100,18 @@ class TAPlayerActivity : AppCompatActivity() {
             sourceConfiguration.startOffset = currentProgress
             bitmovinPlayer?.config?.playbackConfiguration?.isAutoplayEnabled = true
             bitmovinPlayer?.load(sourceConfiguration)
-            EventListenerInteractor.addListeners(bitmovinPlayer, playable?.playableId ?: "")
+            EventListenerInteractor.addListeners(bitmovinPlayer, playable?.playableId
+                    ?: "")
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putDouble(KEY_CURRENT_PROGRESS, bitmovinPlayer?.currentTime ?: 0.0)
+        outState.putSerializable(PlayerContract.KEY_PLAYABLE, playable)
     }
 
+
     private fun getContentVideoUrl() =
-        if (ConfigurationRepository.testVideoUrl.isEmpty()) playable?.contentVideoURL else ConfigurationRepository.testVideoUrl
+            if (ConfigurationRepository.testVideoUrl.isEmpty()) playable?.contentVideoURL else ConfigurationRepository.testVideoUrl
 }

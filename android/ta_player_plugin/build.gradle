@@ -35,6 +35,10 @@ dependencies {
     implementation 'com.bitmovin.player:playercore:2.37.0'
     implementation 'com.applicaster:PlayerEvents:0.0.+'
 
+    implementation "com.google.android.gms:play-services-cast-framework:$playServicesCastVersion" //only needed if Chromecast is used
+    implementation "com.android.support:mediarouter-v7:$androidSupportVersion"  //only needed if Chromecast is used
+    implementation "com.android.support:support-v4:$androidSupportVersion"  //only needed if Chromecast is used
+
     testImplementation 'junit:junit:4.12'
 
     // Applicaster SDK

@@ -4,9 +4,6 @@ apply plugin: 'kotlin-android-extensions'
 apply from: '../constants.gradle'
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "28.0.2"
-
     compileSdkVersion project.ext.compileSdkVersion
     buildToolsVersion project.ext.buildToolsVersion
 
