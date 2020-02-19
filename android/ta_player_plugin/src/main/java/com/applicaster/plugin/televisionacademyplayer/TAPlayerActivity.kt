@@ -1,18 +1,15 @@
 package com.applicaster.plugin.televisionacademyplayer
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.app.MediaRouteButton
-import android.view.Menu
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import com.applicaster.analytics.AnalyticsAgentUtil
 import com.applicaster.plugin_manager.playersmanager.Playable
 import com.bitmovin.player.BitmovinPlayer
 import com.bitmovin.player.cast.BitmovinCastManager
 import com.bitmovin.player.config.media.SourceConfiguration
-import com.google.android.gms.cast.framework.CastButtonFactory
 import kotlinx.android.synthetic.main.activity_player.*
 
 class TAPlayerActivity : AppCompatActivity() {
