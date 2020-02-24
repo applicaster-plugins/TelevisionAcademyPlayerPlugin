@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
 		 :tag => s.version.to_s
   }
 	s.dependency 'React'
-	s.dependency 'ZappPlugins','~> 11.4.3'
+	s.dependency 'ZappPlugins'
 	s.dependency 'ZappCore'
     s.dependency 'BitmovinPlayer','~> 2.37.0'
 	s.xcconfig = {
