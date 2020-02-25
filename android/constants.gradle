@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 project.ext {
-    releaseVersion = '0.0.19'
+    releaseVersion = '0.0.18'
     releaseVersionCode = 1
     minSdkVersion = 17
     targetSdkVersion = 29
@@ -20,7 +20,7 @@ project.ext {
     buildToolsVersion = '29.0.2'
     androidxVersion = '1.0.2'
     androidSupportVersion = '27.1.1'
-    playServicesCastVersion = '16.1.0'
+    playServicesCastVersion = '15.0.1'
 
     modulePrefix = ':'
 
