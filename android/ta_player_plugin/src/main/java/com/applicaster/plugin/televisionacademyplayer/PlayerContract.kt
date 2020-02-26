@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.view.ViewGroup
 import com.applicaster.analytics.AnalyticsAgentUtil
+import com.applicaster.atom.model.APAtomEntry
 import com.applicaster.model.APChannel
 import com.applicaster.model.APVodItem
 import com.applicaster.player.defaultplayer.BasePlayer
@@ -21,6 +22,7 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
 
     companion object {
         const val KEY_PLAYABLE = "key_playable"
+        const val KEY_CURRENT_PROGRESS = "KEY_CURRENT_PROGRESS"
     }
 
     lateinit var videoView: BitmovinPlayerView
@@ -36,17 +38,22 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
     }
 
     override fun playInFullscreen(
-        configuration: PlayableConfiguration?,
-        requestCode: Int,
-        context: Context
+            configuration: PlayableConfiguration?,
+            requestCode: Int,
+            context: Context
     ) {
         val intent = Intent(context, TAPlayerActivity::class.java)
         getContentPlayable().also {
             intent.putExtra(KEY_PLAYABLE, it)
+            intent.putExtra(KEY_CURRENT_PROGRESS, getProgress(it))
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             context.startActivity(intent)
         }
     }
+
+    private fun getProgress(it: Playable): Double =
+            (it as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get("playhead_position")?.toString()?.toDoubleOrNull()
+                    ?: 0.0
 
     override fun attachInline(viewGroup: ViewGroup) {
         super.attachInline(viewGroup)
@@ -98,26 +105,18 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
     override fun getPlayerType() = PlayerContract.PlayerType.Default
 
     private fun getContentPlayable(): Playable =
-        if (ConfigurationRepository.testVideoUrl.isEmpty()) {
-            firstPlayable
-        } else {
-            val item = APVodItem()
-            item.stream_url = ConfigurationRepository.testVideoUrl
-            item
-        }
+            if (ConfigurationRepository.testVideoUrl.isEmpty()) {
+                firstPlayable
+            } else {
+                val item = APVodItem()
+                item.stream_url = ConfigurationRepository.testVideoUrl
+                item
+            }
 
     private fun initializeAnalyticsEvent() {
         val playable = getContentPlayable()
         val params = playable.analyticsParams
-        try {
-            val channel = playable as APChannel
-            params["Program Name"] = channel.next_program.name
-        } catch (e: ClassCastException) {
-            e.printStackTrace()
-        } catch (e: NullPointerException) {
-            e.printStackTrace()
-        }
-
+        (playable as? APChannel)?.apply { params["Program Name"] = next_program.name }
         AnalyticsAgentUtil.generalPlayerInfoEvent(params)
         when {
             playable.isLive -> AnalyticsAgentUtil.PLAY_CHANNEL

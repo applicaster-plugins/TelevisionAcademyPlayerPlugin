@@ -6,6 +6,7 @@ import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import com.applicaster.analytics.AnalyticsAgentUtil
+import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.KEY_CURRENT_PROGRESS
 import com.applicaster.plugin_manager.playersmanager.Playable
 import com.bitmovin.player.BitmovinPlayer
 import com.bitmovin.player.cast.BitmovinCastManager
@@ -14,11 +15,10 @@ import kotlinx.android.synthetic.main.activity_player.*
 
 class TAPlayerActivity : AppCompatActivity() {
 
-    private val KEY_CURRENT_PROGRESS = "KEY_CURRENT_PROGRESS"
-
     private var bitmovinPlayer: BitmovinPlayer? = null
     private var playable: Playable? = null
     private var currentProgress: Double = 0.0
+//    private val testUrl = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +28,10 @@ class TAPlayerActivity : AppCompatActivity() {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
         BitmovinCastManager.getInstance().updateContext(this)
-        playable = with(intent) { extras?.getSerializable(PlayerContract.KEY_PLAYABLE) as? Playable }
+        intent.extras?.apply {
+            playable = getSerializable(PlayerContract.KEY_PLAYABLE) as? Playable
+            currentProgress = getDouble(KEY_CURRENT_PROGRESS, 0.0)
+        }
         if (savedInstanceState != null) {
             currentProgress = savedInstanceState.getDouble(KEY_CURRENT_PROGRESS, 0.0)
         }
@@ -93,7 +96,6 @@ class TAPlayerActivity : AppCompatActivity() {
 
             val sourceConfiguration = SourceConfiguration()
             sourceConfiguration.addSourceItem(this)
-//            sourceConfiguration.addSourceItem(vrSourceItem)
             sourceConfiguration.startOffset = currentProgress
             bitmovinPlayer?.config?.playbackConfiguration?.isAutoplayEnabled = true
             bitmovinPlayer?.load(sourceConfiguration)
@@ -104,7 +106,8 @@ class TAPlayerActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putDouble(KEY_CURRENT_PROGRESS, bitmovinPlayer?.currentTime ?: 0.0)
+        outState.putDouble(KEY_CURRENT_PROGRESS, bitmovinPlayer?.currentTime
+                ?: 0.0)
         outState.putSerializable(PlayerContract.KEY_PLAYABLE, playable)
     }
 
