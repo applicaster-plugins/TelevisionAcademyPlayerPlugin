@@ -90,7 +90,10 @@ export class VideoPlayer extends React.Component<Props, State> {
       }
     };
 
-    if (!pluginConfiguration) {
+    // TODO : THIS IS A WORKAROUND FOR FIX A BUG HAPPENS WHEN WHE CLICK BACK BUTTON ON REAL DEVICE
+    // TODO : WE NEED FIND A BETTER SOLUTION ON THAT PLUGIN !
+    const srcVideo = path(['content', 'src'], playableItem);
+    if (!pluginConfiguration || !srcVideo.includes('https://')) {
       return <View/>
     }
     return (
