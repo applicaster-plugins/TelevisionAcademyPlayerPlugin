@@ -20,7 +20,7 @@
   "identifier": "TelevisionAcademyPlayerPlugin",
   "ui_builder_support": true,
   "dependency_name": "com.applicaster:television-academy-player-plugin",
-  "dependency_version": "0.1.0",
+  "dependency_version": "0.1.1",
   "whitelisted_account_ids": [
     "5dcaba3ee648eb000eaf5c0a"
   ],
