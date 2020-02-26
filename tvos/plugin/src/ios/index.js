@@ -1,5 +1,6 @@
 // @flow
 import * as React from "react";
+import { path } from 'ramda'
 import {DeviceEventEmitter, Dimensions, requireNativeComponent, StyleSheet, View,} from "react-native";
 import {sendQuickBrickEvent} from "@applicaster/zapp-react-native-bridge/QuickBrick";
 import {sessionStorage} from "@applicaster/zapp-react-native-bridge/ZappStorage/SessionStorage";
