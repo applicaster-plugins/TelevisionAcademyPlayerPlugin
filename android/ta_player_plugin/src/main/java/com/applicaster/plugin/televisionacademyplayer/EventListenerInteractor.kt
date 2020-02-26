@@ -66,7 +66,7 @@ object EventListenerInteractor {
                     val timeOffsetMin = TimeUnit.MILLISECONDS.toSeconds(currentTimeMillis - eventTimeStamp)
                     if (timeOffsetMin >= TIME_OFFSET_IN_SEC) {
                         PlayerEventsManager.onPlayerEvent(
-                                "seek",
+                                "heartbeat",
                                 hashMapOf(
                                         Pair("playhead_position", event.timestamp),
                                         Pair("content_length", duration),
@@ -76,6 +76,18 @@ object EventListenerInteractor {
                         eventTimeStamp = currentTimeMillis
                     }
                 }
+            },
+            object : OnPlaybackFinishedListener {
+                override fun onPlaybackFinished(event: PlaybackFinishedEvent?) {
+                        PlayerEventsManager.onPlayerEvent(
+                            "heartbeat",
+                            hashMapOf(
+                                Pair("playhead_position", 0),
+                                Pair("content_length", duration),
+                                Pair("content_uid", contentId)
+                            )
+                        )
+                    }
             },
             object : OnErrorListener {
                 override fun onError(event: ErrorEvent) {

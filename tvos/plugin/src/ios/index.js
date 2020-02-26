@@ -1,5 +1,6 @@
 // @flow
 import * as React from "react";
+import { path } from 'ramda'
 import {DeviceEventEmitter, Dimensions, requireNativeComponent, StyleSheet, View,} from "react-native";
 import {sendQuickBrickEvent} from "@applicaster/zapp-react-native-bridge/QuickBrick";
 import {sessionStorage} from "@applicaster/zapp-react-native-bridge/ZappStorage/SessionStorage";
@@ -90,7 +91,10 @@ export class VideoPlayer extends React.Component<Props, State> {
       }
     };
 
-    if (!pluginConfiguration) {
+    // TODO : THIS IS A WORKAROUND FOR FIX A BUG HAPPENS WHEN WHE CLICK BACK BUTTON ON REAL DEVICE
+    // TODO : WE NEED FIND A BETTER SOLUTION ON THAT PLUGIN !
+    const srcVideo = path(['content', 'src'], playableItem);
+    if (!pluginConfiguration || !srcVideo.includes('https://')) {
       return <View/>
     }
     return (
