@@ -12,7 +12,7 @@
   "platform": "android",
   "author_name": "D. Puzak",
   "author_email": "dmytro.puzak@corewillsoft.com",
-  "manifest_version": "0.1.0",
+  "manifest_version": "0.1.1",
   "name": "Television Academy Player",
   "description": "Android Plugin for Television Academy",
   "type": "player",
@@ -24,7 +24,7 @@
   "whitelisted_account_ids": [
     "5dcaba3ee648eb000eaf5c0a"
   ],
-  "min_zapp_sdk": "12.0.0",
+  "min_zapp_sdk": "11.1.0",
 
   "deprecated_since_zapp_sdk": "",
   "unsupported_since_zapp_sdk": "",
