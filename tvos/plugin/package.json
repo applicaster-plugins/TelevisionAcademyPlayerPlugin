@@ -1,6 +1,6 @@
 {
   "name": "@applicaster/quick-brick-television-academy-bitmovin-player",
-  "version": "0.4.1",
+  "version": "0.4.3",
   "description": "",
   "main": "./src/index.js",
   "scripts": {
@@ -17,5 +17,8 @@
     "@applicaster/zapp-react-native-bridge": "^2.1.1",
     "@applicaster/zapp-react-native-redux": "^2.1.1",
     "@applicaster/zapp-react-native-ui-components": "^2.1.1"
+  },
+  "dependencies": {
+    "ramda": "^0.26.1"
   }
 }
