@@ -46,7 +46,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     }
 
     companion object {
-        private const val ELAPSED_TIME = "elapsed_time"
+        private const val ELAPSED_TIME = "playhead_position"
         private const val VIDEO_QUALITY_TYPE = "video_quality"
         private const val AUDIO_TRACK_TYPE = "audio_quality"
         private const val LANGUAGE_SUBTITLE_TYPE = "language_subtitle"
