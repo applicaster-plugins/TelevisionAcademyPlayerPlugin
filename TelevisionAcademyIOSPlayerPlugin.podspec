@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
     s.name             = "TelevisionAcademyIOSPlayerPlugin"
-    s.version          = '0.2.1'
+    s.version          = '0.2.3'
     s.summary          = "BitmovinPlayer video player framework for Zapp iOS."
     s.description      = <<-DESC
                           BitmovinPlayer video player framework for Zapp iOS.

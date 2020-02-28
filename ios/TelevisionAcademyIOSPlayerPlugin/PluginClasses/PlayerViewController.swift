@@ -113,8 +113,7 @@ class PlayerViewController: UIViewController {
                 let source = PlayableSourceItem(url: URL(string: playable.contentVideoURLPath())!)!
                 source.itemTitle = playable.playableName()
                 source.playable = playable
-                source.elapsedTime = playable.extensionsDictionary?["playhead_position"] as? Double
-
+                source.elapsedTime = convertToDouble(playable.extensionsDictionary?["playhead_position"])
                 return source
         }
 
@@ -363,6 +362,16 @@ extension PlayerViewController {
 
     @objc private func timerAction() {
         timer?.invalidate()
+    }
+    
+    private func convertToDouble(_ value : Any?) -> Double? {
+        var valueAsDouble = value as? Double
+        if let value = value as? Double {
+            valueAsDouble = Double(value)
+        }else if let value = value as? String {
+            valueAsDouble = Double(value)
+        }
+        return valueAsDouble
     }
 }
 
