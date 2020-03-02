@@ -189,32 +189,24 @@ extension PlayerViewController: PlayerListener {
     }
 
     func onPlay(_ event: PlayEvent) {
-
+        
         guard let playerVar = player else { return }
-
-        let miliseconds = event.time * Double(Constants.miliseconds.rawValue)
-        let length = playerVar.duration * Double(Constants.miliseconds.rawValue)
-        let uid = getCurrentPlayable?.identifier
-
+        
         playerEventsManager.onPlayerEvent("play", properties: [
-            "playhead_position" : miliseconds,
-            "content_length" : length,
-            "content_uid": uid
+            "playhead_position" : NSInteger(event.time),
+            "content_length" : NSInteger(playerVar.duration),
+            "content_uid": getCurrentPlayable?.identifier
         ])
     }
-
+    
     func onPaused(_ event: PausedEvent) {
-
+        
         guard let playerVar = player else { return }
-
-        let miliseconds = event.time * Double(Constants.miliseconds.rawValue)
-        let length = playerVar.duration * Double(Constants.miliseconds.rawValue)
-        let uid = getCurrentPlayable?.identifier
-
+        
         playerEventsManager.onPlayerEvent("pause", properties: [
-            "playhead_position" : miliseconds,
-            "content_length" : length,
-            "content_uid": uid
+            "playhead_position" : NSInteger(event.time),
+            "content_length" : NSInteger(playerVar.duration),
+            "content_uid": getCurrentPlayable?.identifier
         ])
 
         // analytics
@@ -243,14 +235,10 @@ extension PlayerViewController: PlayerListener {
 
         timer = Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
 
-        let miliseconds = event.currentTime * Double(Constants.miliseconds.rawValue)
-        let length = playerVar.duration * Double(Constants.miliseconds.rawValue)
-        let uid = getCurrentPlayable?.identifier
-
         playerEventsManager.onPlayerEvent("heartbeat", properties: [
-            "playhead_position" : miliseconds,
-            "content_length" : length,
-            "content_uid": uid
+            "playhead_position" : NSInteger(event.currentTime),
+            "content_length" : NSInteger(playerVar.duration),
+            "content_uid": getCurrentPlayable?.identifier
         ])
     }
 
@@ -275,18 +263,15 @@ extension PlayerViewController: PlayerListener {
         let params = item.additionalAnalyticsParams.merge(analyticParamsBuilder.parameters)
         analyticEventDelegate?.eventOccurred(.seek, params: params, timed: false)
     }
-
+    
     func onPlaybackFinished(_ event: PlaybackFinishedEvent) {
-
+        
         guard let playerVar = player else { return }
-
-        let length = playerVar.duration * Double(Constants.miliseconds.rawValue)
-        let uid = getCurrentPlayable?.identifier
-
+        
         playerEventsManager.onPlayerEvent("heartbeat", properties: [
             "playhead_position" : 0,
-            "content_length" : length,
-            "content_uid": uid
+            "content_length" : NSInteger(playerVar.duration),
+            "content_uid": getCurrentPlayable?.identifier
         ])
     }
 }
