@@ -193,8 +193,8 @@ extension PlayerViewController: PlayerListener {
         guard let playerVar = player else { return }
         
         playerEventsManager.onPlayerEvent("play", properties: [
-            "playhead_position" : NSInteger(event.time),
-            "content_length" : NSInteger(playerVar.duration),
+            "playhead_position" : Int(event.time),
+            "content_length" : Int(playerVar.duration),
             "content_uid": getCurrentPlayable?.identifier
         ])
     }
@@ -204,8 +204,8 @@ extension PlayerViewController: PlayerListener {
         guard let playerVar = player else { return }
         
         playerEventsManager.onPlayerEvent("pause", properties: [
-            "playhead_position" : NSInteger(event.time),
-            "content_length" : NSInteger(playerVar.duration),
+            "playhead_position" : Int(event.time),
+            "content_length" : Int(playerVar.duration),
             "content_uid": getCurrentPlayable?.identifier
         ])
 
@@ -236,8 +236,8 @@ extension PlayerViewController: PlayerListener {
         timer = Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
 
         playerEventsManager.onPlayerEvent("heartbeat", properties: [
-            "playhead_position" : NSInteger(event.currentTime),
-            "content_length" : NSInteger(playerVar.duration),
+            "playhead_position" : Int(event.currentTime),
+            "content_length" : Int(playerVar.duration),
             "content_uid": getCurrentPlayable?.identifier
         ])
     }
@@ -270,7 +270,7 @@ extension PlayerViewController: PlayerListener {
         
         playerEventsManager.onPlayerEvent("heartbeat", properties: [
             "playhead_position" : 0,
-            "content_length" : NSInteger(playerVar.duration),
+            "content_length" : Int(playerVar.duration),
             "content_uid": getCurrentPlayable?.identifier
         ])
     }
