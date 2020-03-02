@@ -38,7 +38,7 @@
   ],
   "project_dependencies": [
     {
-      "tva-quick-brick-player": "node_modules/@applicaster/quick-brick-television-academy-bitmovin-player/android"
+      "tva-quick-brick-player": "./quick_brick/node_modules/@applicaster/quick-brick-television-academy-bitmovin-player/android"
     }
   ],
   "targets": [
