@@ -45,8 +45,8 @@ extension PlayerViewController {
             return
         }
 
-        let duration = round(playerVar.duration)
-        let currentTime = newTime ?? round(playerVar.currentTime)
+        let duration = Int(playerVar.duration)
+        let currentTime = Int(newTime ?? (playerVar.currentTime))
 
         let jsonBody = [
             "content_length": duration,
