@@ -113,8 +113,7 @@ class PlayerViewController: UIViewController {
                 let source = PlayableSourceItem(url: URL(string: playable.contentVideoURLPath())!)!
                 source.itemTitle = playable.playableName()
                 source.playable = playable
-                source.elapsedTime = playable.extensionsDictionary?["elapsed_time"] as? Double
-
+                source.elapsedTime = convertToDouble(playable.extensionsDictionary?["playhead_position"])
                 return source
         }
 
@@ -198,7 +197,7 @@ extension PlayerViewController: PlayerListener {
         let uid = getCurrentPlayable?.identifier
 
         playerEventsManager.onPlayerEvent("play", properties: [
-            "elapsed_time" : miliseconds,
+            "playhead_position" : miliseconds,
             "content_length" : length,
             "content_uid": uid
         ])
@@ -213,7 +212,7 @@ extension PlayerViewController: PlayerListener {
         let uid = getCurrentPlayable?.identifier
 
         playerEventsManager.onPlayerEvent("pause", properties: [
-            "elapsed_time" : miliseconds,
+            "playhead_position" : miliseconds,
             "content_length" : length,
             "content_uid": uid
         ])
@@ -249,7 +248,7 @@ extension PlayerViewController: PlayerListener {
         let uid = getCurrentPlayable?.identifier
 
         playerEventsManager.onPlayerEvent("heartbeat", properties: [
-            "elapsed_time" : miliseconds,
+            "playhead_position" : miliseconds,
             "content_length" : length,
             "content_uid": uid
         ])
@@ -285,7 +284,7 @@ extension PlayerViewController: PlayerListener {
         let uid = getCurrentPlayable?.identifier
 
         playerEventsManager.onPlayerEvent("heartbeat", properties: [
-            "elapsed_time" : 0,
+            "playhead_position" : 0,
             "content_length" : length,
             "content_uid": uid
         ])
@@ -363,6 +362,16 @@ extension PlayerViewController {
 
     @objc private func timerAction() {
         timer?.invalidate()
+    }
+    
+    private func convertToDouble(_ value : Any?) -> Double? {
+        var valueAsDouble = value as? Double
+        if let value = value as? Double {
+            valueAsDouble = Double(value)
+        }else if let value = value as? String {
+            valueAsDouble = Double(value)
+        }
+        return valueAsDouble
     }
 }
 

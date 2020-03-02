@@ -67,7 +67,7 @@ extension ZPPlayablItem {
     static func createVASTVideo() -> ZPPlayable {
         return self.pluginPlayableItem(
             for: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
-            param: ["elapsed_time": 10]
+            param: ["playhead_position": 10]
         )
     }
 
