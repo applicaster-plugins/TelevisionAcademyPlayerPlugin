@@ -2,6 +2,7 @@ package com.applicaster.plugin.televisionacademyplayer
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -18,6 +19,7 @@ class TAPlayerActivity : AppCompatActivity() {
     private var bitmovinPlayer: BitmovinPlayer? = null
     private var playable: Playable? = null
     private var currentProgress: Double = 0.0
+    private val TAG = "TAPlayerActivity"
 //    private val testUrl = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd"
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -96,6 +98,7 @@ class TAPlayerActivity : AppCompatActivity() {
 
             val sourceConfiguration = SourceConfiguration()
             sourceConfiguration.addSourceItem(this)
+            Log.d(TAG, "SET currentProgress :: $currentProgress sec")
             sourceConfiguration.startOffset = currentProgress
             bitmovinPlayer?.config?.playbackConfiguration?.isAutoplayEnabled = true
             bitmovinPlayer?.load(sourceConfiguration)

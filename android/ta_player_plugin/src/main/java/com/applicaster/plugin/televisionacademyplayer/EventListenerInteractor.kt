@@ -1,6 +1,7 @@
 package com.applicaster.plugin.televisionacademyplayer
 
 
+import android.util.Log
 import com.applicaster.analytics.AnalyticsAgentUtil
 import com.applicaster.playerevents.PlayerEventsManager
 import com.bitmovin.player.BitmovinPlayer
@@ -9,6 +10,8 @@ import com.bitmovin.player.api.event.listener.*
 import java.util.concurrent.TimeUnit
 
 object EventListenerInteractor {
+    
+    private val TAG = "EventListenerInteractor" 
 
     var contentId = ""
     var duration = 0.0
@@ -16,25 +19,28 @@ object EventListenerInteractor {
     private val listeners = mutableListOf(
             object : OnPausedListener {
                 override fun onPaused(event: PausedEvent) {
+                    Log.d(TAG, "onPaused ${event.time.toLong()} sec")
                     PlayerEventsManager.onPlayerEvent(
                             "pause",
                             hashMapOf(
-                                    Pair("playhead_position", event.time),
-                                    Pair("content_length", duration),
+                                    Pair("playhead_position", event.time.toLong()),
+                                    Pair("content_length", duration.toLong()),
                                     Pair("content_uid", contentId)
                             )
                     )
+
                     AnalyticsAgentUtil.logPauseEvent(event.time.toLong())
                 }
 
             },
             object : OnPlayListener {
                 override fun onPlay(event: PlayEvent) {
+                    Log.d(TAG, "onPlay ${event.time.toLong()} sec")
                     PlayerEventsManager.onPlayerEvent(
                             "play",
                             hashMapOf(
-                                    Pair("playhead_position", event.time),
-                                    Pair("content_length", duration),
+                                    Pair("playhead_position", event.time.toLong()),
+                                    Pair("content_length", TimeUnit.MILLISECONDS.toSeconds(duration.toLong())),
                                     Pair("content_uid", contentId)
                             )
                     )
@@ -44,11 +50,12 @@ object EventListenerInteractor {
             },
             object : OnSeekListener {
                 override fun onSeek(event: SeekEvent) {
+                    Log.d(TAG, "onSeek ${event.seekTarget.toLong()} sec")
                     PlayerEventsManager.onPlayerEvent(
                             "seek",
                             hashMapOf(
-                                    Pair("playhead_position", event.position),
-                                    Pair("content_length", duration),
+                                    Pair("playhead_position", event.seekTarget.toLong()),
+                                    Pair("content_length", duration.toLong()),
                                     Pair("content_uid", contentId)
                             )
                     )
@@ -65,11 +72,12 @@ object EventListenerInteractor {
                     val currentTimeMillis = System.currentTimeMillis()
                     val timeOffsetMin = TimeUnit.MILLISECONDS.toSeconds(currentTimeMillis - eventTimeStamp)
                     if (timeOffsetMin >= TIME_OFFSET_IN_SEC) {
+                        Log.d(TAG, "onTimeChanged ${event.time.toLong()} sec")
                         PlayerEventsManager.onPlayerEvent(
                                 "heartbeat",
                                 hashMapOf(
-                                        Pair("playhead_position", event.timestamp),
-                                        Pair("content_length", duration),
+                                        Pair("playhead_position", event.time.toLong()),
+                                        Pair("content_length", duration.toLong()),
                                         Pair("content_uid", contentId)
                                 )
                         )
@@ -79,15 +87,16 @@ object EventListenerInteractor {
             },
             object : OnPlaybackFinishedListener {
                 override fun onPlaybackFinished(event: PlaybackFinishedEvent?) {
-                        PlayerEventsManager.onPlayerEvent(
+                    Log.d(TAG, "onPlaybackFinished ${0} sec")
+                    PlayerEventsManager.onPlayerEvent(
                             "heartbeat",
                             hashMapOf(
-                                Pair("playhead_position", 0),
-                                Pair("content_length", duration),
-                                Pair("content_uid", contentId)
+                                    Pair("playhead_position", 0),
+                                    Pair("content_length", duration.toLong()),
+                                    Pair("content_uid", contentId)
                             )
-                        )
-                    }
+                    )
+                }
             },
             object : OnErrorListener {
                 override fun onError(event: ErrorEvent) {
