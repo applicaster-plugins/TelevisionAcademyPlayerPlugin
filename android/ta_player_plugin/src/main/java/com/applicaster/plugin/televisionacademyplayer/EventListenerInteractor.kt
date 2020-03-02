@@ -40,7 +40,7 @@ object EventListenerInteractor {
                             "play",
                             hashMapOf(
                                     Pair("playhead_position", event.time.toLong()),
-                                    Pair("content_length", TimeUnit.MILLISECONDS.toSeconds(duration.toLong())),
+                                    Pair("content_length", duration.toLong()),
                                     Pair("content_uid", contentId)
                             )
                     )
@@ -106,6 +106,7 @@ object EventListenerInteractor {
     )
 
     fun addListeners(player: BitmovinPlayer?, contentId: String) {
+        Log.d(TAG, "EventManager providers ${PlayerEventsManager.playerEventsProviders.size}")
         this.contentId = contentId
         this.duration = player?.duration ?: 0.0
         listeners.forEach { player?.addEventListener(it) }
