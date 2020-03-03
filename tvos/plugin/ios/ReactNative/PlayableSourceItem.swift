@@ -12,10 +12,12 @@ import BitmovinPlayer
 class PlayableSourceItem: SourceItem {
     var elapsedTime: Double?
     var identifier: String
+    var contentGroup: String?
     
-    init?(sourceItemUrl: URL, elapsedTime: Double?, identifier: String) {
+    init?(sourceItemUrl: URL, elapsedTime: Double?, identifier: String, contentGroup: String?) {
         self.elapsedTime = elapsedTime
         self.identifier = identifier
+        self.contentGroup = contentGroup
         super.init(url: sourceItemUrl)
     }
 }

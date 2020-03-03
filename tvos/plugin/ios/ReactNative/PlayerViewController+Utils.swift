@@ -13,7 +13,6 @@ import ZappCore
 
 extension PlayerViewController {
 
-
     var currentPlayable: PlayableSourceItem? {
         return self.bitmovinPlayer?.config.sourceItem as? PlayableSourceItem
     }
@@ -47,10 +46,12 @@ extension PlayerViewController {
 
         let duration = Int(playerVar.duration)
         let currentTime = Int(newTime ?? (playerVar.currentTime))
-
+        let contentGroup = currentPlayable?.contentGroup ?? ""
+    
         let jsonBody = [
             "content_length": duration,
-            "playhead_position": currentTime
+            "playhead_position": currentTime,
+            "content_group": contentGroup
         ]
 
         let jsonData = try? JSONSerialization.data(withJSONObject: jsonBody, options: .prettyPrinted)
