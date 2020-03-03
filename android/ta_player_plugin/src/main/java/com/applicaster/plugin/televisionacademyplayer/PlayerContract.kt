@@ -23,6 +23,7 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
     companion object {
         const val KEY_PLAYABLE = "key_playable"
         const val KEY_CURRENT_PROGRESS = "KEY_CURRENT_PROGRESS"
+        const val KEY_CONTENT_GROUP = "KEY_CONTENT_GROUP"
     }
 
     lateinit var videoView: BitmovinPlayerView
@@ -46,6 +47,7 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
         getContentPlayable().also {
             intent.putExtra(KEY_PLAYABLE, it)
             intent.putExtra(KEY_CURRENT_PROGRESS, getProgress(it))
+            intent.putExtra(KEY_CONTENT_GROUP, getContentGroup(it))
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             context.startActivity(intent)
         }
@@ -55,10 +57,14 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
             (it as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get("playhead_position")?.toString()?.toDoubleOrNull()
                     ?: 0.0
 
+    private fun getContentGroup(it: Playable): String =
+            (it as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get("content_group")?.toString()
+                    ?: ""
+
     override fun attachInline(viewGroup: ViewGroup) {
         super.attachInline(viewGroup)
         viewGroup.addView(videoView)
-        EventListenerInteractor.addListeners(videoView.player, firstPlayable.playableId)
+        EventListenerInteractor.addListeners(videoView.player, firstPlayable.playableId, getContentGroup(getContentPlayable()))
     }
 
     override fun removeInline(viewGroup: ViewGroup) {
