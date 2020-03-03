@@ -18,10 +18,15 @@
   "author": "vlad.sumtsov@corewillsoft.com",
   "license": "MIT",
   "devDependencies": {
-    "@applicaster/zapplicaster-cli": "^2.1.1"
-  },
-  "dependencies": {
+    "@applicaster/zapplicaster-cli": "2.1.1",
     "react": "16.8.3",
     "react-native": "0.59.10"
+  },
+  "peerDependencies": {
+    "@applicaster/zapplicaster-cli": "2.1.1",
+    "react": "16.8.3",
+    "react-native": "0.59.10"
+  },
+  "dependencies": {
   }
 }
