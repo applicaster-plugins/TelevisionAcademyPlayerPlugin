@@ -14,6 +14,7 @@ enum BridgeConstants: String {
     case source = "src"
     case extensions = "extensions"
     case elapsedTime = "playhead_position"
+    case contentGroup = "content_group"
     case baseSkylarkUrl = "baseSkylarkUrl"
     case testVideoSrc = "testVideoSrc"
     case type = "type"

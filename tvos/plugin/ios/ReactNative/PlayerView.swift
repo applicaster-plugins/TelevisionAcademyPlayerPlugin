@@ -38,7 +38,7 @@ class PlayerView: UIView {
                 guard let playerViewController = playerViewController else {
                     return
                 }
-                var viewController = UIApplication.topViewController()
+                let viewController = UIApplication.topViewController()
                 viewController?.present(playerViewController, animated: true)
             } else {
                 playerViewController?.playableItem = playableItem
