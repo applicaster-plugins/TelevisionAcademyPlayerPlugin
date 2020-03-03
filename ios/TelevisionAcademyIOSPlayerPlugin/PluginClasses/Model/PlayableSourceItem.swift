@@ -12,5 +12,6 @@ import ZappPlugins
 
 class PlayableSourceItem: SourceItem {
     var elapsedTime: Double? = nil
+    var contentGroup: String? = ""
     var playable: ZPPlayable? = nil
 }
