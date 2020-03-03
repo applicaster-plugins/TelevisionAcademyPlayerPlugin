@@ -114,6 +114,7 @@ class PlayerViewController: UIViewController {
                 source.itemTitle = playable.playableName()
                 source.playable = playable
                 source.elapsedTime = convertToDouble(playable.extensionsDictionary?["playhead_position"])
+                source.contentGroup = playable.extensionsDictionary?["content_group"] as? String
                 return source
         }
 
@@ -170,8 +171,7 @@ extension PlayerViewController: PlayerListener {
             let item = playerVar.config.sourceItem as? PlayableSourceItem else { return }
 
         if let elapsedTime = item.elapsedTime {
-            let time = elapsedTime/Double(Constants.miliseconds.rawValue)
-            playerVar.seek(time: time)
+            playerVar.seek(time: elapsedTime)
             didStartPlaybackSession()
         }
 
@@ -190,23 +190,27 @@ extension PlayerViewController: PlayerListener {
 
     func onPlay(_ event: PlayEvent) {
         
-        guard let playerVar = player else { return }
+        guard let playerVar = player,
+            let item = playerVar.config.sourceItem as? PlayableSourceItem else { return }
         
         playerEventsManager.onPlayerEvent("play", properties: [
             "playhead_position" : Int(event.time),
             "content_length" : Int(playerVar.duration),
-            "content_uid": getCurrentPlayable?.identifier
+            "content_uid": getCurrentPlayable?.identifier,
+            "content_group": item.contentGroup
         ])
     }
     
     func onPaused(_ event: PausedEvent) {
         
-        guard let playerVar = player else { return }
+        guard let playerVar = player,
+             let sourceItem = playerVar.config.sourceItem as? PlayableSourceItem else { return }
         
         playerEventsManager.onPlayerEvent("pause", properties: [
             "playhead_position" : Int(event.time),
             "content_length" : Int(playerVar.duration),
-            "content_uid": getCurrentPlayable?.identifier
+            "content_uid": getCurrentPlayable?.identifier,
+            "content_group": sourceItem.contentGroup
         ])
 
         // analytics
@@ -228,8 +232,9 @@ extension PlayerViewController: PlayerListener {
 
     func onTimeChanged(_ event: TimeChangedEvent) {
 
-        guard let playerVar = player else { return }
-
+        guard let playerVar = player,
+             let sourceItem = playerVar.config.sourceItem as? PlayableSourceItem else { return }
+        
         if let timerVar = timer,
             timerVar.isValid { return }
 
@@ -238,7 +243,8 @@ extension PlayerViewController: PlayerListener {
         playerEventsManager.onPlayerEvent("heartbeat", properties: [
             "playhead_position" : Int(event.currentTime),
             "content_length" : Int(playerVar.duration),
-            "content_uid": getCurrentPlayable?.identifier
+            "content_uid": getCurrentPlayable?.identifier,
+            "content_group": sourceItem.contentGroup
         ])
     }
 
@@ -266,12 +272,14 @@ extension PlayerViewController: PlayerListener {
     
     func onPlaybackFinished(_ event: PlaybackFinishedEvent) {
         
-        guard let playerVar = player else { return }
+        guard let playerVar = player,
+             let sourceItem = playerVar.config.sourceItem as? PlayableSourceItem else { return }
         
         playerEventsManager.onPlayerEvent("heartbeat", properties: [
             "playhead_position" : 0,
             "content_length" : Int(playerVar.duration),
-            "content_uid": getCurrentPlayable?.identifier
+            "content_uid": getCurrentPlayable?.identifier,
+            "content_group": sourceItem.contentGroup
         ])
     }
 }

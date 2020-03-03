@@ -67,13 +67,14 @@ extension ZPPlayablItem {
     static func createVASTVideo() -> ZPPlayable {
         return self.pluginPlayableItem(
             for: "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
-            param: ["playhead_position": 10]
+            param: ["playhead_position": 10, "content_group": "test_content_group"]
         )
     }
 
     static func createTest(for url: String) -> ZPPlayable {
         return self.pluginPlayableItem(
-            for: url
+            for: url,
+            param: ["playhead_position": 10, "content_group": "test_content_group"]
         )
     }
 
