@@ -4,6 +4,8 @@ package com.applicaster.plugin.televisionacademyplayer
 import android.util.Log
 import com.applicaster.analytics.AnalyticsAgentUtil
 import com.applicaster.playerevents.PlayerEventsManager
+import com.applicaster.plugin_manager.login.LoginManager
+import com.applicaster.plugin_manager.playersmanager.Playable
 import com.bitmovin.player.BitmovinPlayer
 import com.bitmovin.player.api.event.data.*
 import com.bitmovin.player.api.event.listener.*
@@ -14,7 +16,12 @@ object EventListenerInteractor {
     private val TAG = "EventListenerInteractor" 
 
     var contentId = ""
-    var duration = 0.0
+    var contentGroup = ""
+    val duration : Double
+        get() =   player?.duration ?: 0.toDouble()
+
+
+    var player: BitmovinPlayer? = null
 
     private val listeners = mutableListOf(
             object : OnPausedListener {
@@ -25,7 +32,8 @@ object EventListenerInteractor {
                             hashMapOf(
                                     Pair("playhead_position", event.time.toLong()),
                                     Pair("content_length", duration.toLong()),
-                                    Pair("content_uid", contentId)
+                                    Pair("content_uid", contentId),
+                                    Pair("content_group", contentGroup)
                             )
                     )
 
@@ -41,7 +49,8 @@ object EventListenerInteractor {
                             hashMapOf(
                                     Pair("playhead_position", event.time.toLong()),
                                     Pair("content_length", duration.toLong()),
-                                    Pair("content_uid", contentId)
+                                    Pair("content_uid", contentId),
+                                    Pair("content_group", contentGroup)
                             )
                     )
                     AnalyticsAgentUtil.logPlayEvent(event.time.toLong())
@@ -56,7 +65,8 @@ object EventListenerInteractor {
                             hashMapOf(
                                     Pair("playhead_position", event.seekTarget.toLong()),
                                     Pair("content_length", duration.toLong()),
-                                    Pair("content_uid", contentId)
+                                    Pair("content_uid", contentId),
+                                    Pair("content_group", contentGroup)
                             )
                     )
                     AnalyticsAgentUtil.logSeekEndEvent(event.position.toInt())
@@ -78,7 +88,8 @@ object EventListenerInteractor {
                                 hashMapOf(
                                         Pair("playhead_position", event.time.toLong()),
                                         Pair("content_length", duration.toLong()),
-                                        Pair("content_uid", contentId)
+                                        Pair("content_uid", contentId),
+                                        Pair("content_group", contentGroup)
                                 )
                         )
                         eventTimeStamp = currentTimeMillis
@@ -93,7 +104,8 @@ object EventListenerInteractor {
                             hashMapOf(
                                     Pair("playhead_position", 0),
                                     Pair("content_length", duration.toLong()),
-                                    Pair("content_uid", contentId)
+                                    Pair("content_uid", contentId),
+                                    Pair("content_group", contentGroup)
                             )
                     )
                 }
@@ -105,16 +117,17 @@ object EventListenerInteractor {
             }
     )
 
-    fun addListeners(player: BitmovinPlayer?, contentId: String) {
+    fun addListeners(player: BitmovinPlayer?, contentId: String, contentGroup: String) {
         Log.d(TAG, "EventManager providers ${PlayerEventsManager.playerEventsProviders.size}")
+        this.contentGroup = contentGroup
         this.contentId = contentId
-        this.duration = player?.duration ?: 0.0
+        this.player = player
         listeners.forEach { player?.addEventListener(it) }
     }
 
     fun removeListeners(player: BitmovinPlayer?) {
         this.contentId = ""
-        this.duration = 0.0
+        this.player = null
         listeners.forEach { player?.removeEventListener(it) }
     }
 }
