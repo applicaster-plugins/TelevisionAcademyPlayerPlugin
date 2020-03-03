@@ -7,6 +7,7 @@ import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import com.applicaster.analytics.AnalyticsAgentUtil
+import com.applicaster.atom.model.APAtomEntry
 import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.KEY_CURRENT_PROGRESS
 import com.applicaster.plugin_manager.playersmanager.Playable
 import com.bitmovin.player.BitmovinPlayer
@@ -21,6 +22,9 @@ class TAPlayerActivity : AppCompatActivity() {
     private var currentProgress: Double = 0.0
     private val TAG = "TAPlayerActivity"
 //    private val testUrl = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd"
+
+    private fun getContentGroup(it: Playable?): String =
+            (it as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get("content_group")?.toString() ?: ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,7 +107,7 @@ class TAPlayerActivity : AppCompatActivity() {
             bitmovinPlayer?.config?.playbackConfiguration?.isAutoplayEnabled = true
             bitmovinPlayer?.load(sourceConfiguration)
             EventListenerInteractor.addListeners(bitmovinPlayer, playable?.playableId
-                    ?: "")
+                    ?: "", getContentGroup(playable))
         }
     }
 

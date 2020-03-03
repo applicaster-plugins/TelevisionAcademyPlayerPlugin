@@ -51,14 +51,17 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
         }
     }
 
-    private fun getProgress(it: Playable): Double =
+    private fun getProgress(it: Playable?): Double =
             (it as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get("playhead_position")?.toString()?.toDoubleOrNull()
                     ?: 0.0
+
+    private fun getContentGroup(it: Playable?): String =
+            (it as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get("content_group")?.toString() ?: ""
 
     override fun attachInline(viewGroup: ViewGroup) {
         super.attachInline(viewGroup)
         viewGroup.addView(videoView)
-        EventListenerInteractor.addListeners(videoView.player, firstPlayable.playableId)
+        EventListenerInteractor.addListeners(videoView.player, firstPlayable.playableId, getContentGroup(firstPlayable))
     }
 
     override fun removeInline(viewGroup: ViewGroup) {
