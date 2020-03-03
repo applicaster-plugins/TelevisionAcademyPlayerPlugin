@@ -126,6 +126,7 @@ object EventListenerInteractor {
     }
 
     fun removeListeners(player: BitmovinPlayer?) {
+        this.contentGroup = ""
         this.contentId = ""
         this.player = null
         listeners.forEach { player?.removeEventListener(it) }
