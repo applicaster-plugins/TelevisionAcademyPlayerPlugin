@@ -67,7 +67,7 @@ repositories {
 
 //SDK Manager
 buildscript {
-    ext.kotlin_version = '1.3.10'
+    ext.kotlin_version = '1.2.51'
     repositories {
         jcenter()
         google()
@@ -83,7 +83,7 @@ buildscript {
 
 dependencies {
     // Applicaster SDK
-    def applicasterSDKPath = 'com.applicaster:applicaster-android-sdk:4.1.0'
+    def applicasterSDKPath = 'com.applicaster:applicaster-android-sdk:5.0.1'
 
     // Check if an open SDK is defined - if not use the closed one.
     def devSDK = findProject(':applicaster-android-sdk')
@@ -136,7 +136,7 @@ buildscript {
         maven { url 'http://bitmovin.bintray.com/maven' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.2'
+        classpath 'com.android.tools.build:gradle:3.1.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
