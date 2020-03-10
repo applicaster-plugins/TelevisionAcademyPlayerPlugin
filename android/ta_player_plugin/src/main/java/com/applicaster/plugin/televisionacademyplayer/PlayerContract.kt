@@ -2,9 +2,11 @@ package com.applicaster.plugin.televisionacademyplayer
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.ViewGroup
 import com.applicaster.analytics.AnalyticsAgentUtil
 import com.applicaster.atom.model.APAtomEntry
+import com.applicaster.genericchromecast.ExpandedControlsActivity
 import com.applicaster.model.APChannel
 import com.applicaster.model.APVodItem
 import com.applicaster.player.defaultplayer.BasePlayer
@@ -16,6 +18,8 @@ import com.applicaster.plugin_manager.playersmanager.PlayerContract
 import com.bitmovin.player.BitmovinPlayerView
 import com.bitmovin.player.cast.BitmovinCastManager
 import com.bitmovin.player.config.media.SourceConfiguration
+import com.facebook.react.packagerconnection.ReconnectingWebSocket
+import com.google.android.gms.cast.Cast
 import java.util.*
 
 class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
@@ -135,7 +139,12 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
     }
 
     override fun executeOnApplicationReady(context: Context?, listener: HookListener?) {
-        BitmovinCastManager.initialize()
+        Log.d("TAG", "executeOnApplicationReady")
+        BitmovinCastManager.getInstance().addMessageReceivedCallback { var1, var2, var3 ->
+            Log.d("TAG", "addMessageReceivedCallback var1 : $var1 var2 : $var2 var3 % $var3 ")
+        }
+        BitmovinCastManager.initialize("F02DA75A", "some_meessage_namespace", ExpandedControlsActivity::class.java)
+        BitmovinCastManager.getInstance().updateContext(context)
         listener?.onHookFinished()
     }
 
