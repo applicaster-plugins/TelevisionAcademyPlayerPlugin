@@ -92,7 +92,14 @@ class PlayerViewController: UIViewController {
 
         viewAlreadyDidAppear = true
     }
-
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        player?.destroy()
+        player = nil
+        playerView = nil
+    }
+    
     private func setupPlayer() {
 
         let config = PlayerConfiguration()
