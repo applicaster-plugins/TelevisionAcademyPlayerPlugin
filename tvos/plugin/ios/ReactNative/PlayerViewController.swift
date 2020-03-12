@@ -24,7 +24,7 @@ class PlayerViewController: UIViewController {
     var baseSkylarkUrl: NSString?
     var testVideoSrc: NSString?
 
-    var lastTrackDate: Date? = nil
+    var lastTrackDate: Date = Date(timeIntervalSince1970: 0)
     var task: URLSessionDataTask? = nil
     let trackTimeStep: Double = 5.0
 

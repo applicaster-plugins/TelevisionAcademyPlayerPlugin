@@ -23,11 +23,7 @@ extension PlayerViewController {
             return
         }
 
-        var lastTrack: Double = 0.0
-
-        if let last = self.lastTrackDate {
-            lastTrack = Date().timeIntervalSince(last)
-        }
+        let lastTrack: Double = Date().timeIntervalSince(self.lastTrackDate)
 
         let needUpdate = lastTrack > 5.0
 
@@ -47,7 +43,7 @@ extension PlayerViewController {
         let duration = Int(playerVar.duration)
         let currentTime = Int(newTime ?? (playerVar.currentTime))
         let contentGroup = currentPlayable?.contentGroup ?? ""
-    
+
         let jsonBody : [String:Any] = [
             "content_length": duration,
             "playhead_position": currentTime,
@@ -60,7 +56,9 @@ extension PlayerViewController {
         let url = URL(string: putApi)!
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
-        request.addValue("Bearer " + token, forHTTPHeaderField: "user_token")
+        request.addValue("Bearer " + token, forHTTPHeaderField: "Authorization")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.httpBody = jsonData
 
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
