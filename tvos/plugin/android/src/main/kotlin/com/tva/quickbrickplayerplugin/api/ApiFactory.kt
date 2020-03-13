@@ -20,7 +20,9 @@ class ApiFactory(
                 .addInterceptor {
                     val original = it.request()
                     val request = original.newBuilder()
-                            .header("user_token", "Bearer $accessToken")
+                            .header("Authorization", "Bearer $accessToken")
+                            .header("Content-Type", "application/json")
+                            .header("Accept", "application/json")
                             .method(original.method(), original.body())
                             .build()
 
