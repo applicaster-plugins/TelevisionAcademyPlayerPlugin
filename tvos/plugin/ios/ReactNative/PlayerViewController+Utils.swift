@@ -36,9 +36,10 @@ extension PlayerViewController {
                 return
         }
 
-        guard let token = FacadeConnector.connector?.storage?.localStorageValue(for: "token", namespace: "login")  else {
+        guard var token = FacadeConnector.connector?.storage?.localStorageValue(for: "token", namespace: "login")  else {
             return
         }
+
         //Temprorary fix for incorrect store into the local storage.
         if (token.hasPrefix("\"")) {
             token = String(token.dropFirst(1))
@@ -46,7 +47,6 @@ extension PlayerViewController {
         if (token.hasSuffix("\"")) {
             token = String(token.dropLast(1))
         }
-
         let duration = Int(playerVar.duration)
         let currentTime = Int(newTime ?? (playerVar.currentTime))
         let contentGroup = currentPlayable?.contentGroup ?? ""
