@@ -1,12 +1,12 @@
 // @flow
 import * as React from "react";
-import { path } from 'ramda'
+import {path} from 'ramda'
 import {DeviceEventEmitter, Dimensions, requireNativeComponent, StyleSheet, View,} from "react-native";
 import {sendQuickBrickEvent} from "@applicaster/zapp-react-native-bridge/QuickBrick";
 import {sessionStorage} from "@applicaster/zapp-react-native-bridge/ZappStorage/SessionStorage";
+import {withNavigator} from '@applicaster/zapp-react-native-ui-components/Decorators/Navigator/';
 
 const PlayerBridge = requireNativeComponent("PlayerBridge");
-
 type Props = {
   source: { uri: string },
   item: { content: {} },
@@ -16,12 +16,10 @@ type Props = {
   playableItem: {},
   pluginConfiguration: {}
 };
-
 type State = {};
-
 const NAMESPACE = "TelevisionAcademyPlayerPluginTV";
 
-export class VideoPlayer extends React.Component<Props, State> {
+class VideoPlayerComponent extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
@@ -51,8 +49,10 @@ export class VideoPlayer extends React.Component<Props, State> {
   }
 
   _onEnd = event => {
+    const { navigator } = this.props
     if (this.props.onEnd) {
       this.props.onEnd(event.nativeEvent);
+      navigator.canGoBack() && navigator.goBack();
     }
   };
 
@@ -80,7 +80,6 @@ export class VideoPlayer extends React.Component<Props, State> {
     const { playableItem } = this.props;
     const { pluginConfiguration } = this.state;
     const { height, width } = Dimensions.get("window");
-
     const nativeProps = {
       ...this.props,
       ...{
@@ -90,7 +89,6 @@ export class VideoPlayer extends React.Component<Props, State> {
         onVideoEnd: this._onEnd,
       }
     };
-
     // TODO : THIS IS A WORKAROUND FOR FIX A BUG HAPPENS WHEN WHE CLICK BACK BUTTON ON REAL DEVICE
     // TODO : WE NEED FIND A BETTER SOLUTION ON THAT PLUGIN !
     const srcVideo = path(['content', 'src'], playableItem);
@@ -125,3 +123,4 @@ const styles = StyleSheet.create({
     height: '100%'
   },
 });
+export const VideoPlayer = withNavigator(VideoPlayerComponent);

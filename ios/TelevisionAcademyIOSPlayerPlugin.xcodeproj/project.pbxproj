@@ -14,7 +14,6 @@
 		B774E2F823B5FFFF006398B5 /* BitmovinPlayerPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = B774E2F723B5FFFF006398B5 /* BitmovinPlayerPlugin.swift */; };
 		B777B6ED23DF47A4002BD9F2 /* bitmovinplayer-ui.min.js in Resources */ = {isa = PBXBuildFile; fileRef = B777B6EA23DF47A3002BD9F2 /* bitmovinplayer-ui.min.js */; };
 		B777B6EE23DF47A4002BD9F2 /* bitmovinplayer-ui.min.css in Resources */ = {isa = PBXBuildFile; fileRef = B777B6EB23DF47A3002BD9F2 /* bitmovinplayer-ui.min.css */; };
-		B777B6EF23DF47A4002BD9F2 /* customclosebutton.ts in Resources */ = {isa = PBXBuildFile; fileRef = B777B6EC23DF47A3002BD9F2 /* customclosebutton.ts */; };
 		B77B34BD23CC5F4E00899D9F /* PlayableSourceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B77B34B923CC5F4E00899D9F /* PlayableSourceItem.swift */; };
 		B77B34BE23CC5F4E00899D9F /* ZPPlayable+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B77B34BB23CC5F4E00899D9F /* ZPPlayable+Utils.swift */; };
 		B77B34BF23CC5F4E00899D9F /* String+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B77B34BC23CC5F4E00899D9F /* String+Utils.swift */; };
@@ -40,7 +39,6 @@
 		B774E2F723B5FFFF006398B5 /* BitmovinPlayerPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitmovinPlayerPlugin.swift; sourceTree = "<group>"; };
 		B777B6EA23DF47A3002BD9F2 /* bitmovinplayer-ui.min.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "bitmovinplayer-ui.min.js"; sourceTree = "<group>"; };
 		B777B6EB23DF47A3002BD9F2 /* bitmovinplayer-ui.min.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = "bitmovinplayer-ui.min.css"; sourceTree = "<group>"; };
-		B777B6EC23DF47A3002BD9F2 /* customclosebutton.ts */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = customclosebutton.ts; sourceTree = "<group>"; };
 		B77B34B923CC5F4E00899D9F /* PlayableSourceItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayableSourceItem.swift; sourceTree = "<group>"; };
 		B77B34BB23CC5F4E00899D9F /* ZPPlayable+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ZPPlayable+Utils.swift"; sourceTree = "<group>"; };
 		B77B34BC23CC5F4E00899D9F /* String+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Utils.swift"; sourceTree = "<group>"; };
@@ -134,7 +132,6 @@
 			children = (
 				B777B6EA23DF47A3002BD9F2 /* bitmovinplayer-ui.min.js */,
 				B777B6EB23DF47A3002BD9F2 /* bitmovinplayer-ui.min.css */,
-				B777B6EC23DF47A3002BD9F2 /* customclosebutton.ts */,
 			);
 			path = SupportingFiles;
 			sourceTree = "<group>";
@@ -240,7 +237,6 @@
 			files = (
 				B732975B23B5F7A4004038ED /* LaunchScreen.storyboard in Resources */,
 				B777B6EE23DF47A4002BD9F2 /* bitmovinplayer-ui.min.css in Resources */,
-				B777B6EF23DF47A4002BD9F2 /* customclosebutton.ts in Resources */,
 				B777B6ED23DF47A4002BD9F2 /* bitmovinplayer-ui.min.js in Resources */,
 				B732975823B5F7A4004038ED /* Assets.xcassets in Resources */,
 				B732975623B5F7A3004038ED /* Main.storyboard in Resources */,

@@ -13,7 +13,6 @@ import ZappCore
 
 extension PlayerViewController {
 
-
     var currentPlayable: PlayableSourceItem? {
         return self.bitmovinPlayer?.config.sourceItem as? PlayableSourceItem
     }
@@ -24,11 +23,7 @@ extension PlayerViewController {
             return
         }
 
-        var lastTrack: Double = 0.0
-
-        if let last = self.lastTrackDate {
-            lastTrack = Date().timeIntervalSince(last)
-        }
+        let lastTrack: Double = Date().timeIntervalSince(self.lastTrackDate)
 
         let needUpdate = lastTrack > 5.0
 
@@ -44,13 +39,22 @@ extension PlayerViewController {
         guard let token = FacadeConnector.connector?.storage?.localStorageValue(for: "token", namespace: "login")  else {
             return
         }
+        //Temprorary fix for incorrect store into the local storage.
+        if (token.hasPrefix("\"")) {
+            token = String(token.dropFirst(1))
+        }
+        if (token.hasSuffix("\"")) {
+            token = String(token.dropLast(1))
+        }
 
         let duration = Int(playerVar.duration)
         let currentTime = Int(newTime ?? (playerVar.currentTime))
+        let contentGroup = currentPlayable?.contentGroup ?? ""
 
-        let jsonBody = [
+        let jsonBody : [String:Any] = [
             "content_length": duration,
-            "playhead_position": currentTime
+            "playhead_position": currentTime,
+            "content_group": contentGroup
         ]
 
         let jsonData = try? JSONSerialization.data(withJSONObject: jsonBody, options: .prettyPrinted)
@@ -59,7 +63,9 @@ extension PlayerViewController {
         let url = URL(string: putApi)!
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
-        request.addValue("Bearer " + token, forHTTPHeaderField: "user_token")
+        request.addValue("Bearer " + token, forHTTPHeaderField: "Authorization")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.httpBody = jsonData
 
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
