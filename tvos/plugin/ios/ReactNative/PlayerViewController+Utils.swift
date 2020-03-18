@@ -13,10 +13,6 @@ import ZappCore
 
 extension PlayerViewController {
 
-    var currentPlayable: PlayableSourceItem? {
-        return self.bitmovinPlayer?.config.sourceItem as? PlayableSourceItem
-    }
-
     func trackTime(force: Bool, newTime: Double? = nil) {
 
         guard let playerVar = self.bitmovinPlayer else {
@@ -39,7 +35,7 @@ extension PlayerViewController {
         guard var token = FacadeConnector.connector?.storage?.localStorageValue(for: "token", namespace: "login")  else {
             return
         }
-
+        
         //Temprorary fix for incorrect store into the local storage.
         if (token.hasPrefix("\"")) {
             token = String(token.dropFirst(1))
