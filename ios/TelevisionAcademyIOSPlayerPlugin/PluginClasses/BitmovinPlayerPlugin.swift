@@ -51,8 +51,10 @@ extension BitmovinPlayerPlugin: ZPPlayerProtocol {
             videos.removeAll()
             videos.append(ZPPlayablItem.createTest(for: testUrl))
         }
-
-        let playerViewController = PlayerViewController(with: videos, configurationJSON: configurationJSON)
+        
+        let applicationId = configurationJSON?["ApplicationId"] as? String
+        
+        let playerViewController = PlayerViewController(with: videos, applicationId: applicationId)
 
         let instance = BitmovinPlayerPlugin()
         playerViewController.analyticEventDelegate = instance

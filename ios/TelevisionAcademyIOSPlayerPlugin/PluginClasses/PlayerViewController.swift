@@ -26,7 +26,6 @@ class PlayerViewController: UIViewController {
 
     // playable data
     let videos: [ZPPlayable]
-    let configuration: NSDictionary
     let playerEventsManager = PlayerEventsManager()
 
     // general tools
@@ -48,15 +47,18 @@ class PlayerViewController: UIViewController {
         return bitmovinUserInterfaceConfiguration
     }
 
-    required init(with items: [ZPPlayable]?, configurationJSON: NSDictionary?) {
+    required init(with items: [ZPPlayable]?, applicationId: String?) {
         videos = items ?? []
-        configuration = configurationJSON ?? [:]
-
+        
         super.init(nibName: nil, bundle: nil)
-
+        
         // Initialize ChromeCast support for this application
-        BitmovinCastManager.initializeCasting()
-
+        if let appId = applicationId {
+            BitmovinCastManager.initializeCasting(applicationId: appId, messageNamespace: nil)
+        } else {
+            BitmovinCastManager.initializeCasting()
+        }
+        
         // Initialize logging
         GCKLogger.sharedInstance().delegate = self
     }
