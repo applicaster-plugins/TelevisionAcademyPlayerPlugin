@@ -9,10 +9,14 @@
 /* Begin PBXBuildFile section */
 		77EB1F020AA34CEB66E21C3D /* Pods_BitmovinRNPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C13909C75DC4DE7EFE1F414 /* Pods_BitmovinRNPlayer.framework */; };
 		F54F0CE123DF2397005FAF49 /* BitmovinRNPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54F0CE023DF2397005FAF49 /* BitmovinRNPlayerTests.swift */; };
-		F5B5C21F23EAF1A5004BCCFF /* PlayerBridgeView+PlayerListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B5C21723EAF1A4004BCCFF /* PlayerBridgeView+PlayerListener.swift */; };
+		F578E2322421E73B00BAC37D /* AnalyticParamsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F578E2312421E73B00BAC37D /* AnalyticParamsBuilder.swift */; };
+		F578E2342421E76800BAC37D /* Progress.swift in Sources */ = {isa = PBXBuildFile; fileRef = F578E2332421E76800BAC37D /* Progress.swift */; };
+		F583ED8C240E916300091D93 /* UIApplication+FindUiViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F583ED88240E916300091D93 /* UIApplication+FindUiViewController.swift */; };
+		F583ED8D240E916300091D93 /* PlayerViewController+PlayerListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = F583ED89240E916300091D93 /* PlayerViewController+PlayerListener.swift */; };
+		F583ED8E240E916300091D93 /* PlayerViewController+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F583ED8A240E916300091D93 /* PlayerViewController+Utils.swift */; };
+		F583ED8F240E916300091D93 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F583ED8B240E916300091D93 /* PlayerViewController.swift */; };
 		F5B5C22023EAF1A5004BCCFF /* PlayerBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B5C21923EAF1A4004BCCFF /* PlayerBridge.m */; };
 		F5B5C22123EAF1A5004BCCFF /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B5C21A23EAF1A4004BCCFF /* PlayerView.swift */; };
-		F5B5C22223EAF1A5004BCCFF /* PlayerBridgeView+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B5C21B23EAF1A4004BCCFF /* PlayerBridgeView+Utils.swift */; };
 		F5B5C22323EAF1A5004BCCFF /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B5C21C23EAF1A5004BCCFF /* Constants.swift */; };
 		F5B5C22423EAF1A5004BCCFF /* PlayableSourceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B5C21D23EAF1A5004BCCFF /* PlayableSourceItem.swift */; };
 		F5B5C22523EAF1A5004BCCFF /* PlayerBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5B5C21E23EAF1A5004BCCFF /* PlayerBridge.swift */; };
@@ -44,11 +48,14 @@
 		F54F0CE023DF2397005FAF49 /* BitmovinRNPlayerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitmovinRNPlayerTests.swift; sourceTree = "<group>"; };
 		F54F0CE223DF2397005FAF49 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F54F0CE723DF2397005FAF49 /* BitmovinRNPlayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BitmovinRNPlayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		F5B5C21623EAF1A4004BCCFF /* BitmovinRNPlayer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BitmovinRNPlayer-Bridging-Header.h"; sourceTree = "<group>"; };
-		F5B5C21723EAF1A4004BCCFF /* PlayerBridgeView+PlayerListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlayerBridgeView+PlayerListener.swift"; sourceTree = "<group>"; };
+		F578E2312421E73B00BAC37D /* AnalyticParamsBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticParamsBuilder.swift; sourceTree = "<group>"; };
+		F578E2332421E76800BAC37D /* Progress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Progress.swift; sourceTree = "<group>"; };
+		F583ED88240E916300091D93 /* UIApplication+FindUiViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIApplication+FindUiViewController.swift"; sourceTree = "<group>"; };
+		F583ED89240E916300091D93 /* PlayerViewController+PlayerListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlayerViewController+PlayerListener.swift"; sourceTree = "<group>"; };
+		F583ED8A240E916300091D93 /* PlayerViewController+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlayerViewController+Utils.swift"; sourceTree = "<group>"; };
+		F583ED8B240E916300091D93 /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		F5B5C21923EAF1A4004BCCFF /* PlayerBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayerBridge.m; sourceTree = "<group>"; };
 		F5B5C21A23EAF1A4004BCCFF /* PlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
-		F5B5C21B23EAF1A4004BCCFF /* PlayerBridgeView+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlayerBridgeView+Utils.swift"; sourceTree = "<group>"; };
 		F5B5C21C23EAF1A5004BCCFF /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		F5B5C21D23EAF1A5004BCCFF /* PlayableSourceItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayableSourceItem.swift; sourceTree = "<group>"; };
 		F5B5C21E23EAF1A5004BCCFF /* PlayerBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerBridge.swift; sourceTree = "<group>"; };
@@ -130,16 +137,27 @@
 		F55286A323E9ACED00D96038 /* ReactNative */ = {
 			isa = PBXGroup;
 			children = (
+				F578E21124210A3B00BAC37D /* Analytics */,
 				F5B5C21C23EAF1A5004BCCFF /* Constants.swift */,
+				F578E2332421E76800BAC37D /* Progress.swift */,
 				F5B5C21D23EAF1A5004BCCFF /* PlayableSourceItem.swift */,
 				F5B5C21923EAF1A4004BCCFF /* PlayerBridge.m */,
 				F5B5C21E23EAF1A5004BCCFF /* PlayerBridge.swift */,
-				F5B5C21723EAF1A4004BCCFF /* PlayerBridgeView+PlayerListener.swift */,
-				F5B5C21B23EAF1A4004BCCFF /* PlayerBridgeView+Utils.swift */,
 				F5B5C21A23EAF1A4004BCCFF /* PlayerView.swift */,
-				F5B5C21623EAF1A4004BCCFF /* BitmovinRNPlayer-Bridging-Header.h */,
+				F583ED8B240E916300091D93 /* PlayerViewController.swift */,
+				F583ED89240E916300091D93 /* PlayerViewController+PlayerListener.swift */,
+				F583ED8A240E916300091D93 /* PlayerViewController+Utils.swift */,
+				F583ED88240E916300091D93 /* UIApplication+FindUiViewController.swift */,
 			);
 			path = ReactNative;
+			sourceTree = "<group>";
+		};
+		F578E21124210A3B00BAC37D /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				F578E2312421E73B00BAC37D /* AnalyticParamsBuilder.swift */,
+			);
+			path = Analytics;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -315,12 +333,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F5B5C22223EAF1A5004BCCFF /* PlayerBridgeView+Utils.swift in Sources */,
-				F5B5C21F23EAF1A5004BCCFF /* PlayerBridgeView+PlayerListener.swift in Sources */,
+				F583ED8D240E916300091D93 /* PlayerViewController+PlayerListener.swift in Sources */,
 				F5B5C22523EAF1A5004BCCFF /* PlayerBridge.swift in Sources */,
 				F5B5C22323EAF1A5004BCCFF /* Constants.swift in Sources */,
 				F5B5C22423EAF1A5004BCCFF /* PlayableSourceItem.swift in Sources */,
+				F578E2322421E73B00BAC37D /* AnalyticParamsBuilder.swift in Sources */,
 				F5B5C22123EAF1A5004BCCFF /* PlayerView.swift in Sources */,
+				F578E2342421E76800BAC37D /* Progress.swift in Sources */,
+				F583ED8F240E916300091D93 /* PlayerViewController.swift in Sources */,
+				F583ED8C240E916300091D93 /* UIApplication+FindUiViewController.swift in Sources */,
+				F583ED8E240E916300091D93 /* PlayerViewController+Utils.swift in Sources */,
 				F5B5C22023EAF1A5004BCCFF /* PlayerBridge.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

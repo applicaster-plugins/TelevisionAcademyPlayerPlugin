@@ -17,19 +17,19 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
+import com.tva.quickbrickplayerplugin.analytic.AnalyticUtil
 import com.tva.quickbrickplayerplugin.api.ApiFactory
 import com.tva.quickbrickplayerplugin.api.PlayerEvent
 import kotlinx.android.synthetic.main.player_view.view.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.TimeUnit.MILLISECONDS
 
 class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
 
-
     private var lastTrackTime = 0L
     private var eventListeners = mutableListOf<EventListener<*>>()
-    private var elapsedTimeMillis: Long? = null
+    private var elapsedTimeSeconds: Long? = null
+    private var contentGroup: String? = null
     private var videoSrc: String? = null
     private var sourceId: String? = null
     //Temporary hardcoded
@@ -44,9 +44,13 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     private val apiFactory by lazy {
         ApiFactory(baseSkylarkUrl, LoginManager.getLoginPlugin()?.token ?: "")
     }
+    private val analyticUtil by lazy {
+        AnalyticUtil()
+    }
 
     companion object {
         private const val ELAPSED_TIME = "playhead_position"
+        private const val CONTENT_GROUP = "content_group"
         private const val VIDEO_QUALITY_TYPE = "video_quality"
         private const val AUDIO_TRACK_TYPE = "audio_quality"
         private const val LANGUAGE_SUBTITLE_TYPE = "language_subtitle"
@@ -62,8 +66,10 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         bitmovinPlayer?.setup(createPlayerConfiguration())
 
         bitmovinPlayerView.onResume()
-        addEventListener(OnErrorListener { errorEvent ->
-            Log.e(TAG, "An Error occurred (${errorEvent.code}): ${errorEvent.message}")
+        addEventListener(OnReadyListener { analyticUtil.startTrack(it.timestamp, bitmovinPlayer?.duration ?: 0.0) })
+        addEventListener(OnErrorListener { event ->
+            Log.e(TAG, "An Error occurred (${event.code}): ${event.message}")
+            analyticUtil.handlePlayerError(event.message)
         })
         addEventListener(OnTimeChangedListener {
             trackTime(false)
@@ -73,14 +79,18 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         })
         addEventListener(OnPausedListener {
             trackTime(false)
+            analyticUtil.trackPause(it.time, bitmovinPlayer?.duration ?: 0.0)
         })
         addEventListener(OnPlaybackFinishedListener {
             trackTime(true)
         })
+        addEventListener(OnSeekListener {
+            analyticUtil.trackSeek(it.position, it.seekTarget, bitmovinPlayer?.duration ?: 0.0)
+        })
 
         bitmovinPlayer?.play()
         bitmovinPlayerView.onStart()
-        elapsedTimeMillis?.let { bitmovinPlayer?.seek(MILLISECONDS.toSeconds(it).toDouble()) }
+        elapsedTimeSeconds?.let { bitmovinPlayer?.seek(it.toDouble()) }
     }
 
     private fun createPlayerConfiguration() = PlayerConfiguration().apply {
@@ -106,6 +116,8 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         bitmovinPlayerView.onStop()
         bitmovinPlayerView.onDestroy()
         eventListeners.forEach { bitmovinPlayer?.removeEventListener(it) }
+        bitmovinPlayer?.let { player -> analyticUtil.endTrack(player.currentTime, bitmovinPlayer?.duration ?: 0.0) }
+
     }
 
     fun onKeyChanged(event: ReadableMap?) {
@@ -131,7 +143,10 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         if (source.hasKey("extensions")) {
             source.getMap("extensions")?.apply {
                 if (hasKey(ELAPSED_TIME)) {
-                    elapsedTimeMillis = getString(ELAPSED_TIME)?.toLongOrNull()
+                    elapsedTimeSeconds = getString(ELAPSED_TIME)?.toLongOrNull()
+                }
+                if (hasKey(CONTENT_GROUP)) {
+                    contentGroup = getString(CONTENT_GROUP)
                 }
             }
         }
@@ -269,8 +284,10 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         lastTrackTime = System.currentTimeMillis()
         bitmovinPlayer?.let { player ->
             apiFactory.watchListApi
-                    .putWatchlist(sourceId!!, PlayerEvent(player.duration.toLong(), (newTime
-                            ?: player.currentTime).toLong()))
+                    .putWatchlist(sourceId!!, PlayerEvent(
+                            player.duration.toLong(),
+                            (newTime ?: player.currentTime).toLong(),
+                            contentGroup ?: ""))
                     .subscribe({}, { Timber.e(it) })
         }
     }

@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react';
-import {Image, StyleSheet, Text, ToastAndroid, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import PropTypes from 'prop-types';
 
 const styles = StyleSheet.create({

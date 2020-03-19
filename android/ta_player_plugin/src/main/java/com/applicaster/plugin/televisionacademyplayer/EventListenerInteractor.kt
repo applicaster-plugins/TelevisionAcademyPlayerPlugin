@@ -14,8 +14,10 @@ object EventListenerInteractor {
     private val TAG = "EventListenerInteractor"
 
     var contentId = ""
-    var duration = 0.0
+    val duration : Double
+        get() =   player?.duration ?: 0.toDouble()
     var contentGroup = ""
+    var player: BitmovinPlayer? = null
 
     private val listeners = mutableListOf(
             object : OnPausedListener {
@@ -115,13 +117,13 @@ object EventListenerInteractor {
         Log.d(TAG, "EventManager providers ${PlayerEventsManager.playerEventsProviders.size}")
         this.contentId = contentId
         this.contentGroup = contentGroup
-        this.duration = player?.duration ?: 0.0
+        this.player = player
         listeners.forEach { player?.addEventListener(it) }
     }
 
     fun removeListeners(player: BitmovinPlayer?) {
         this.contentId = ""
-        this.duration = 0.0
+        this.player = null
         listeners.forEach { player?.removeEventListener(it) }
     }
 }
