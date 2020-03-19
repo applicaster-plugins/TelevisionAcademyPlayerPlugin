@@ -34,6 +34,7 @@ dependencies {
     implementation "com.android.support:support-compat:$androidSupportVersion"
     implementation 'com.bitmovin.player:playercore:2.37.0'
     implementation 'com.applicaster:PlayerEvents:0.0.+'
+    implementation 'com.github.LiquidPlayer:LiquidCore:0.5.1'
 
     implementation "com.google.android.gms:play-services-cast-framework:$playServicesCastVersion"
     //only needed if Chromecast is used

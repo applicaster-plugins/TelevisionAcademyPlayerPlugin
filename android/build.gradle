@@ -30,6 +30,7 @@ allprojects {
         maven {
             url  'http://bitmovin.bintray.com/maven'
         }
+        maven { url 'https://jitpack.io' }
     }
 }
 
