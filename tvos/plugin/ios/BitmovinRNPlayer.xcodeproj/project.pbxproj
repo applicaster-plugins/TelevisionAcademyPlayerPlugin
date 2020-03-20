@@ -11,6 +11,7 @@
 		F54F0CE123DF2397005FAF49 /* BitmovinRNPlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F54F0CE023DF2397005FAF49 /* BitmovinRNPlayerTests.swift */; };
 		F578E2322421E73B00BAC37D /* AnalyticParamsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F578E2312421E73B00BAC37D /* AnalyticParamsBuilder.swift */; };
 		F578E2342421E76800BAC37D /* Progress.swift in Sources */ = {isa = PBXBuildFile; fileRef = F578E2332421E76800BAC37D /* Progress.swift */; };
+		F578E2362424BC4900BAC37D /* String+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F578E2352424BC4900BAC37D /* String+Utils.swift */; };
 		F583ED8C240E916300091D93 /* UIApplication+FindUiViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F583ED88240E916300091D93 /* UIApplication+FindUiViewController.swift */; };
 		F583ED8D240E916300091D93 /* PlayerViewController+PlayerListener.swift in Sources */ = {isa = PBXBuildFile; fileRef = F583ED89240E916300091D93 /* PlayerViewController+PlayerListener.swift */; };
 		F583ED8E240E916300091D93 /* PlayerViewController+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F583ED8A240E916300091D93 /* PlayerViewController+Utils.swift */; };
@@ -50,6 +51,7 @@
 		F54F0CE723DF2397005FAF49 /* BitmovinRNPlayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BitmovinRNPlayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F578E2312421E73B00BAC37D /* AnalyticParamsBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnalyticParamsBuilder.swift; sourceTree = "<group>"; };
 		F578E2332421E76800BAC37D /* Progress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Progress.swift; sourceTree = "<group>"; };
+		F578E2352424BC4900BAC37D /* String+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Utils.swift"; sourceTree = "<group>"; };
 		F583ED88240E916300091D93 /* UIApplication+FindUiViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIApplication+FindUiViewController.swift"; sourceTree = "<group>"; };
 		F583ED89240E916300091D93 /* PlayerViewController+PlayerListener.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlayerViewController+PlayerListener.swift"; sourceTree = "<group>"; };
 		F583ED8A240E916300091D93 /* PlayerViewController+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PlayerViewController+Utils.swift"; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 		F55286A323E9ACED00D96038 /* ReactNative */ = {
 			isa = PBXGroup;
 			children = (
+				F578E2352424BC4900BAC37D /* String+Utils.swift */,
 				F578E21124210A3B00BAC37D /* Analytics */,
 				F5B5C21C23EAF1A5004BCCFF /* Constants.swift */,
 				F578E2332421E76800BAC37D /* Progress.swift */,
@@ -341,6 +344,7 @@
 				F5B5C22123EAF1A5004BCCFF /* PlayerView.swift in Sources */,
 				F578E2342421E76800BAC37D /* Progress.swift in Sources */,
 				F583ED8F240E916300091D93 /* PlayerViewController.swift in Sources */,
+				F578E2362424BC4900BAC37D /* String+Utils.swift in Sources */,
 				F583ED8C240E916300091D93 /* UIApplication+FindUiViewController.swift in Sources */,
 				F583ED8E240E916300091D93 /* PlayerViewController+Utils.swift in Sources */,
 				F5B5C22023EAF1A5004BCCFF /* PlayerBridge.m in Sources */,
