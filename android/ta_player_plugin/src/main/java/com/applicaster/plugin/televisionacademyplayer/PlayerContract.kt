@@ -16,7 +16,6 @@ import com.applicaster.plugin_manager.playersmanager.PlayerContract
 import com.bitmovin.player.BitmovinPlayerView
 import com.bitmovin.player.cast.BitmovinCastManager
 import com.bitmovin.player.config.media.SourceConfiguration
-import java.util.*
 
 class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
 
@@ -138,5 +137,4 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
         BitmovinCastManager.initialize()
         listener?.onHookFinished()
     }
-
 }
