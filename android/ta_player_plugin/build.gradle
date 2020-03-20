@@ -68,11 +68,6 @@ dependencies {
             exclude group: 'com.google.android.exoplayer', module: 'exoplayer-smoothstreaming'
         }
     }
-//    implementation project(':cast_plugin')
-    implementation("com.applicaster:GenericChromecast-Android-no-meta:1.0.+") {
-        exclude group: 'com.applicaster', module: 'applicaster-android-sdk'
-        exclude group: 'com.applicaster', module: 'zapp-root-android'
-    }
 }
 
 apply from: '../publish.gradle'
