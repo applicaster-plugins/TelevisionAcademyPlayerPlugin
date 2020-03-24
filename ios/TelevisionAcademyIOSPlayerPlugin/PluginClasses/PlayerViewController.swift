@@ -55,8 +55,8 @@ class PlayerViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
 
         // Initialize ChromeCast support for this application
-        BitmovinCastManager.initializeCasting()
-
+        // Initialize bitmovin chrome casting in the ZappGeneralPluginChromeCast_Bitmovin
+//         BitmovinCastManager.initializeCasting(applicationId: "3BD10BE7", messageNamespace: nil)
         // Initialize logging
         GCKLogger.sharedInstance().delegate = self
     }
@@ -66,9 +66,7 @@ class PlayerViewController: UIViewController {
     }
 
     deinit {
-        player?.destroy()
-        player = nil
-        playerView = nil
+        finishPlayer()
     }
 
     override func viewDidLoad() {
@@ -95,6 +93,10 @@ class PlayerViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        finishPlayer()
+    }
+    
+    private func finishPlayer() {
         player?.destroy()
         player = nil
         playerView = nil
@@ -152,13 +154,10 @@ class PlayerViewController: UIViewController {
 extension PlayerViewController: CustomMessageHandlerDelegate {
     func receivedSynchronousMessage(_ message: String, withData data: String?) -> String? {
         if message == "closePlayer" {
-            player?.pause()
             dismiss(animated: true)  {
-                self.player = nil
-                self.playerView = nil
+                self.finishPlayer()
             }
         }
-
         return nil
     }
 
