@@ -19,6 +19,7 @@ Pod::Spec.new do |s|
     s.source_files = 'ios/TelevisionAcademyIOSPlayerPlugin/PluginClasses/*.swift','ios/TelevisionAcademyIOSPlayerPlugin/PluginClasses/**/*.swift'
     s.dependency 'ZappPlugins'
     s.dependency 'BitmovinPlayer','~> 2.37.0'
+    s.dependency 'ZappGeneralPluginChromecast'
     s.dependency 'PlayerEvents'
     s.xcconfig =  { 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES',
                     'ENABLE_BITCODE' => 'YES',
