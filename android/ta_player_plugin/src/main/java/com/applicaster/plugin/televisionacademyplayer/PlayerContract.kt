@@ -134,7 +134,11 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
     }
 
     override fun executeOnApplicationReady(context: Context?, listener: HookListener?) {
-        BitmovinCastManager.initialize()
+        if (ConfigurationRepository.chromeCastAppId.isNullOrEmpty()) {
+            BitmovinCastManager.initialize()
+        } else {
+            BitmovinCastManager.initialize(ConfigurationRepository.chromeCastAppId, null)
+        }
         listener?.onHookFinished()
     }
 }
