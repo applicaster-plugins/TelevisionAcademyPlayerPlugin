@@ -12,7 +12,7 @@
   "platform": "android",
   "author_name": "Dmytro Puzak",
   "author_email": "dmytro.puzak@corewillsoft.com",
-  "manifest_version": "0.1.5",
+  "manifest_version": "0.1.6",
   "name": "Television Academy Player",
   "description": "Android Plugin for Television Academy",
   "type": "player",
@@ -20,7 +20,7 @@
   "identifier": "TelevisionAcademyPlayerPlugin",
   "ui_builder_support": true,
   "dependency_name": "com.applicaster:television-academy-player-plugin",
-  "dependency_version": "0.1.5",
+  "dependency_version": "0.1.6",
   "whitelisted_account_ids": [
     "5dcaba3ee648eb000eaf5c0a"
   ],
@@ -34,6 +34,11 @@
       "type": "text",
       "key": "test_video_url",
       "tooltip_text": "Test URL to check Bitmovin player functionality."
+    },
+    {
+      "type": "text",
+      "key": "chromecast_app_id",
+      "tooltip_text": "Chromecast application ID"
     }
   ],
   "targets": ["mobile"],
