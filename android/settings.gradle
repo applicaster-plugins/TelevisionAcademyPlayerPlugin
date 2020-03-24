@@ -1,2 +1,0 @@
-include ':app', ':ta_player_plugin'
-rootProject.name='TelevisionAcademyAndroidPlayerPlugin'
