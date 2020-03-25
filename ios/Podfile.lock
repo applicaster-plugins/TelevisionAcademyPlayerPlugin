@@ -1,78 +1,20 @@
 PODS:
-  - Alamofire (4.9.1)
-  - ApplicasterSDK (12.0.3):
-    - Alamofire (= 4.9.1)
-    - CocoaLumberjack/Swift (= 3.5.3)
-    - FBSDKCoreKit (= 5.2.3)
-    - FBSDKLoginKit (= 5.2.3)
-    - FBSDKShareKit (= 5.2.3)
-    - SSZipArchive (= 2.1.0)
-    - TTTAttributedLabel (= 2.1.0)
-    - TwitterKit (= 3.4.2)
-    - ZappPlugins (~> 11.0.0)
   - BitmovinPlayer (2.37.0)
-  - CocoaLumberjack/Core (3.5.3)
-  - CocoaLumberjack/Swift (3.5.3):
-    - CocoaLumberjack/Core
-  - FBSDKCoreKit (5.2.3):
-    - FBSDKCoreKit/Basics (= 5.2.3)
-    - FBSDKCoreKit/Core (= 5.2.3)
-  - FBSDKCoreKit/Basics (5.2.3)
-  - FBSDKCoreKit/Core (5.2.3):
-    - FBSDKCoreKit/Basics
-  - FBSDKLoginKit (5.2.3):
-    - FBSDKCoreKit (~> 5.0)
-  - FBSDKShareKit (5.2.3):
-    - FBSDKCoreKit (~> 5.0)
-  - google-cast-sdk-no-bluetooth (4.4.4):
-    - google-cast-sdk-no-bluetooth/Core (= 4.4.4)
-    - Protobuf (~> 3.0)
-  - google-cast-sdk-no-bluetooth/Core (4.4.4):
-    - Protobuf (~> 3.0)
   - PlayerEvents (0.1.0):
     - ZappPlugins
-  - Protobuf (3.11.4)
-  - SSZipArchive (2.1.0)
-  - TTTAttributedLabel (2.1.0)
-  - TwitterCore (3.2.0)
-  - TwitterKit (3.4.2):
-    - TwitterCore (>= 3.2.0)
   - ZappCore (0.5.0)
-  - ZappGeneralPluginChromecast (10.0.1):
-    - ApplicasterSDK
-    - google-cast-sdk-no-bluetooth (= 4.4.4)
-    - ZappGeneralPluginsSDK
-    - ZappPlugins
-  - ZappGeneralPluginsSDK (10.0.2):
-    - ZappPlugins (~> 11.0.0)
   - ZappPlugins (11.0.6):
     - ZappCore
 
 DEPENDENCIES:
   - BitmovinPlayer (from `https://github.com/bitmovin/bitmovin-player-ios-sdk-cocoapod.git`, tag `2.37.0`)
   - PlayerEvents (from `https://github.com/applicaster/PlayerEvents-iOS.git`)
-  - "ZappGeneralPluginChromecast (from `git@github.com:applicaster/ZappGeneralPluginChromecast-iOS.git`)"
   - ZappPlugins
 
 SPEC REPOS:
   "git@github.com:applicaster/CocoaPods.git":
-    - ApplicasterSDK
-    - TTTAttributedLabel
     - ZappCore
     - ZappPlugins
-  "git@github.com:applicaster/PluginsBuilderCocoaPods.git":
-    - ZappGeneralPluginsSDK
-  https://github.com/CocoaPods/Specs.git:
-    - Alamofire
-    - CocoaLumberjack
-    - FBSDKCoreKit
-    - FBSDKLoginKit
-    - FBSDKShareKit
-    - google-cast-sdk-no-bluetooth
-    - Protobuf
-    - SSZipArchive
-    - TwitterCore
-    - TwitterKit
 
 EXTERNAL SOURCES:
   BitmovinPlayer:
@@ -80,8 +22,6 @@ EXTERNAL SOURCES:
     :tag: 2.37.0
   PlayerEvents:
     :git: https://github.com/applicaster/PlayerEvents-iOS.git
-  ZappGeneralPluginChromecast:
-    :git: "git@github.com:applicaster/ZappGeneralPluginChromecast-iOS.git"
 
 CHECKOUT OPTIONS:
   BitmovinPlayer:
@@ -90,30 +30,13 @@ CHECKOUT OPTIONS:
   PlayerEvents:
     :commit: 7830ab0cc7ef463a25dd723fd78aec02f4081e10
     :git: https://github.com/applicaster/PlayerEvents-iOS.git
-  ZappGeneralPluginChromecast:
-    :commit: 449023b68649b4aaa52f9803f66f254eb870bb18
-    :git: "git@github.com:applicaster/ZappGeneralPluginChromecast-iOS.git"
 
 SPEC CHECKSUMS:
-  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
-  ApplicasterSDK: 9565636259431d282e4cd6ed3da98382d42e5bb6
   BitmovinPlayer: 82c65a3ad4815b52520b2273c9832166e21f4f09
-  CocoaLumberjack: 2f44e60eb91c176d471fdba43b9e3eae6a721947
-  FBSDKCoreKit: 5154c35d9058fd7dfa0445ba19e194c4b172fc32
-  FBSDKLoginKit: dc98b6bf12334f1a42f28d0457fffc9aa3d1eca5
-  FBSDKShareKit: 6f9c622f9a5d051f43f2dab6f753d5198422b89c
-  google-cast-sdk-no-bluetooth: e0af19280673fba052f7fc3ddde6116c733ce505
   PlayerEvents: 2116911e3375965a0d4cd4001da5bdea7904464a
-  Protobuf: 176220c526ad8bd09ab1fb40a978eac3fef665f7
-  SSZipArchive: 1e8e53dcb11bca3ded4738958dc49fc467320a14
-  TTTAttributedLabel: f8c7f1dbc7b8f7168e23e8b4764dda2e3b74aae8
-  TwitterCore: 8cbc9ad34d91c63a0035ea05bfbfc0d7ca72a28c
-  TwitterKit: 5e4f41d70b9abdb41df5467f52d7aa2c0fd26ebb
   ZappCore: f92ff80112b8dfac6ebba117b393df0665e93241
-  ZappGeneralPluginChromecast: 0d4ba6a2f70ac8fde5d62ae64b2c98d0ee2dcf8d
-  ZappGeneralPluginsSDK: ded1dc812418156d030690321363c26fe2961b09
   ZappPlugins: 39fabc1b8c05be6e55625b8f256b827265748678
 
-PODFILE CHECKSUM: 51c5bf9d5e0faa06564b2ea60f90438a90d60bf7
+PODFILE CHECKSUM: bf62cbbdda7c2f667d7094399d03fde73fce3b5b
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.0

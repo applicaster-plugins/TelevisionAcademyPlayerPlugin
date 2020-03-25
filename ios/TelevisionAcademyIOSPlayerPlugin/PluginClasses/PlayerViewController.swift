@@ -10,7 +10,6 @@ import UIKit
 import BitmovinPlayer
 import ZappPlugins
 import PlayerEvents
-import GoogleCast
 
 class PlayerViewController: UIViewController {
 
@@ -58,7 +57,6 @@ class PlayerViewController: UIViewController {
         // Initialize bitmovin chrome casting in the ZappGeneralPluginChromeCast_Bitmovin
 //         BitmovinCastManager.initializeCasting(applicationId: "3BD10BE7", messageNamespace: nil)
         // Initialize logging
-        GCKLogger.sharedInstance().delegate = self
     }
 
     required init?(coder: NSCoder) {
@@ -371,13 +369,5 @@ extension PlayerViewController {
             valueAsDouble = Double(value)
         }
         return valueAsDouble
-    }
-}
-
-//MARK:- GCKLoggerDelegate
-
-extension PlayerViewController: GCKLoggerDelegate {
-    public func log(fromFunction function: UnsafePointer<Int8>, message: String) {
-        print("ChromeCast Log: \(function) \(message)")
     }
 }

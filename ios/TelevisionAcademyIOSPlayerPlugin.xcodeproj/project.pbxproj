@@ -186,7 +186,6 @@
 				B732974823B5F7A3004038ED /* Frameworks */,
 				B732974923B5F7A3004038ED /* Resources */,
 				7840C3DBCEBDD1E2143FEAEE /* [CP] Embed Pods Frameworks */,
-				07C24A03DB13C9F004E060CD /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -246,23 +245,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		07C24A03DB13C9F004E060CD /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TelevisionAcademyIOSPlayerPlugin/Pods-TelevisionAcademyIOSPlayerPlugin-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-TelevisionAcademyIOSPlayerPlugin/Pods-TelevisionAcademyIOSPlayerPlugin-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TelevisionAcademyIOSPlayerPlugin/Pods-TelevisionAcademyIOSPlayerPlugin-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		3225712D8050E4CE8C25BFE8 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
