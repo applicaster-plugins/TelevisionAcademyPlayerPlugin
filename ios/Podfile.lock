@@ -1,5 +1,5 @@
 PODS:
-  - BitmovinPlayer (2.37.0)
+  - BitmovinPlayer (2.42.0)
   - PlayerEvents (0.1.0):
     - ZappPlugins
   - ZappCore (0.5.0)
@@ -7,7 +7,7 @@ PODS:
     - ZappCore
 
 DEPENDENCIES:
-  - BitmovinPlayer (from `https://github.com/bitmovin/bitmovin-player-ios-sdk-cocoapod.git`, tag `2.37.0`)
+  - BitmovinPlayer (from `https://github.com/bitmovin/bitmovin-player-ios-sdk-cocoapod.git`, tag `2.42.0`)
   - PlayerEvents (from `https://github.com/applicaster/PlayerEvents-iOS.git`)
   - ZappPlugins
 
@@ -19,24 +19,24 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   BitmovinPlayer:
     :git: https://github.com/bitmovin/bitmovin-player-ios-sdk-cocoapod.git
-    :tag: 2.37.0
+    :tag: 2.42.0
   PlayerEvents:
     :git: https://github.com/applicaster/PlayerEvents-iOS.git
 
 CHECKOUT OPTIONS:
   BitmovinPlayer:
     :git: https://github.com/bitmovin/bitmovin-player-ios-sdk-cocoapod.git
-    :tag: 2.37.0
+    :tag: 2.42.0
   PlayerEvents:
     :commit: 7830ab0cc7ef463a25dd723fd78aec02f4081e10
     :git: https://github.com/applicaster/PlayerEvents-iOS.git
 
 SPEC CHECKSUMS:
-  BitmovinPlayer: 82c65a3ad4815b52520b2273c9832166e21f4f09
+  BitmovinPlayer: aede7cc3108495046682d5f5227182b4c4b88581
   PlayerEvents: 2116911e3375965a0d4cd4001da5bdea7904464a
   ZappCore: f92ff80112b8dfac6ebba117b393df0665e93241
   ZappPlugins: 39fabc1b8c05be6e55625b8f256b827265748678
 
-PODFILE CHECKSUM: bf62cbbdda7c2f667d7094399d03fde73fce3b5b
+PODFILE CHECKSUM: 3c9c656a73c4a9c576caf00a0e759d38e16507a6
 
 COCOAPODS: 1.9.0

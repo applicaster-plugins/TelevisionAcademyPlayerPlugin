@@ -16,6 +16,7 @@ class PlayerViewController: UIViewController {
     enum Constants: Int {
         case miliseconds = 1000
     }
+    static var lastVideoUrl: String?
 
     // player utils
     var player: BitmovinPlayer?
@@ -125,9 +126,9 @@ class PlayerViewController: UIViewController {
                 return source
         }
 
-        config.playbackConfiguration.isAutoplayEnabled = true
+//        config.playbackConfiguration.isAutoplayEnabled = true
         config.sourceItem = sourceItems.first
-
+        
         let player = BitmovinPlayer(configuration: config)
         player.add(listener: self)
 
@@ -172,15 +173,18 @@ extension PlayerViewController: PlayerListener {
     func onReady(_ event: ReadyEvent) {
         
         guard let playerVar = player,
-            let item = playerVar.config.sourceItem as? PlayableSourceItem else { return }
-
-        if let elapsedTime = item.elapsedTime {
+            let item = playerVar.config.sourceItem as? PlayableSourceItem,
+            let elapsedTime = item.elapsedTime,
+            let videoUrl = item.playable?.contentVideoURLPath() else { return }
+        
+        if(!playerVar.isCasting || playerVar.isCasting && PlayerViewController.lastVideoUrl != videoUrl) {
+            playerVar.play()
             playerVar.seek(time: elapsedTime)
-            didStartPlaybackSession()
         }
+        didStartPlaybackSession()
+        PlayerViewController.lastVideoUrl = videoUrl
 
         // analytics
-
         guard let currentPlayable = item.playable else { return }
 
         let analyticParamsBuilder = AnalyticParamsBuilder()
