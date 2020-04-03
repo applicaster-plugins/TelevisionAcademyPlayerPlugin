@@ -55,7 +55,7 @@ class PlayerViewController: UIViewController {
         videos = items ?? []
         configuration = configurationJSON ?? [:]
         if let remoteMediaClient = GCKCastContext.sharedInstance().sessionManager.currentCastSession?.remoteMediaClient {
-            castingLastVideoElapsedTime = remoteMediaClient.approximateStreamPosition() / 1000
+            castingLastVideoElapsedTime = remoteMediaClient.approximateStreamPosition()
         }
         
         super.init(nibName: nil, bundle: nil)
@@ -189,7 +189,7 @@ extension PlayerViewController: PlayerListener {
         
         if (playerVar.isCasting) {
             // Timeout to workaround starting play when casting
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
                 // Starting video from it fisnished during previous play.
                 if (PlayerViewController.lastVideoUrl == absoluteVideoUrl) {
                     var seekTime = self.castingLastVideoElapsedTime
