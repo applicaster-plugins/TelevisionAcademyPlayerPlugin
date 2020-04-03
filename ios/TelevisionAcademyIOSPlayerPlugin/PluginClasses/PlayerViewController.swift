@@ -10,36 +10,39 @@ import UIKit
 import BitmovinPlayer
 import ZappPlugins
 import PlayerEvents
+import GoogleCast
 
 class PlayerViewController: UIViewController {
-
+    
     enum Constants: Int {
         case miliseconds = 1000
     }
     static var lastVideoUrl: String?
-
+    static var lastVideoElapsedTime: Double = 0.0
+    private var castingLastVideoElapsedTime: Double = 0.0
+    
     // player utils
     var player: BitmovinPlayer?
     private var playerView: BMPBitmovinPlayerView?
     private var videoStartTime = Date()
     private var viewSwitchCounter = 0
-
+    
     // playable data
     let videos: [ZPPlayable]
     let configuration: NSDictionary
     let playerEventsManager = PlayerEventsManager()
-
+    
     // general tools
     private var viewAlreadyDidAppear = false
-
+    
     var timer: Timer?
-
+    
     // analytics
     weak var analyticEventDelegate: PlaybackAnalyticEventsDelegate?
-
+    
     // player ui
     fileprivate var customMessageHandler: CustomMessageHandler?
-
+    
     fileprivate var bitmovinUserInterfaceConfiguration: BitmovinUserInterfaceConfiguration {
         let bitmovinUserInterfaceConfiguration = BitmovinUserInterfaceConfiguration()
         customMessageHandler = CustomMessageHandler()
@@ -47,46 +50,49 @@ class PlayerViewController: UIViewController {
         bitmovinUserInterfaceConfiguration.customMessageHandler = customMessageHandler
         return bitmovinUserInterfaceConfiguration
     }
-
+    
     required init(with items: [ZPPlayable]?, configurationJSON: NSDictionary?) {
         videos = items ?? []
         configuration = configurationJSON ?? [:]
-
+        if let remoteMediaClient = GCKCastContext.sharedInstance().sessionManager.currentCastSession?.remoteMediaClient {
+            castingLastVideoElapsedTime = remoteMediaClient.approximateStreamPosition() / 1000
+        }
+        
         super.init(nibName: nil, bundle: nil)
-
+        
         // Initialize ChromeCast support for this application
         // Initialize bitmovin chrome casting in the ZappGeneralPluginChromeCast_Bitmovin
-//         BitmovinCastManager.initializeCasting(applicationId: "3BD10BE7", messageNamespace: nil)
+        // BitmovinCastManager.initializeCasting(applicationId: "3BD10BE7", messageNamespace: nil)
         // Initialize logging
+//        BitmovinCastManager.initializeCasting()
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     deinit {
         finishPlayer()
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
         setupPlayer()
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
+        
         guard viewAlreadyDidAppear == false else {
             return
         }
-
+        
         if let delegate = ZAAppConnector.sharedInstance().chromecastDelegate,
             delegate.isSynced() {
             delegate.play(self.videos, currentPosition: 0)
-//            self.player?.pause()
         }
-
+        
         viewAlreadyDidAppear = true
     }
     
@@ -96,15 +102,16 @@ class PlayerViewController: UIViewController {
     }
     
     private func finishPlayer() {
+        PlayerViewController.lastVideoElapsedTime = player?.currentTime ?? PlayerViewController.lastVideoElapsedTime
         player?.destroy()
         player = nil
         playerView = nil
     }
     
     private func setupPlayer() {
-
+        
         let config = PlayerConfiguration()
-
+        
         guard let cssURL = Bundle.main.url(forResource: "bitmovinplayer-ui", withExtension: "min.css"),
             let jsURL = Bundle.main.url(forResource: "bitmovinplayer-ui", withExtension: "min.js") else {
                 print("Please specify the needed resources marked with TODO in ViewController.swift file.")
@@ -114,7 +121,7 @@ class PlayerViewController: UIViewController {
         config.styleConfiguration.playerUiCss = cssURL
         config.styleConfiguration.playerUiJs = jsURL
         config.styleConfiguration.userInterfaceConfiguration = bitmovinUserInterfaceConfiguration
-
+        
         let sourceItems =
             videos.map { (playable) -> PlayableSourceItem in
 
@@ -125,24 +132,23 @@ class PlayerViewController: UIViewController {
                 source.contentGroup = playable.extensionsDictionary?["content_group"] as? String
                 return source
         }
-
-//        config.playbackConfiguration.isAutoplayEnabled = true
+        
         config.sourceItem = sourceItems.first
         
         let player = BitmovinPlayer(configuration: config)
         player.add(listener: self)
-
+        
         let playerView = BMPBitmovinPlayerView(player: player, frame: .zero)
         playerView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         playerView.frame = view.bounds
-
+        
         view.addSubview(playerView)
         view.bringSubviewToFront(playerView)
-
+        
         self.player = player
         self.playerView = playerView
     }
-
+    
     func didStartPlaybackSession() {
         viewSwitchCounter = 0
         videoStartTime = Date()
@@ -159,7 +165,7 @@ extension PlayerViewController: CustomMessageHandlerDelegate {
         }
         return nil
     }
-
+    
     func receivedAsynchronousMessage(_ message: String, withData data: String?) {
         print("received Asynchronouse Messagse", message, data ?? "")
     }
@@ -169,7 +175,7 @@ extension PlayerViewController: CustomMessageHandlerDelegate {
 //MARK:- PlayerListener
 
 extension PlayerViewController: PlayerListener {
-
+  
     func onReady(_ event: ReadyEvent) {
         
         guard let playerVar = player,
@@ -177,25 +183,49 @@ extension PlayerViewController: PlayerListener {
             let elapsedTime = item.elapsedTime,
             let videoUrl = item.playable?.contentVideoURLPath() else { return }
         
-        if(!playerVar.isCasting || playerVar.isCasting && PlayerViewController.lastVideoUrl != videoUrl) {
+        var component = URLComponents(string: videoUrl)
+        component?.query = nil
+        let absoluteVideoUrl = component?.url?.absoluteString
+        
+        if (playerVar.isCasting) {
+            // Timeout to workaround starting play when casting
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                // Starting video from it fisnished during previous play.
+                if (PlayerViewController.lastVideoUrl == absoluteVideoUrl) {
+                    var seekTime = self.castingLastVideoElapsedTime
+                    if (seekTime<=0) {
+                        seekTime = elapsedTime
+                    }
+                    playerVar.seek(time: seekTime)
+                } else {
+                    playerVar.seek(time: elapsedTime)
+                }
+                playerVar.play()
+            }
+        } else {
+            if (PlayerViewController.lastVideoUrl == absoluteVideoUrl) {
+                playerVar.seek(time: PlayerViewController.lastVideoElapsedTime)
+            } else {
+                playerVar.seek(time: elapsedTime)
+            }
             playerVar.play()
-            playerVar.seek(time: elapsedTime)
         }
+        
+        PlayerViewController.lastVideoUrl = absoluteVideoUrl
         didStartPlaybackSession()
-        PlayerViewController.lastVideoUrl = videoUrl
-
+        
         // analytics
         guard let currentPlayable = item.playable else { return }
-
+        
         let analyticParamsBuilder = AnalyticParamsBuilder()
         analyticParamsBuilder.duration = playerVar.duration
         analyticParamsBuilder.isLive = currentPlayable.isLive()
-
+        
         let params = currentPlayable.additionalAnalyticsParams.merge(analyticParamsBuilder.parameters)
         let event: AnalyticsEvent = currentPlayable.isLive() ? .live : .vod
         analyticEventDelegate?.eventOccurred(event, params: params, timed: false)
     }
-
+    
     func onPlay(_ event: PlayEvent) {
         
         guard let playerVar = player,
@@ -212,7 +242,7 @@ extension PlayerViewController: PlayerListener {
     func onPaused(_ event: PausedEvent) {
         
         guard let playerVar = player,
-             let sourceItem = playerVar.config.sourceItem as? PlayableSourceItem else { return }
+            let sourceItem = playerVar.config.sourceItem as? PlayableSourceItem else { return }
         
         playerEventsManager.onPlayerEvent("pause", properties: [
             "playhead_position" : Int(event.time),
@@ -220,34 +250,34 @@ extension PlayerViewController: PlayerListener {
             "content_uid": getCurrentPlayable?.identifier,
             "content_group": sourceItem.contentGroup
         ])
-
+        
         // analytics
-
+        
         guard let item = getCurrentPlayable,
             let playbackState = getPlaybackState else {
                 return
         }
-
+        
         let analyticParamsBuilder = AnalyticParamsBuilder()
         analyticParamsBuilder.progress = playbackState.progress
         analyticParamsBuilder.duration = playbackState.duration
         analyticParamsBuilder.isLive = item.isLive()
         analyticParamsBuilder.durationInVideo = Date().timeIntervalSince(videoStartTime)
-
+        
         let params = item.additionalAnalyticsParams.merge(analyticParamsBuilder.parameters)
         analyticEventDelegate?.eventOccurred(.pause, params: params, timed: false)
     }
-
+    
     func onTimeChanged(_ event: TimeChangedEvent) {
-
+        
         guard let playerVar = player,
-             let sourceItem = playerVar.config.sourceItem as? PlayableSourceItem else { return }
+            let sourceItem = playerVar.config.sourceItem as? PlayableSourceItem else { return }
         
         if let timerVar = timer,
             timerVar.isValid { return }
-
+        
         timer = Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(timerAction), userInfo: nil, repeats: true)
-
+        
         playerEventsManager.onPlayerEvent("heartbeat", properties: [
             "playhead_position" : Int(event.currentTime),
             "content_length" : Int(playerVar.duration),
@@ -255,25 +285,25 @@ extension PlayerViewController: PlayerListener {
             "content_group": sourceItem.contentGroup
         ])
     }
-
+    
     func onSeek(_ event: SeekEvent) {
-
+        
         // analytics
-
+        
         guard let item = getCurrentPlayable,
             let playbackState = getPlaybackState else {
                 return
         }
-
+        
         let from = event.position
         let to = event.seekTarget
-
+        
         let analyticParamsBuilder = AnalyticParamsBuilder()
         analyticParamsBuilder.duration = playbackState.duration
         analyticParamsBuilder.timecodeFrom = from
         analyticParamsBuilder.timecodeTo = to
         analyticParamsBuilder.seekDirection = to > from ? "Fast Forward" : "Rewind"
-
+        
         let params = item.additionalAnalyticsParams.merge(analyticParamsBuilder.parameters)
         analyticEventDelegate?.eventOccurred(.seek, params: params, timed: false)
     }
@@ -281,7 +311,7 @@ extension PlayerViewController: PlayerListener {
     func onPlaybackFinished(_ event: PlaybackFinishedEvent) {
         
         guard let playerVar = player,
-             let sourceItem = playerVar.config.sourceItem as? PlayableSourceItem else { return }
+            let sourceItem = playerVar.config.sourceItem as? PlayableSourceItem else { return }
         
         playerEventsManager.onPlayerEvent("heartbeat", properties: [
             "playhead_position" : 0,
@@ -295,41 +325,41 @@ extension PlayerViewController: PlayerListener {
 //MARK:- Public
 
 extension PlayerViewController {
-
+    
     func pause() {
         player?.pause()
     }
-
+    
     func stop() {
         player?.pause()
     }
-
+    
     func play() {
         player?.play()
     }
-
+    
     func setInlineView(rootViewController: UIViewController, container: UIView) {
         rootViewController.addChildViewController(self, to: container)
         view.matchParent()
-
+        
         playerViewDidTransit(.inline)
     }
-
+    
     func setFullscreenView() {
         let container = self.view.superview
         container?.removeFromSuperview()
         view.matchParent()
-
+        
         playerViewDidTransit(.fullscreen)
     }
-
+    
     var getCurrentPlayable: ZPPlayable? {
         guard let playerVar = player else { return nil }
-
+        
         guard let item = playerVar.config.sourceItem as? PlayableSourceItem else { return nil }
         return item.playable
     }
-
+    
     var getPlaybackState: Progress? {
         guard let playerVar = player else { return nil }
         return Progress(progress: playerVar.currentTime, duration: playerVar.duration)
@@ -339,16 +369,16 @@ extension PlayerViewController {
 //MARK:- Supporting
 
 extension PlayerViewController {
-
+    
     private func playerViewDidTransit(_ playerScreenMode: PlayerScreenMode) {
-
+        
         guard let item = getCurrentPlayable,
             let playbackState = getPlaybackState else {
                 return
         }
-
+        
         viewSwitchCounter += 1
-
+        
         let analyticParamsBuidler = AnalyticParamsBuilder()
         analyticParamsBuidler.progress = playbackState.progress
         analyticParamsBuidler.duration = playbackState.duration
@@ -356,11 +386,11 @@ extension PlayerViewController {
         analyticParamsBuidler.durationInVideo = Date().timeIntervalSince(videoStartTime)
         analyticParamsBuidler.newView = playerScreenMode
         analyticParamsBuidler.viewSwitchCounter = viewSwitchCounter
-
+        
         let params = item.additionalAnalyticsParams.merge(analyticParamsBuidler.parameters)
         analyticEventDelegate?.eventOccurred(.playerViewSwitch, params: params, timed: false)
     }
-
+    
     @objc private func timerAction() {
         timer?.invalidate()
     }

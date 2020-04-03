@@ -1,13 +1,20 @@
 PODS:
   - BitmovinPlayer (2.42.0)
+  - google-cast-sdk-no-bluetooth (4.4.4):
+    - google-cast-sdk-no-bluetooth/Core (= 4.4.4)
+    - Protobuf (~> 3.0)
+  - google-cast-sdk-no-bluetooth/Core (4.4.4):
+    - Protobuf (~> 3.0)
   - PlayerEvents (0.1.0):
     - ZappPlugins
+  - Protobuf (3.11.4)
   - ZappCore (0.5.0)
   - ZappPlugins (11.0.6):
     - ZappCore
 
 DEPENDENCIES:
   - BitmovinPlayer (from `https://github.com/bitmovin/bitmovin-player-ios-sdk-cocoapod.git`, tag `2.42.0`)
+  - google-cast-sdk-no-bluetooth (= 4.4.4)
   - PlayerEvents (from `https://github.com/applicaster/PlayerEvents-iOS.git`)
   - ZappPlugins
 
@@ -15,6 +22,9 @@ SPEC REPOS:
   "git@github.com:applicaster/CocoaPods.git":
     - ZappCore
     - ZappPlugins
+  https://github.com/CocoaPods/Specs.git:
+    - google-cast-sdk-no-bluetooth
+    - Protobuf
 
 EXTERNAL SOURCES:
   BitmovinPlayer:
@@ -33,10 +43,12 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   BitmovinPlayer: aede7cc3108495046682d5f5227182b4c4b88581
+  google-cast-sdk-no-bluetooth: e0af19280673fba052f7fc3ddde6116c733ce505
   PlayerEvents: 2116911e3375965a0d4cd4001da5bdea7904464a
+  Protobuf: 176220c526ad8bd09ab1fb40a978eac3fef665f7
   ZappCore: f92ff80112b8dfac6ebba117b393df0665e93241
   ZappPlugins: 39fabc1b8c05be6e55625b8f256b827265748678
 
-PODFILE CHECKSUM: 3c9c656a73c4a9c576caf00a0e759d38e16507a6
+PODFILE CHECKSUM: 82409000062f60d700ed37f4403c1739fcab3271
 
 COCOAPODS: 1.9.0

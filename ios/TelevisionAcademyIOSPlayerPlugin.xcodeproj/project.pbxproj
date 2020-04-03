@@ -186,6 +186,7 @@
 				B732974823B5F7A3004038ED /* Frameworks */,
 				B732974923B5F7A3004038ED /* Resources */,
 				7840C3DBCEBDD1E2143FEAEE /* [CP] Embed Pods Frameworks */,
+				D719EF725D8E91F3B6E2EA11 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -282,6 +283,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TelevisionAcademyIOSPlayerPlugin/Pods-TelevisionAcademyIOSPlayerPlugin-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D719EF725D8E91F3B6E2EA11 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TelevisionAcademyIOSPlayerPlugin/Pods-TelevisionAcademyIOSPlayerPlugin-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TelevisionAcademyIOSPlayerPlugin/Pods-TelevisionAcademyIOSPlayerPlugin-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TelevisionAcademyIOSPlayerPlugin/Pods-TelevisionAcademyIOSPlayerPlugin-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

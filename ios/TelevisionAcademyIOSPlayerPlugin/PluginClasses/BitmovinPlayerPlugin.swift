@@ -71,7 +71,6 @@ extension BitmovinPlayerPlugin: ZPPlayerProtocol {
 
     public func presentPlayerFullScreen(_ rootViewController: UIViewController, configuration: ZPPlayerConfiguration?) {
         presentPlayerFullScreen(rootViewController, configuration: configuration) {
-            self.playerViewController.player?.play()
         }
     }
 
