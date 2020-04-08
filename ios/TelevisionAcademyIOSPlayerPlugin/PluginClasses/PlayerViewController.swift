@@ -56,6 +56,7 @@ class PlayerViewController: UIViewController {
         configuration = configurationJSON ?? [:]
         if let remoteMediaClient = GCKCastContext.sharedInstance().sessionManager.currentCastSession?.remoteMediaClient {
             castingLastVideoElapsedTime = remoteMediaClient.approximateStreamPosition()
+            remoteMediaClient.pause()
         }
         
         super.init(nibName: nil, bundle: nil)
@@ -64,7 +65,7 @@ class PlayerViewController: UIViewController {
         // Initialize bitmovin chrome casting in the ZappGeneralPluginChromeCast_Bitmovin
         // BitmovinCastManager.initializeCasting(applicationId: "3BD10BE7", messageNamespace: nil)
         // Initialize logging
-//        BitmovinCastManager.initializeCasting()
+        //        BitmovinCastManager.initializeCasting()
     }
     
     required init?(coder: NSCoder) {
@@ -124,7 +125,7 @@ class PlayerViewController: UIViewController {
         
         let sourceItems =
             videos.map { (playable) -> PlayableSourceItem in
-
+                
                 let source = PlayableSourceItem(url: URL(string: playable.contentVideoURLPath())!)!
                 source.itemTitle = playable.playableName()
                 source.playable = playable
@@ -175,47 +176,19 @@ extension PlayerViewController: CustomMessageHandlerDelegate {
 //MARK:- PlayerListener
 
 extension PlayerViewController: PlayerListener {
-  
     func onReady(_ event: ReadyEvent) {
-        
-        guard let playerVar = player,
-            let item = playerVar.config.sourceItem as? PlayableSourceItem,
-            let elapsedTime = item.elapsedTime,
-            let videoUrl = item.playable?.contentVideoURLPath() else { return }
-        
-        var component = URLComponents(string: videoUrl)
-        component?.query = nil
-        let absoluteVideoUrl = component?.url?.absoluteString
-        
-        if (playerVar.isCasting) {
-            // Timeout to workaround starting play when casting
-            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-                // Starting video from it fisnished during previous play.
-                if (PlayerViewController.lastVideoUrl == absoluteVideoUrl) {
-                    var seekTime = self.castingLastVideoElapsedTime
-                    if (seekTime<=0) {
-                        seekTime = elapsedTime
-                    }
-                    playerVar.seek(time: seekTime)
-                } else {
-                    playerVar.seek(time: elapsedTime)
-                }
-                playerVar.play()
-            }
-        } else {
-            if (PlayerViewController.lastVideoUrl == absoluteVideoUrl) {
-                playerVar.seek(time: PlayerViewController.lastVideoElapsedTime)
-            } else {
-                playerVar.seek(time: elapsedTime)
-            }
+        guard let playerVar = player else { return }
+            
+        // Timeout to workaround starting play when casting
+        DispatchQueue.main.asyncAfter(deadline: .now() + (playerVar.isCasting ? 1 : 0)) {
+            playerVar.seek(time: self.castingSeekTime())
             playerVar.play()
         }
-        
-        PlayerViewController.lastVideoUrl = absoluteVideoUrl
         didStartPlaybackSession()
         
         // analytics
-        guard let currentPlayable = item.playable else { return }
+        guard let item = playerVar.config.sourceItem as? PlayableSourceItem,
+            let currentPlayable = item.playable else { return }
         
         let analyticParamsBuilder = AnalyticParamsBuilder()
         analyticParamsBuilder.duration = playerVar.duration
@@ -226,8 +199,32 @@ extension PlayerViewController: PlayerListener {
         analyticEventDelegate?.eventOccurred(event, params: params, timed: false)
     }
     
-    func onPlay(_ event: PlayEvent) {
+    private func castingSeekTime() -> Double {
         
+        guard let playerVar = player,
+            let item = playerVar.config.sourceItem as? PlayableSourceItem,
+            let elapsedTime = item.elapsedTime,
+            let videoUrl = item.playable?.contentVideoURLPath() else { return 0.0 }
+        
+        var component = URLComponents(string: videoUrl)
+        component?.query = nil
+        let absoluteVideoUrl = component?.url?.absoluteString
+        let lastVideoUrl = PlayerViewController.lastVideoUrl
+        PlayerViewController.lastVideoUrl = absoluteVideoUrl
+        
+        if (lastVideoUrl == absoluteVideoUrl) {
+            if (self.castingLastVideoElapsedTime > 0) {
+                // Starting casting video from it is currently playing.
+                return self.castingLastVideoElapsedTime
+            } else if (PlayerViewController.lastVideoElapsedTime  > 0) {
+                // Starting playing video from it was stopped.
+                return PlayerViewController.lastVideoElapsedTime
+            }
+        }
+        return elapsedTime
+    }
+    
+    func onPlay(_ event: PlayEvent) {
         guard let playerVar = player,
             let item = playerVar.config.sourceItem as? PlayableSourceItem else { return }
         
@@ -240,7 +237,6 @@ extension PlayerViewController: PlayerListener {
     }
     
     func onPaused(_ event: PausedEvent) {
-        
         guard let playerVar = player,
             let sourceItem = playerVar.config.sourceItem as? PlayableSourceItem else { return }
         
