@@ -11,6 +11,7 @@ import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.K
 import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.KEY_CURRENT_PROGRESS
 import com.applicaster.plugin_manager.playersmanager.Playable
 import com.bitmovin.player.BitmovinPlayer
+import com.bitmovin.player.api.event.listener.OnReadyListener
 import com.bitmovin.player.cast.BitmovinCastManager
 import com.bitmovin.player.config.media.SourceConfiguration
 import kotlinx.android.synthetic.main.activity_player.*
@@ -103,10 +104,13 @@ class TAPlayerActivity : AppCompatActivity() {
             sourceConfiguration.addSourceItem(this)
             Log.d(TAG, "SET currentProgress :: $currentProgress sec")
             sourceConfiguration.startOffset = currentProgress
-            bitmovinPlayer?.config?.playbackConfiguration?.isAutoplayEnabled = true
             bitmovinPlayer?.load(sourceConfiguration)
             EventListenerInteractor.addListeners(bitmovinPlayer, playable?.playableId
                     ?: "", contentGroup)
+
+            bitmovinPlayer?.addEventListener(OnReadyListener {
+                bitmovinPlayer?.play()
+            })
         }
     }
 
