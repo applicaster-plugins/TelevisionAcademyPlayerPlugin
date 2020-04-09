@@ -14,7 +14,6 @@ import com.applicaster.plugin_manager.playersmanager.Playable
 import com.applicaster.plugin_manager.playersmanager.PlayableConfiguration
 import com.applicaster.plugin_manager.playersmanager.PlayerContract
 import com.bitmovin.player.BitmovinPlayerView
-import com.bitmovin.player.cast.BitmovinCastManager
 import com.bitmovin.player.config.media.SourceConfiguration
 
 class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
@@ -134,11 +133,6 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
     }
 
     override fun executeOnApplicationReady(context: Context?, listener: HookListener?) {
-        if (ConfigurationRepository.chromeCastAppId.isNullOrEmpty()) {
-            BitmovinCastManager.initialize()
-        } else {
-            BitmovinCastManager.initialize(ConfigurationRepository.chromeCastAppId, null)
-        }
         listener?.onHookFinished()
     }
 }
