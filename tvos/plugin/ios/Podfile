@@ -4,12 +4,15 @@ use_frameworks!
 source 'git@github.com:applicaster/CocoaPods.git'
 source 'git@github.com:applicaster/CocoaPods-Private.git'
 source 'git@github.com:applicaster/PluginsBuilderCocoaPods.git'
+source 'git@github.com:applicaster/PluginsBuilderCocoaPods.git'
 source 'git@github.com:CocoaPods/Specs.git'
 
 target 'BitmovinRNPlayer' do
 
   pod 'ZappPlugins'
-  pod 'BitmovinPlayer', '2.37.0'
+  pod 'BitmovinPlayer','2.42.0'
+  pod 'BitmovinAnalyticsCollector/BitmovinPlayer', git: 'https://github.com/bitmovin/bitmovin-analytics-collector-ios.git', tag: '1.12.0'
+  pod 'BitmovinAnalyticsCollector/Core', git: 'https://github.com/bitmovin/bitmovin-analytics-collector-ios.git', tag: '1.12.0'
   pod 'yoga', :path => '../../node_modules/react-native/ReactCommon/yoga'
   pod 'React', :path => '../../node_modules/react-native', :subspecs => [
     'Core',

@@ -1,5 +1,8 @@
 PODS:
-  - BitmovinPlayer (2.37.0)
+  - BitmovinAnalyticsCollector/BitmovinPlayer (1.12.0):
+    - BitmovinPlayer (~> 2.40)
+  - BitmovinAnalyticsCollector/Core (1.12.0)
+  - BitmovinPlayer (2.42.0)
   - boost-for-react-native (1.63.0)
   - DoubleConversion (1.1.6)
   - Folly (2018.10.22.00):
@@ -64,7 +67,9 @@ PODS:
     - ZappCore
 
 DEPENDENCIES:
-  - BitmovinPlayer (= 2.37.0)
+  - BitmovinAnalyticsCollector/BitmovinPlayer (from `https://github.com/bitmovin/bitmovin-analytics-collector-ios.git`, tag `1.12.0`)
+  - BitmovinAnalyticsCollector/Core (from `https://github.com/bitmovin/bitmovin-analytics-collector-ios.git`, tag `1.12.0`)
+  - BitmovinPlayer (= 2.42.0)
   - DoubleConversion (from `../../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - Folly (from `../../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../../node_modules/react-native/third-party-podspecs/glog.podspec`)
@@ -93,6 +98,9 @@ SPEC REPOS:
     - boost-for-react-native
 
 EXTERNAL SOURCES:
+  BitmovinAnalyticsCollector:
+    :git: https://github.com/bitmovin/bitmovin-analytics-collector-ios.git
+    :tag: 1.12.0
   DoubleConversion:
     :podspec: "../../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   Folly:
@@ -104,8 +112,14 @@ EXTERNAL SOURCES:
   yoga:
     :path: "../../node_modules/react-native/ReactCommon/yoga"
 
+CHECKOUT OPTIONS:
+  BitmovinAnalyticsCollector:
+    :git: https://github.com/bitmovin/bitmovin-analytics-collector-ios.git
+    :tag: 1.12.0
+
 SPEC CHECKSUMS:
-  BitmovinPlayer: 1d28f125952403f2bbd63e0a2f30f9101f4247ea
+  BitmovinAnalyticsCollector: aed8eade600230a2bbdb0294695700bb1588bcb0
+  BitmovinPlayer: 093d9163769c19df2c55c9ec400443e69e69083b
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   DoubleConversion: bb338842f62ab1d708ceb63ec3d999f0f3d98ecd
   Folly: de497beb10f102453a1afa9edbf8cf8a251890de
@@ -115,6 +129,6 @@ SPEC CHECKSUMS:
   ZappCore: f92ff80112b8dfac6ebba117b393df0665e93241
   ZappPlugins: 3a6592c577790586d519b021dcc143bab15bf49c
 
-PODFILE CHECKSUM: b19ca80bf81abad915e02e7f7086e6fa85f7672a
+PODFILE CHECKSUM: cc981204c0078ca642ba19a8f541308faba7f723
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.0

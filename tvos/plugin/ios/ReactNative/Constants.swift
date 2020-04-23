@@ -19,10 +19,15 @@ enum BridgeConstants: String {
     case testVideoSrc = "testVideoSrc"
     case type = "type"
     case keyCode = "keyCode"
+    case bitmovinAnalyticLicenseKey = "BitmovinAnalyticLicenseKey"
+    case bitmovinPlayerLicenseKey = "plist.BitmovinPlayerLicenseKey"
+    case heartbeatInterval = "heartbeat_interval"
+    case baseSkylarkUrl = "baseSkylarkUrl"
 }
 
 enum CommonConstants: Int {
     case miliseconds = 1000
     case SEEKING_OFFSET = 10
     case TRACK_TIME_INTERVAL = 5
+    case DEFAULT_HEARTBEAT_INTERVAL = 5000
 }

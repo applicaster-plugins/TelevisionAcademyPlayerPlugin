@@ -9,8 +9,8 @@
   "author_name": "Vlad Sumtsov",
   "author_email": "vlad.sumtsov@corewillsoft.com",
   "dependency_name": "@applicaster/quick-brick-television-academy-bitmovin-player",
-  "dependency_version": "0.4.20",
-  "manifest_version": "0.4.20",
+  "dependency_version": "0.4.21",
+  "manifest_version": "0.4.21",
   "name": "Television Academy Player TV",
   "description": "Television Academy Bitmovin Player plugin for Apple TV on Quick Brick",
   "type": "player",
@@ -48,6 +48,17 @@
       "key": "plist.BitmovinPlayerLicenseKey",
       "tooltip_text": "Bitmovin player license key.",
       "default": ""
+    },
+    {
+      "type": "text",
+      "key": "BitmovinAnalyticLicenseKey",
+      "tooltip_text": "Bitmovin analytic license key."
+    },
+    {
+      "type": "text",
+      "key": "heartbeat_interval",
+      "default": "5000",
+      "tooltip_text": "Bitmovin heartbeat interval in milliseconds. Default is 5000 milliseconds."
     }
   ],
   "targets": ["tv"],

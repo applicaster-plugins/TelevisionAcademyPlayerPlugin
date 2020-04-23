@@ -10,10 +10,10 @@
  import BitmovinPlayer
  
  class PlayerViewController: UIViewController {
-    
     weak var eventsResponderDelegate: PlayerEventsResponder?
     var bitmovinPlayer: BitmovinPlayer?
     private var bitmovinPlayerView: BMPBitmovinPlayerView?
+    private var analyticCollector: BitmovinAnalytics?
     
     var playableItem: NSDictionary? {
         willSet(newPlayableItem) {
@@ -24,6 +24,9 @@
     }
     var baseSkylarkUrl: NSString?
     var testVideoSrc: NSString?
+    var analyticKey: NSString?
+    var playerKey: NSString?
+    var heartbeatInterval: Int
     
     var lastTrackDate: Date = Date(timeIntervalSince1970: 0)
     var task: URLSessionDataTask? = nil
@@ -31,7 +34,11 @@
     var skipSeekTrack: Bool = false
     
     deinit {
-        self.bitmovinPlayer?.destroy()
+        bitmovinPlayer?.destroy()
+        bitmovinPlayer = nil
+        bitmovinPlayerView = nil
+        analyticCollector?.detachPlayer()
+        analyticCollector = nil
     }
     
     override func viewDidLoad() {
@@ -73,6 +80,9 @@
         let player = BitmovinPlayer(configuration: config)
         player.add(listener: self)
         
+        self.analyticCollector = createAnalyticCollector(videoId: identifier)
+        self.analyticCollector?.attachBitmovinPlayer(player: player)
+        
         DispatchQueue.main.async {
             let playerView = BMPBitmovinPlayerView(player: player, frame: .zero)
             playerView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
@@ -84,6 +94,19 @@
             self.bitmovinPlayer = player
             self.bitmovinPlayerView = playerView
         }
+    }
+    
+    private func createAnalyticCollector(videoId: String) -> BitmovinAnalytics? {
+        guard let analyticKey = self.analyticKey,
+            let playerKey = self.playerKey
+            else { return nil }
+        
+        let config:BitmovinAnalyticsConfig = BitmovinAnalyticsConfig(key:analyticKey, playerKey:playerKey)
+        config.cdnProvider = CdnProvider.bitmovin
+        config.videoId = videoId
+        config.heartbeatInterval = self.heartbeatInterval
+        
+        return BitmovinAnalytics(config: config);
     }
     
     override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
