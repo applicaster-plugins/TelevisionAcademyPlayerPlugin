@@ -25,6 +25,7 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
     }
 
     lateinit var videoView: BitmovinPlayerView
+    private var bitmovinAnalyticInteractor: BitmovinAnalyticInteractor? = null
 
     override fun init(playable: Playable, context: Context) {
         this.init(mutableListOf(playable), context)
@@ -62,12 +63,16 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
     override fun attachInline(viewGroup: ViewGroup) {
         super.attachInline(viewGroup)
         viewGroup.addView(videoView)
+        bitmovinAnalyticInteractor = BitmovinAnalyticInteractor().apply {
+            initializeAnalyticsCollector(context, getContentPlayable())
+        }
         EventListenerInteractor.addListeners(videoView.player, firstPlayable.playableId, getContentGroup(getContentPlayable()))
     }
 
     override fun removeInline(viewGroup: ViewGroup) {
         super.removeInline(viewGroup)
         viewGroup.removeView(videoView)
+        bitmovinAnalyticInteractor?.detachPlayer()
         EventListenerInteractor.removeListeners(videoView.player)
     }
 
@@ -76,6 +81,7 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
         getContentPlayable().apply {
             val source = SourceConfiguration()
             source.addSourceItem(contentVideoURL)
+            bitmovinAnalyticInteractor?.attachPlayer(videoView.player)
             videoView.player?.config?.playbackConfiguration?.isAutoplayEnabled = true
             videoView.player?.load(source)
         }
