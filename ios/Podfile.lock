@@ -1,4 +1,7 @@
 PODS:
+  - BitmovinAnalyticsCollector/BitmovinPlayer (1.12.0):
+    - BitmovinPlayer (~> 2.40)
+  - BitmovinAnalyticsCollector/Core (1.12.0)
   - BitmovinPlayer (2.42.0)
   - google-cast-sdk-no-bluetooth (4.4.4):
     - google-cast-sdk-no-bluetooth/Core (= 4.4.4)
@@ -13,6 +16,8 @@ PODS:
     - ZappCore
 
 DEPENDENCIES:
+  - BitmovinAnalyticsCollector/BitmovinPlayer (from `https://github.com/bitmovin/bitmovin-analytics-collector-ios.git`, tag `1.12.0`)
+  - BitmovinAnalyticsCollector/Core (from `https://github.com/bitmovin/bitmovin-analytics-collector-ios.git`, tag `1.12.0`)
   - BitmovinPlayer (from `https://github.com/bitmovin/bitmovin-player-ios-sdk-cocoapod.git`, tag `2.42.0`)
   - google-cast-sdk-no-bluetooth (= 4.4.4)
   - PlayerEvents (from `https://github.com/applicaster/PlayerEvents-iOS.git`)
@@ -27,6 +32,9 @@ SPEC REPOS:
     - Protobuf
 
 EXTERNAL SOURCES:
+  BitmovinAnalyticsCollector:
+    :git: https://github.com/bitmovin/bitmovin-analytics-collector-ios.git
+    :tag: 1.12.0
   BitmovinPlayer:
     :git: https://github.com/bitmovin/bitmovin-player-ios-sdk-cocoapod.git
     :tag: 2.42.0
@@ -34,6 +42,9 @@ EXTERNAL SOURCES:
     :git: https://github.com/applicaster/PlayerEvents-iOS.git
 
 CHECKOUT OPTIONS:
+  BitmovinAnalyticsCollector:
+    :git: https://github.com/bitmovin/bitmovin-analytics-collector-ios.git
+    :tag: 1.12.0
   BitmovinPlayer:
     :git: https://github.com/bitmovin/bitmovin-player-ios-sdk-cocoapod.git
     :tag: 2.42.0
@@ -42,6 +53,7 @@ CHECKOUT OPTIONS:
     :git: https://github.com/applicaster/PlayerEvents-iOS.git
 
 SPEC CHECKSUMS:
+  BitmovinAnalyticsCollector: aed8eade600230a2bbdb0294695700bb1588bcb0
   BitmovinPlayer: aede7cc3108495046682d5f5227182b4c4b88581
   google-cast-sdk-no-bluetooth: e0af19280673fba052f7fc3ddde6116c733ce505
   PlayerEvents: 2116911e3375965a0d4cd4001da5bdea7904464a
@@ -49,6 +61,6 @@ SPEC CHECKSUMS:
   ZappCore: f92ff80112b8dfac6ebba117b393df0665e93241
   ZappPlugins: 39fabc1b8c05be6e55625b8f256b827265748678
 
-PODFILE CHECKSUM: 82409000062f60d700ed37f4403c1739fcab3271
+PODFILE CHECKSUM: d73fd890a8f2ea38638488b862d96dbfef685172
 
 COCOAPODS: 1.9.0

@@ -13,7 +13,7 @@
       "platform": "ios",
       "author_name": "Vlad Sumtsov",
       "author_email": "vlad.sumtsov@corewillsoft.com",
-      "manifest_version": "0.2.19",
+      "manifest_version": "0.2.20",
       "name": "Television Academy Player",
       "description": "iOS Plugin for Television Academy",
       "type": "player",
@@ -21,7 +21,7 @@
       "identifier": "TelevisionAcademyPlayerPlugin",
       "ui_builder_support": true,
       "dependency_name": "TelevisionAcademyIOSPlayerPlugin",
-      "dependency_version": "0.2.19",
+      "dependency_version": "0.2.20",
       "min_zapp_sdk": "12.0.0",
       "deprecated_since_zapp_sdk": "",
       "unsupported_since_zapp_sdk": "",
@@ -36,6 +36,17 @@
                   "type": "text",
                   "key": "plist.BitmovinPlayerLicenseKey",
                   "tooltip_text": "Bitmovin player license key."
+            },
+            {
+                  "type": "text",
+                  "key": "BitmovinAnalyticLicenseKey",
+                  "tooltip_text": "Bitmovin analytic license key."
+            },
+            {
+                  "type": "text",
+                  "key": "heartbeat_interval",
+                  "default": "5000",
+                  "tooltip_text": "Bitmovin heartbeat interval in milliseconds. Default is 5000 milliseconds."
             }
       ],
       "targets": ["mobile"],
