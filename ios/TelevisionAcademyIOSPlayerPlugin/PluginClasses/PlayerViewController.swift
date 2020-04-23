@@ -8,6 +8,7 @@
 
 import UIKit
 import BitmovinPlayer
+import BitmovinAnalyticsCollector
 import ZappPlugins
 import PlayerEvents
 import GoogleCast
@@ -17,6 +18,7 @@ class PlayerViewController: UIViewController {
     enum Constants: Int {
         case miliseconds = 1000
     }
+    private let defaultAnalyticHeartbeat = 5000
     static var lastVideoUrl: String?
     static var lastVideoElapsedTime: Double = 0.0
     private var castingLastVideoElapsedTime: Double = 0.0
@@ -24,6 +26,7 @@ class PlayerViewController: UIViewController {
     // player utils
     var player: BitmovinPlayer?
     private var playerView: BMPBitmovinPlayerView?
+    private var analyticCollector: BitmovinAnalytics?
     private var videoStartTime = Date()
     private var viewSwitchCounter = 0
     
@@ -65,7 +68,7 @@ class PlayerViewController: UIViewController {
         // Initialize bitmovin chrome casting in the ZappGeneralPluginChromeCast_Bitmovin
         // BitmovinCastManager.initializeCasting(applicationId: "3BD10BE7", messageNamespace: nil)
         // Initialize logging
-        //        BitmovinCastManager.initializeCasting()
+        // BitmovinCastManager.initializeCasting()
     }
     
     required init?(coder: NSCoder) {
@@ -107,6 +110,20 @@ class PlayerViewController: UIViewController {
         player?.destroy()
         player = nil
         playerView = nil
+        analyticCollector?.detachPlayer()
+        analyticCollector = nil
+    }
+    
+    private func createAnalyticCollector(videoId: String) -> BitmovinAnalytics? {
+        guard let playerKey = configuration["plist.BitmovinPlayerLicenseKey"] as? String else { return nil }
+        guard let analyticKey = configuration["BitmovinAnalyticLicenseKey"] as? String else { return nil }
+    
+        let config:BitmovinAnalyticsConfig = BitmovinAnalyticsConfig(key:analyticKey, playerKey:playerKey)
+        config.cdnProvider = CdnProvider.bitmovin
+        config.videoId = videoId
+        config.heartbeatInterval = Int(self.configuration["heartbeat_interval"] as? String ?? "") ?? defaultAnalyticHeartbeat
+          
+        return BitmovinAnalytics(config: config);
     }
     
     private func setupPlayer() {
@@ -125,7 +142,6 @@ class PlayerViewController: UIViewController {
         
         let sourceItems =
             videos.map { (playable) -> PlayableSourceItem in
-                
                 let source = PlayableSourceItem(url: URL(string: playable.contentVideoURLPath())!)!
                 source.itemTitle = playable.playableName()
                 source.playable = playable
@@ -138,6 +154,9 @@ class PlayerViewController: UIViewController {
         
         let player = BitmovinPlayer(configuration: config)
         player.add(listener: self)
+        
+        self.analyticCollector = createAnalyticCollector(videoId: sourceItems.first?.playable?.identifier as String? ?? "")
+        self.analyticCollector?.attachBitmovinPlayer(player: player)
         
         let playerView = BMPBitmovinPlayerView(player: player, frame: .zero)
         playerView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
