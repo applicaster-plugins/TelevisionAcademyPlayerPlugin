@@ -13,11 +13,11 @@
     }
   ],
   "dependency_name": "@applicaster/quick-brick-television-academy-bitmovin-player",
-  "dependency_version": "0.4.20",
+  "dependency_version": "0.4.21",
   "platform": "android",
   "author_name": "Vlad Sumtsov",
   "author_email": "vlad.sumtsov@corewillsoft.com",
-  "manifest_version": "0.4.20",
+  "manifest_version": "0.4.21",
   "name": "Television Academy Player TV",
   "description": "Television Academy Bitmovin Player plugin for Android TV on Quick Brick",
   "type": "player",
@@ -34,7 +34,7 @@
   "react_bundle_url": "",
   "extra_dependencies": [],
   "npm_dependencies": [
-    "@applicaster/quick-brick-television-academy-bitmovin-player@0.4.20"
+    "@applicaster/quick-brick-television-academy-bitmovin-player@0.4.21"
   ],
   "project_dependencies": [
     {
@@ -56,6 +56,11 @@
       "type": "text",
       "tooltip_text": "Url for skylark to put video metadata. Example: https://publicapi.feature.atas.ostm.io/api/v1",
       "default": ""
+    },
+    {
+      "type": "text",
+      "key": "heartbeat_interval",
+      "tooltip_text": "Bitmovin analytics heartbeat interval."
     }
   ],
   "hooks": {

@@ -18,6 +18,7 @@ import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.tva.quickbrickplayerplugin.analytic.AnalyticUtil
+import com.tva.quickbrickplayerplugin.analytic.BitmovinAnalyticInteractor
 import com.tva.quickbrickplayerplugin.api.ApiFactory
 import com.tva.quickbrickplayerplugin.api.PlayerEvent
 import kotlinx.android.synthetic.main.player_view.view.*
@@ -34,12 +35,14 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     private var sourceId: String? = null
     //Temporary hardcoded
     private var testVideoSrc: String? = null
+    private var heartbeatInterval: Int = 5000
     private lateinit var baseSkylarkUrl: String
 
     private val TAG = TVAQuickBrickPlayerView::class.java.simpleName
     private val SEEKING_OFFSET = 10
     private val TRACK_TIME_INTERVAL = TimeUnit.SECONDS.toMillis(5)
     private var bitmovinPlayer: BitmovinPlayer? = null
+    private var bitmovinAnalyticInteractor: BitmovinAnalyticInteractor
 
     private val apiFactory by lazy {
         ApiFactory(baseSkylarkUrl, LoginManager.getLoginPlugin()?.token ?: "")
@@ -59,6 +62,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     init {
         OSUtil.getLayoutInflater(context).inflate(R.layout.player_view, this)
         bitmovinPlayer = bitmovinPlayerView.player
+        bitmovinAnalyticInteractor = BitmovinAnalyticInteractor()
     }
 
     override fun onAttachedToWindow() {
@@ -88,6 +92,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
             analyticUtil.trackSeek(it.position, it.seekTarget, bitmovinPlayer?.duration ?: 0.0)
         })
 
+        bitmovinAnalyticInteractor.attachPlayer(bitmovinPlayer)
         bitmovinPlayer?.play()
         bitmovinPlayerView.onStart()
         elapsedTimeSeconds?.let { bitmovinPlayer?.seek(it.toDouble()) }
@@ -117,7 +122,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         bitmovinPlayerView.onDestroy()
         eventListeners.forEach { bitmovinPlayer?.removeEventListener(it) }
         bitmovinPlayer?.let { player -> analyticUtil.endTrack(player.currentTime, bitmovinPlayer?.duration ?: 0.0) }
-
+        bitmovinAnalyticInteractor.detachPlayer()
     }
 
     fun onKeyChanged(event: ReadableMap?) {
@@ -150,6 +155,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
                 }
             }
         }
+        bitmovinAnalyticInteractor.initializeAnalyticsCollector(context, sourceId, heartbeatInterval)
     }
 
     fun setPluginConfiguration(params: ReadableMap) {
@@ -157,6 +163,9 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
                 ?: throw IllegalArgumentException("baseSkylarkUrl should be specified in config")
         if (params.hasKey("testVideoSrc")) {
             this.testVideoSrc = params.getString("testVideoSrc")
+        }
+        if (params.hasKey("heartbeat_interval")) {
+            this.heartbeatInterval = params.getInt("heartbeat_interval")
         }
     }
 
