@@ -100,6 +100,7 @@ dependencies {
 
     api fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.bitmovin.player:playercore:2.37.0"
+    implementation 'com.bitmovin.analytics:collector-bitmovin-player:1.12.1'    
 
     //Network
     api('com.squareup.okhttp3:logging-interceptor:3.8.1') {

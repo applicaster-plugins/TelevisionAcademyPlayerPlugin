@@ -14,8 +14,13 @@
     <application android:largeHeap="true">
 
         <meta-data
-            android:name="BITMOVIN_PLAYER_LICENSE_KEY"
-            android:value="9909b054-c194-416e-b2bc-13f9a781431e" />
+                android:name="BITMOVIN_ANALYTICS_LICENSE_KEY"
+                android:value="@string/bitmovin_analytics_license_key" />
+
+        <meta-data
+                android:name="BITMOVIN_PLAYER_LICENSE_KEY"
+                android:value="@string/bitmovin_player_license_key" />
+
     </application>
 
 </manifest>
