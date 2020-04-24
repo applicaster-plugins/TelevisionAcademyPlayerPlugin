@@ -12,7 +12,7 @@
   "platform": "android",
   "author_name": "Vlad Sumtsov",
   "author_email": "vlad.sumtsov@corewillsoft.com",
-  "manifest_version": "0.1.8",
+  "manifest_version": "0.1.9",
   "name": "Television Academy Player",
   "description": "Android Plugin for Television Academy",
   "type": "player",
@@ -20,7 +20,7 @@
   "identifier": "TelevisionAcademyPlayerPlugin",
   "ui_builder_support": true,
   "dependency_name": "com.applicaster:television-academy-player-plugin",
-  "dependency_version": "0.1.8",
+  "dependency_version": "0.1.9",
   "whitelisted_account_ids": [
     "5dcaba3ee648eb000eaf5c0a"
   ],
@@ -39,6 +39,11 @@
       "type": "text",
       "key": "chromecast_app_id",
       "tooltip_text": "Chromecast application ID"
+    },
+    {
+      "type": "text",
+      "key": "heartbeat_interval",
+      "tooltip_text": "Bitmovin analytics heartbeat interval."
     }
   ],
   "targets": ["mobile"],

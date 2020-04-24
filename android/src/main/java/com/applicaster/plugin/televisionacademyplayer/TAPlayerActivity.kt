@@ -23,6 +23,7 @@ class TAPlayerActivity : AppCompatActivity() {
     private var currentProgress: Double = 0.0
     private var contentGroup: String = ""
     private val TAG = "TAPlayerActivity"
+    private var bitmovinAnalyticInteractor: BitmovinAnalyticInteractor
 //    private val testUrl = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd"
 
     init {
@@ -34,6 +35,7 @@ class TAPlayerActivity : AppCompatActivity() {
                 BitmovinCastManager.initialize(ConfigurationRepository.chromeCastAppId, null)
             }
         }
+        bitmovinAnalyticInteractor = BitmovinAnalyticInteractor()
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +55,7 @@ class TAPlayerActivity : AppCompatActivity() {
         }
         setContentView(R.layout.activity_player)
         bitmovinPlayer = bitmovinPlayerView.player
+        bitmovinAnalyticInteractor.initializeAnalyticsCollector(applicationContext, playable)
         initializePlayer()
     }
 
@@ -96,6 +99,7 @@ class TAPlayerActivity : AppCompatActivity() {
             else -> AnalyticsAgentUtil.PLAY_VOD_ITEM
         }.let { AnalyticsAgentUtil.endTimedEvent(it) }
         EventListenerInteractor.removeListeners(bitmovinPlayer)
+        bitmovinAnalyticInteractor.detachPlayer()
         super.onDestroy()
     }
 
@@ -119,6 +123,7 @@ class TAPlayerActivity : AppCompatActivity() {
                     ?: "", contentGroup)
 
             bitmovinPlayer?.addEventListener(OnReadyListener {
+                bitmovinAnalyticInteractor.attachPlayer(bitmovinPlayer)
                 bitmovinPlayer?.play()
             })
         }
