@@ -54,8 +54,8 @@ class PlayerView: UIView {
             
             guard let config = pluginConfiguration,
                 let baseSkylarkUrl = config[BridgeConstants.baseSkylarkUrl.rawValue] as? NSString,
-                let analyticKey = configuration[BridgeConstants.bitmovinAnalyticLicenseKey.rawValue] as? String,
-                let playerKey = configuration[BridgeConstants.bitmovinPlayerLicenseKey.rawValue] as? String
+                let analyticKey = config[BridgeConstants.bitmovinAnalyticLicenseKey.rawValue] as? String,
+                let playerKey = config[BridgeConstants.bitmovinPlayerLicenseKey.rawValue] as? String
                 else { return }
             
             self.baseSkylarkUrl = baseSkylarkUrl
@@ -65,7 +65,7 @@ class PlayerView: UIView {
                 self.testVideoSrc = nil
             }
             
-            let heartbeatInterval = Int(self.configuration[BridgeConstants.heartbeatInterval.rawValue] as? String ?? "")
+            let heartbeatInterval = Int(config[BridgeConstants.heartbeatInterval.rawValue] as? String ?? "")
             
             playerViewController?.baseSkylarkUrl = self.baseSkylarkUrl
             playerViewController?.testVideoSrc = self.testVideoSrc

@@ -22,7 +22,6 @@ enum BridgeConstants: String {
     case bitmovinAnalyticLicenseKey = "BitmovinAnalyticLicenseKey"
     case bitmovinPlayerLicenseKey = "plist.BitmovinPlayerLicenseKey"
     case heartbeatInterval = "heartbeat_interval"
-    case baseSkylarkUrl = "baseSkylarkUrl"
 }
 
 enum CommonConstants: Int {
