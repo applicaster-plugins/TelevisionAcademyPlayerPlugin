@@ -18,7 +18,9 @@ object ConfigurationRepository {
             chromeCastAppId = it.toString()
         }
         params[HEARTBEAT_INTERVAL]?.let {
-            heartbeatInterval = it.toString().toInt()
+            it.toString().toIntOrNull()?.let { heartbeatIntervalValue ->
+                heartbeatInterval = heartbeatIntervalValue
+            }
         }
     }
 }
