@@ -5,7 +5,7 @@
     "react_packages": [
       "com.tva.quickbrickplayerplugin.TVAQuickBrickPlayerPluginReactPackage"
     ],
-    "proguard_rules": "-keep class com.tva.quickbrickplayerplugin.** { *; }\n-keep class com.bitmovin.player.** { *; }\n"
+    "proguard_rules": "-keep class com.tva.quickbrickplayerplugin.** { *; }\n-keep class com.bitmovin.player.** { *; }\n-keep class com.bitmovin.analytics.** { *; }\n"
   },
   "dependency_repository_url": [
     {
