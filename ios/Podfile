@@ -11,8 +11,7 @@ target 'TelevisionAcademyIOSPlayerPlugin' do
   pod 'ZappPlugins'
   pod 'google-cast-sdk-no-bluetooth', '= 4.4.4'
   pod 'PlayerEvents', git: 'https://github.com/applicaster/PlayerEvents-iOS.git'
-  pod 'BitmovinAnalyticsCollector/BitmovinPlayer', git: 'https://github.com/bitmovin/bitmovin-analytics-collector-ios.git', tag: '1.12.0'
-  pod 'BitmovinAnalyticsCollector/Core', git: 'https://github.com/bitmovin/bitmovin-analytics-collector-ios.git', tag: '1.12.0'
+  pod 'BitmovinAnalyticsCollector', git: 'https://github.com/bitmovin/bitmovin-analytics-collector-ios.git', tag: '1.12.0'
   pod 'BitmovinPlayer', git: 'https://github.com/bitmovin/bitmovin-player-ios-sdk-cocoapod.git', tag:'2.42.0'
 end
 
