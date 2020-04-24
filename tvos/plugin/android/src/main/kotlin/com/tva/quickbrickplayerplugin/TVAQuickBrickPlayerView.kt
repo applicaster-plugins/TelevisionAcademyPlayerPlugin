@@ -165,7 +165,9 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
             this.testVideoSrc = params.getString("testVideoSrc")
         }
         if (params.hasKey("heartbeat_interval")) {
-            this.heartbeatInterval = params.getInt("heartbeat_interval")
+            params.getString("heartbeat_interval")?.toIntOrNull()?.let {
+                this.heartbeatInterval = it
+            }
         }
     }
 
