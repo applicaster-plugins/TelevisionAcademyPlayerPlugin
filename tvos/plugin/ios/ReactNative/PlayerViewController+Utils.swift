@@ -12,26 +12,26 @@ import ZappPlugins
 import ZappCore
 
 extension PlayerViewController {
-
+    
     func trackTime(force: Bool, newTime: Double? = nil) {
-
+        
         guard let playerVar = self.bitmovinPlayer else {
             return
         }
-
+        
         let lastTrack: Double = Date().timeIntervalSince(self.lastTrackDate)
-
+        
         let needUpdate = lastTrack > 5.0
-
+        
         if !force && !needUpdate {
             return
         }
-
+        
         guard let item = self.currentPlayable,
             let baseSkylarkUrlVar = self.baseSkylarkUrl else {
                 return
         }
-
+        
         guard var token = FacadeConnector.connector?.storage?.localStorageValue(for: "token", namespace: "login")  else {
             return
         }
@@ -46,16 +46,16 @@ extension PlayerViewController {
         let duration = Int(playerVar.duration)
         let currentTime = Int(newTime ?? (playerVar.currentTime))
         let contentGroup = currentPlayable?.contentGroup ?? ""
-
+        
         let jsonBody : [String:Any] = [
             "content_length": duration,
             "playhead_position": currentTime,
             "content_group": contentGroup
         ]
-
+        
         let jsonData = try? JSONSerialization.data(withJSONObject: jsonBody, options: .prettyPrinted)
         let putApi = (baseSkylarkUrlVar as String) + "/watchlist/" + item.identifier
-
+        
         let url = URL(string: putApi)!
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
@@ -63,7 +63,7 @@ extension PlayerViewController {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
         request.httpBody = jsonData
-
+        
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 print("error: \(error)")
@@ -77,7 +77,7 @@ extension PlayerViewController {
             }
         }
         task.resume()
-
+        
         self.task = task
         self.lastTrackDate = Date()
     }

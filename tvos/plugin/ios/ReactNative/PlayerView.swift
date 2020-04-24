@@ -19,6 +19,8 @@ class PlayerView: UIView {
     var baseSkylarkUrl: NSString? = nil
     var testVideoSrc: NSString? = nil
     
+    private let defaultAnalyticHeartbeat = 5000
+
     @objc public var onVideoEnd: RCTBubblingEventBlock?
     
     @objc var onKeyChanged: NSDictionary? {
@@ -51,21 +53,25 @@ class PlayerView: UIView {
         didSet {
             
             guard let config = pluginConfiguration,
-                let baseSkylarkUrl = config[BridgeConstants.baseSkylarkUrl.rawValue] as? NSString else {
-                    return
-            }
+                let baseSkylarkUrl = config[BridgeConstants.baseSkylarkUrl.rawValue] as? NSString,
+                let analyticKey = configuration[BridgeConstants.bitmovinAnalyticLicenseKey.rawValue] as? String,
+                let playerKey = configuration[BridgeConstants.bitmovinPlayerLicenseKey.rawValue] as? String
+                else { return }
             
             self.baseSkylarkUrl = baseSkylarkUrl
             
-            guard let testVideoSrc = config[BridgeConstants.testVideoSrc.rawValue] as? NSString else {
-                return
-            }
-            self.testVideoSrc = testVideoSrc
+            self.testVideoSrc = config[BridgeConstants.testVideoSrc.rawValue] as? NSString
             if (self.testVideoSrc?.length == 0) {
                 self.testVideoSrc = nil
             }
+            
+            let heartbeatInterval = Int(self.configuration[BridgeConstants.heartbeatInterval.rawValue] as? String ?? "")
+            
             playerViewController?.baseSkylarkUrl = self.baseSkylarkUrl
-            playerViewController?.testVideoSrc =  self.testVideoSrc
+            playerViewController?.testVideoSrc = self.testVideoSrc
+            playerViewController?.analyticKey = analyticKey
+            playerViewController?.playerKey = playerKey
+            playerViewController?.heartbeatInterval = heartbeatInterval ?? CommonConstants.DEFAULT_HEARTBEAT_INTERVAL.rawValue
         }
     }
     

@@ -12,9 +12,9 @@ import ZappPlugins
 import ZappCore
 
 extension PlayerViewController: PlayerListener, UserInterfaceListener {
-
+    
     func onReady(_ event: ReadyEvent) {
-
+        
         guard let item = self.currentPlayable else { return }
         
         self.skipSeekTrack = true
@@ -36,8 +36,8 @@ extension PlayerViewController: PlayerListener, UserInterfaceListener {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         guard let playbackState = playbackState else {
-             return
-         }
+            return
+        }
         
         let params = AnalyticParamsBuilder()
         params.progress = playbackState.progress
@@ -48,7 +48,7 @@ extension PlayerViewController: PlayerListener, UserInterfaceListener {
     func onPlay(_ event: PlayEvent) {
         self.trackTime(force: false)
     }
-
+    
     func onPaused(_ event: PausedEvent) {
         self.trackTime(force: false)
         
@@ -60,10 +60,10 @@ extension PlayerViewController: PlayerListener, UserInterfaceListener {
         let params = AnalyticParamsBuilder()
         params.progress = playbackState.progress
         params.duration = playbackState.duration
-    
+        
         FacadeConnector.connector?.analytics?.sendEvent?(name: AnalyticsEvent.pause.rawValue, parameters: params.parameters)
     }
-
+    
     func onTimeChanged(_ event: TimeChangedEvent) {
         self.trackTime(force: false)
     }
@@ -79,20 +79,20 @@ extension PlayerViewController: PlayerListener, UserInterfaceListener {
         
         let from = event.position
         let to = event.seekTarget
-
+        
         let params = AnalyticParamsBuilder()
         params.duration = playbackState.duration
         params.timecodeFrom = from
         params.timecodeTo = to
         params.seekDirection = to > from ? "Fast Forward" : "Rewind"
-
+        
         FacadeConnector.connector?.analytics?.sendEvent?(name: AnalyticsEvent.seek.rawValue, parameters: params.parameters)
     }
-
+    
     func onPlaybackFinished(_ event: PlaybackFinishedEvent) {
         self.trackTime(force: true)
     }
-
+    
     func onEvent(_ event: PlayerEvent) {
         print(event)
     }

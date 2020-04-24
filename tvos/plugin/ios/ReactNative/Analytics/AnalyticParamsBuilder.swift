@@ -14,13 +14,13 @@ class AnalyticParamsBuilder {
             parameters[AnalyticsKeys.itemDuration.rawValue] = String.create(fromInterval: duration)
         }
     }
-
+    
     public var progress = 0.0 {
         didSet {
             parameters[AnalyticsKeys.timecode.rawValue] = String.create(fromInterval: progress)
         }
     }
-
+    
     public var timecodeFrom = 0.0 {
         didSet {
             parameters[AnalyticsKeys.timecodeFrom.rawValue] = String.create(fromInterval: timecodeFrom)
@@ -31,13 +31,13 @@ class AnalyticParamsBuilder {
             parameters[AnalyticsKeys.timecodeTo.rawValue] = String.create(fromInterval: timecodeTo)
         }
     }
-
+    
     public var seekDirection = "" {
         didSet {
             parameters[AnalyticsKeys.seekDirection.rawValue] = seekDirection
         }
     }
-
+    
     private(set) var parameters: [String: Any] = [:]
 }
 

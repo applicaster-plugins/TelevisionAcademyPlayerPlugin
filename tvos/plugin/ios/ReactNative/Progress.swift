@@ -11,11 +11,11 @@ import Foundation
 struct Progress {
     var progress: TimeInterval = .infinity
     var duration: TimeInterval = .infinity
-
+    
     var isValid: Bool {
         return progress.isFinite && duration.isFinite
     }
-
+    
     var isCompleted: Bool {
         return isValid && progress >= duration
     }
