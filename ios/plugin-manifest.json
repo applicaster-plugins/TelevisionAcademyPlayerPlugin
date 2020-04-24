@@ -5,8 +5,7 @@
       },
       "dependency_repository_url": [
             "https://github.com/applicaster/PlayerEvents-iOS.git",
-            "https://github.com/applicaster-plugins/TelevisionAcademyPlayerPlugin.git",
-            "https://github.com/bitmovin/bitmovin-analytics-collector-ios.git"
+            "https://github.com/applicaster-plugins/TelevisionAcademyPlayerPlugin.git"
       ],
       "whitelisted_account_ids": [
             "5dcaba3ee648eb000eaf5c0a"
@@ -14,7 +13,7 @@
       "platform": "ios",
       "author_name": "Vlad Sumtsov",
       "author_email": "vlad.sumtsov@corewillsoft.com",
-      "manifest_version": "0.2.21",
+      "manifest_version": "0.5.0",
       "name": "Television Academy Player",
       "description": "iOS Plugin for Television Academy",
       "type": "player",
@@ -22,7 +21,7 @@
       "identifier": "TelevisionAcademyPlayerPlugin",
       "ui_builder_support": true,
       "dependency_name": "TelevisionAcademyIOSPlayerPlugin",
-      "dependency_version": "0.2.21",
+      "dependency_version": "0.5.0",
       "min_zapp_sdk": "12.0.0",
       "deprecated_since_zapp_sdk": "",
       "unsupported_since_zapp_sdk": "",
