@@ -7,7 +7,8 @@ import {sessionStorage} from "@applicaster/zapp-react-native-bridge/ZappStorage/
 import {withNavigator} from '@applicaster/zapp-react-native-ui-components/Decorators/Navigator/';
 
 const PlayerBridge = requireNativeComponent("PlayerBridge");
-type Props = {
+type
+Props = {
   source: { uri: string },
   item: { content: {} },
   onEnd: any,
@@ -16,7 +17,8 @@ type Props = {
   playableItem: {},
   pluginConfiguration: {}
 };
-type State = {};
+type
+State = {};
 const NAMESPACE = "TelevisionAcademyPlayerPluginTV";
 
 class VideoPlayerComponent extends React.Component<Props, State> {
@@ -108,7 +110,18 @@ class VideoPlayerComponent extends React.Component<Props, State> {
     try {
       const baseSkylarkUrl = await sessionStorage.getItem("baseSkylarkUrl", NAMESPACE);
       const testVideoSrc = await sessionStorage.getItem("test_video_url", NAMESPACE);
-      this.setState({ pluginConfiguration: { baseSkylarkUrl, testVideoSrc } })
+      const bitmovinAnalyticLicenseKey = await sessionStorage.getItem("BitmovinAnalyticLicenseKey", NAMESPACE);
+      const bitmovinPlayerLicenseKey = await sessionStorage.getItem("plist.BitmovinPlayerLicenseKey", NAMESPACE);
+      const heartbeatInterval = await sessionStorage.getItem("heartbeat_interval", NAMESPACE);
+      this.setState({
+        pluginConfiguration: {
+          baseSkylarkUrl,
+          testVideoSrc,
+          bitmovinAnalyticLicenseKey,
+          bitmovinPlayerLicenseKey,
+          heartbeatInterval
+        }
+      })
     } catch (e) {
       this.setState({ pluginConfiguration: {} })
     }

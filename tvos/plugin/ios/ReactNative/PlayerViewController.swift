@@ -27,7 +27,7 @@
     var testVideoSrc: NSString?
     var analyticKey: NSString?
     var playerKey: NSString?
-    var heartbeatInterval: Int
+    var heartbeatInterval: Int = 5000
 
     var lastTrackDate: Date = Date(timeIntervalSince1970: 0)
     var task: URLSessionDataTask? = nil
@@ -102,7 +102,7 @@
             let playerKey = self.playerKey
             else { return nil }
 
-        let config:BitmovinAnalyticsConfig = BitmovinAnalyticsConfig(key:analyticKey, playerKey:playerKey)
+        let config:BitmovinAnalyticsConfig = BitmovinAnalyticsConfig(key:analyticKey as String, playerKey:playerKey as String)
         config.cdnProvider = CdnProvider.bitmovin
         config.videoId = videoId
         config.heartbeatInterval = self.heartbeatInterval
