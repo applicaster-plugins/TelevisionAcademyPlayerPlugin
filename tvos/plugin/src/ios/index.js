@@ -7,8 +7,7 @@ import {sessionStorage} from "@applicaster/zapp-react-native-bridge/ZappStorage/
 import {withNavigator} from '@applicaster/zapp-react-native-ui-components/Decorators/Navigator/';
 
 const PlayerBridge = requireNativeComponent("PlayerBridge");
-type
-Props = {
+type Props = {
   source: { uri: string },
   item: { content: {} },
   onEnd: any,
@@ -17,8 +16,7 @@ Props = {
   playableItem: {},
   pluginConfiguration: {}
 };
-type
-State = {};
+type State = {};
 const NAMESPACE = "TelevisionAcademyPlayerPluginTV";
 
 class VideoPlayerComponent extends React.Component<Props, State> {
