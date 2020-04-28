@@ -108,7 +108,18 @@ class VideoPlayerComponent extends React.Component<Props, State> {
     try {
       const baseSkylarkUrl = await sessionStorage.getItem("baseSkylarkUrl", NAMESPACE);
       const testVideoSrc = await sessionStorage.getItem("test_video_url", NAMESPACE);
-      this.setState({ pluginConfiguration: { baseSkylarkUrl, testVideoSrc } })
+      const bitmovinAnalyticLicenseKey = await sessionStorage.getItem("BitmovinAnalyticLicenseKey", NAMESPACE);
+      const bitmovinPlayerLicenseKey = await sessionStorage.getItem("plist.BitmovinPlayerLicenseKey", NAMESPACE);
+      const heartbeatInterval = await sessionStorage.getItem("heartbeat_interval", NAMESPACE);
+      this.setState({
+        pluginConfiguration: {
+          baseSkylarkUrl,
+          testVideoSrc,
+          bitmovinAnalyticLicenseKey,
+          bitmovinPlayerLicenseKey,
+          heartbeatInterval
+        }
+      })
     } catch (e) {
       this.setState({ pluginConfiguration: {} })
     }
