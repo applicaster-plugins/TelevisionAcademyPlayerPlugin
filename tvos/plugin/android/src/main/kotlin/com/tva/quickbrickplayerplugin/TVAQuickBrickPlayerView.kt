@@ -148,7 +148,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         if (source.hasKey("extensions")) {
             source.getMap("extensions")?.apply {
                 if (hasKey(ELAPSED_TIME)) {
-                    elapsedTimeSeconds = getString(ELAPSED_TIME)?.toLongOrNull()
+                    elapsedTimeSeconds = getDouble(ELAPSED_TIME).toLong()
                 }
                 if (hasKey(CONTENT_GROUP)) {
                     contentGroup = getString(CONTENT_GROUP)
