@@ -56,6 +56,7 @@ class TAPlayerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_player)
         bitmovinPlayer = bitmovinPlayerView.player
         bitmovinAnalyticInteractor.initializeAnalyticsCollector(applicationContext, playable)
+        bitmovinAnalyticInteractor.attachPlayer(bitmovinPlayer)
         initializePlayer()
     }
 
@@ -123,7 +124,6 @@ class TAPlayerActivity : AppCompatActivity() {
                     ?: "", contentGroup)
 
             bitmovinPlayer?.addEventListener(OnReadyListener {
-                bitmovinAnalyticInteractor.attachPlayer(bitmovinPlayer)
                 bitmovinPlayer?.play()
             })
         }
