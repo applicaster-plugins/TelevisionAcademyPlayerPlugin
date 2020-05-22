@@ -9,11 +9,14 @@ import android.view.WindowManager
 import com.applicaster.analytics.AnalyticsAgentUtil
 import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.KEY_CONTENT_GROUP
 import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.KEY_CURRENT_PROGRESS
+import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.KEY_VIDEO_TYPE
 import com.applicaster.plugin_manager.playersmanager.Playable
 import com.bitmovin.player.BitmovinPlayer
 import com.bitmovin.player.api.event.listener.OnReadyListener
 import com.bitmovin.player.cast.BitmovinCastManager
 import com.bitmovin.player.config.media.SourceConfiguration
+import com.bitmovin.player.config.media.SourceItem
+import com.bitmovin.player.config.vr.VRContentType
 import kotlinx.android.synthetic.main.activity_player.*
 
 class TAPlayerActivity : AppCompatActivity() {
@@ -22,6 +25,7 @@ class TAPlayerActivity : AppCompatActivity() {
     private var playable: Playable? = null
     private var currentProgress: Double = 0.0
     private var contentGroup: String = ""
+    private var videoType: String = ""
     private val TAG = "TAPlayerActivity"
     private var bitmovinAnalyticInteractor: BitmovinAnalyticInteractor
 //    private val testUrl = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd"
@@ -49,6 +53,7 @@ class TAPlayerActivity : AppCompatActivity() {
             playable = getSerializable(PlayerContract.KEY_PLAYABLE) as? Playable
             currentProgress = getDouble(KEY_CURRENT_PROGRESS, 0.0)
             contentGroup = getString(KEY_CONTENT_GROUP, "")
+            videoType = getString(KEY_VIDEO_TYPE, "")
         }
         if (savedInstanceState != null) {
             currentProgress = savedInstanceState.getDouble(KEY_CURRENT_PROGRESS, 0.0)
@@ -106,17 +111,18 @@ class TAPlayerActivity : AppCompatActivity() {
 
     private fun initializePlayer() {
         getContentVideoUrl()?.apply {
-            // TODO:: uncomment it and use vrSourceItem as a source to turn on VR
-//            val vrSourceItem = SourceItem(this)
-//            // Get the current VRConfiguration of the SourceItem
-//            val vrConfiguration = vrSourceItem.vrConfiguration
-//            // Set the VrContentType on the VRConfiguration
-//            vrConfiguration.vrContentType = VRContentType.SINGLE
-//            // Set the start position to 180 degrees
-//            vrConfiguration.startPosition = 180.0
-
             val sourceConfiguration = SourceConfiguration()
-            sourceConfiguration.addSourceItem(this)
+
+            if (videoType == "360") {
+                val vrSourceItem = SourceItem(this)
+                val vrConfiguration = vrSourceItem.vrConfiguration
+                vrConfiguration.vrContentType = VRContentType.SINGLE
+                vrConfiguration.startPosition = 180.0
+                sourceConfiguration.addSourceItem(vrSourceItem)
+            }else {
+                sourceConfiguration.addSourceItem(this)
+            }
+
             Log.d(TAG, "SET currentProgress :: $currentProgress sec")
             sourceConfiguration.startOffset = currentProgress
             bitmovinPlayer?.load(sourceConfiguration)

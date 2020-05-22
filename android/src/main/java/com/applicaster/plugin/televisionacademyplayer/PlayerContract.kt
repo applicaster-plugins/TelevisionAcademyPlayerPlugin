@@ -22,6 +22,7 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
         const val KEY_PLAYABLE = "key_playable"
         const val KEY_CURRENT_PROGRESS = "KEY_CURRENT_PROGRESS"
         const val KEY_CONTENT_GROUP = "KEY_CONTENT_GROUP"
+        const val KEY_VIDEO_TYPE = "KEY_VIDEO_TYPE"
     }
 
     lateinit var videoView: BitmovinPlayerView
@@ -47,6 +48,7 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
             intent.putExtra(KEY_PLAYABLE, it)
             intent.putExtra(KEY_CURRENT_PROGRESS, getProgress(it))
             intent.putExtra(KEY_CONTENT_GROUP, getContentGroup(it))
+            intent.putExtra(KEY_VIDEO_TYPE, getVideoType(it))
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             context.startActivity(intent)
         }
@@ -58,6 +60,10 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
 
     private fun getContentGroup(it: Playable): String =
             (it as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get("content_group")?.toString()
+                    ?: ""
+
+    private fun getVideoType(it: Playable): String =
+            (it as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get("video_type")?.toString()
                     ?: ""
 
     override fun attachInline(viewGroup: ViewGroup) {
