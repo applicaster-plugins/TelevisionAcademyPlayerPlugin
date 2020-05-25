@@ -44,6 +44,20 @@
       "type": "text",
       "key": "heartbeat_interval",
       "tooltip_text": "Bitmovin analytics heartbeat interval."
+    },
+    {
+      "type": "text",
+      "key": "api_base_url",
+      "label": "api base url",
+      "placeholder": "https://....../",
+      "tooltip_text": "api base url"
+    },
+    {
+      "type": "text",
+      "key": "dsp_base_url",
+      "label": "dsp base url",
+      "placeholder": "https://zapp-pipes....../",
+      "tooltip_text": "dsp base url"
     }
   ],
   "targets": ["mobile"],
