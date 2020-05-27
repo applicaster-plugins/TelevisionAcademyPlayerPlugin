@@ -19,6 +19,7 @@ import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.K
 import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.SUBMISSION_ID
 import com.applicaster.plugin.televisionacademyplayer.network.ContentURLRepostory
 import com.applicaster.plugin.televisionacademyplayer.network.Entry
+import com.applicaster.plugin.televisionacademyplayer.network.OKHttpRepsotory
 import com.applicaster.plugin_manager.login.LoginContract
 import com.applicaster.plugin_manager.login.LoginManager
 import com.applicaster.plugin_manager.playersmanager.Playable
@@ -176,7 +177,7 @@ class TAPlayerActivity : AppCompatActivity() {
     }
 
     private fun getUIDs(competition_id: String, submission_id: String, token: String) {
-        ContentURLRepostory().contentUIDS(competition_id, submission_id, token) { status, response ->
+        OKHttpRepsotory().contentUIDS(competition_id, submission_id, token) { status, response ->
             if (status == ResponseStatusCodes.SUCCESS) {
                 for (episode: Entry in response?.entry!!) {
                     episode.content!!.src?.let { uidList.add(it) }

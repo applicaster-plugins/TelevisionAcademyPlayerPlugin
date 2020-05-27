@@ -1,7 +1,6 @@
 package com.applicaster.plugin.televisionacademyplayer.network
 
 import com.applicaster.plugin.televisionacademyplayer.ConfigurationRepository.apiBaseUrl
-import com.applicaster.plugin.televisionacademyplayer.ConfigurationRepository.dspBaseUrl
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -34,14 +33,6 @@ class RestClient {
 
     var tvpClient = retrofit.create<NetworkAPI>(NetworkAPI::class.java)
 
-    private val DSPRetrofit = Retrofit.Builder()
-        .baseUrl(dspBaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(okHttpClient)
-        .build()
-
-
-    var DSPClient = DSPRetrofit.create<NetworkAPI>(NetworkAPI::class.java)
 
 
 }

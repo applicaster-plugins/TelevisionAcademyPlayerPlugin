@@ -28,20 +28,7 @@ class ContentURLRepostory {
             }
         })
     }
-    fun contentUIDS(competition_id: String,submission_id: String, token: String, callback: (ResponseStatusCodes, UIDSResponse?) -> Unit) {
-        RestClient.getInstance().DSPClient.getUIDs(competition_id, submission_id, token).enqueue(object : Callback<UIDSResponse> {
-            override fun onResponse(call: Call<UIDSResponse>, response: Response<UIDSResponse>) {
-                when (ResponseStatusCodes.getData(response.code())) {
-                    ResponseStatusCodes.SUCCESS -> callback(ResponseStatusCodes.SUCCESS, (response.body() as UIDSResponse))
-                    ResponseStatusCodes.AUTHENTICATION_FAILED -> callback(ResponseStatusCodes.AUTHENTICATION_FAILED, null)
-                    ResponseStatusCodes.INVALID_REQUEST -> callback(ResponseStatusCodes.INVALID_REQUEST, null)
-                    ResponseStatusCodes.NO_SUCH_CONTENT -> callback(ResponseStatusCodes.NO_SUCH_CONTENT, null)
-                }
-            }
-            override fun onFailure(call: Call<UIDSResponse>, t: Throwable) {
-                callback(ResponseStatusCodes.ON_FAILURE_NO_CODE, null)
-            }
-        })
-    }
+
+
 
 }
