@@ -26,11 +26,11 @@ class OKHttpRepsotory {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body()
                 val bodyString = body?.string() ?: ""
-                when (ResponseStatusCodes.getData(response.code())) {
-                    ResponseStatusCodes.SUCCESS -> callback(ResponseStatusCodes.SUCCESS, Gson().fromJson(bodyString, UIDSResponse::class.java))
-                    ResponseStatusCodes.AUTHENTICATION_FAILED -> callback(ResponseStatusCodes.AUTHENTICATION_FAILED, null)
-                    ResponseStatusCodes.INVALID_REQUEST -> callback(ResponseStatusCodes.INVALID_REQUEST, null)
-                    ResponseStatusCodes.NO_SUCH_CONTENT -> callback(ResponseStatusCodes.NO_SUCH_CONTENT, null)
+                if ((response.code()==200) && bodyString.length>2) {
+                    callback(ResponseStatusCodes.SUCCESS, Gson().fromJson(bodyString, UIDSResponse::class.java))
+                }
+                else{
+                    callback(ResponseStatusCodes.AUTHENTICATION_FAILED, null)
                 }
             }
         })
