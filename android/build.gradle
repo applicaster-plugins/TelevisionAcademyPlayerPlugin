@@ -82,5 +82,5 @@ dependencies {
     implementation 'com.bitmovin.analytics:collector-bitmovin-player:1.12.1'
     implementation 'com.applicaster:PlayerEvents:0.0.+'
 }
-apply from: './build_plugin.gradle'
-apply from: './publish.gradle'
+//apply from: './build_plugin.gradle'
+//apply from: './publish.gradle'
