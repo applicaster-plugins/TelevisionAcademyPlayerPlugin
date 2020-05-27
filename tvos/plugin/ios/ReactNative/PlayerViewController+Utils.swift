@@ -8,7 +8,6 @@
 
 import Foundation
 import BitmovinPlayer
-import ZappPlugins
 import ZappCore
 
 extension PlayerViewController {
