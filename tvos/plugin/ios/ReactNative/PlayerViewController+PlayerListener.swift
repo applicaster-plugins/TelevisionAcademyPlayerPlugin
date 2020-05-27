@@ -8,7 +8,6 @@
 
 import Foundation
 import BitmovinPlayer
-import ZappPlugins
 import ZappCore
 
 extension PlayerViewController: PlayerListener, UserInterfaceListener {
@@ -66,6 +65,7 @@ extension PlayerViewController: PlayerListener, UserInterfaceListener {
     
     func onTimeChanged(_ event: TimeChangedEvent) {
         self.trackTime(force: false)
+        eventsResponderDelegate?.onTimeChangedEvent(time: event.currentTime, duration: (self.bitmovinPlayer?.duration ?? 0))
     }
     
     func onSeek(_ event: SeekEvent) {
