@@ -18,7 +18,7 @@
   "identifier": "TelevisionAcademyPlayerPluginTV",
   "ui_builder_support": false,
   "whitelisted_account_ids": ["5dcaba3ee648eb000eaf5c0a"],
-  "min_zapp_sdk": "10.1.0",
+  "min_zapp_sdk": "12.0.0",
   "deprecated_since_zapp_sdk": "",
   "unsupported_since_zapp_sdk": "",
   "react_native": true,
