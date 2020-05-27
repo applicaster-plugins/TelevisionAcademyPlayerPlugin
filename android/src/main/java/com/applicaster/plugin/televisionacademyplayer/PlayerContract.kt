@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import com.applicaster.analytics.AnalyticsAgentUtil
 import com.applicaster.atom.model.APAtomEntry
 import com.applicaster.model.APChannel
-import com.applicaster.model.APVodItem
 import com.applicaster.player.defaultplayer.BasePlayer
 import com.applicaster.plugin_manager.hook.ApplicationLoaderHookUpI
 import com.applicaster.plugin_manager.hook.HookListener
@@ -125,14 +124,8 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
 
     override fun getPlayerType() = PlayerContract.PlayerType.Default
 
-    private fun getContentPlayable(): Playable =
-            if (ConfigurationRepository.testVideoUrl.isEmpty()) {
-                firstPlayable
-            } else {
-                val item = APVodItem()
-                item.stream_url = ConfigurationRepository.testVideoUrl
-                item
-            }
+    private fun getContentPlayable(): Playable = firstPlayable
+
 
     private fun initializeAnalyticsEvent() {
         val playable = getContentPlayable()

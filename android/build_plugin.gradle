@@ -8,7 +8,7 @@ android {
         minSdkVersion project.ext.minSdkVersion
         targetSdkVersion project.ext.targetSdkVersion
 
-        consumerProguardFiles 'consumer-rules.pro'
+        consumerProguardFiles 'proguard-rules.pro'
     }
 
     buildTypes {

@@ -1,5 +1,6 @@
 package com.applicaster.plugin.televisionacademyplayer.network
 
+import android.util.Log
 import com.applicaster.plugin.televisionacademyplayer.ConfigurationRepository
 import com.applicaster.plugin.televisionacademyplayer.ConfigurationRepository.dsp_parameters_url
 import com.applicaster.tvaplayerhook.enums.ResponseStatusCodes
@@ -17,8 +18,9 @@ class OKHttpRepsotory {
         urlBuilder.addQueryParameter("competition_id", competition_id)
         urlBuilder.addQueryParameter("uid", submission_id)
         urlBuilder.addQueryParameter("token", token)
-        val url = urlBuilder.build().toString()+dsp_parameters_url
+        val url = urlBuilder.build().toString() + dsp_parameters_url
         val request = Request.Builder().url(url).build()
+        Log.d("TAPlayerActivity",url)
         OkHttpClient().newCall(request).enqueue(object : okhttp3.Callback {
             override fun onFailure(call: Call, e: IOException) {
                 callback(ResponseStatusCodes.ON_FAILURE_NO_CODE, null)

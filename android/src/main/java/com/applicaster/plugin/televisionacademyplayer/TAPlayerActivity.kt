@@ -223,7 +223,7 @@ class TAPlayerActivity : AppCompatActivity() {
         bitmovinPlayer?.load(sourceConfiguration)
         EventListenerInteractor.addListeners(bitmovinPlayer, playable?.playableId
                 ?: "", contentGroup)
-        Log.d(TAG, "play now: " + currentPlaylistItem + " || current:" + currentProgress + " from total items:" + playlistItems.size)
+        Log.d("TAPlayerActivity", "play now: " + currentPlaylistItem + " || current:" + currentProgress + " from total items:" + playlistItems.size)
 
     }
 
