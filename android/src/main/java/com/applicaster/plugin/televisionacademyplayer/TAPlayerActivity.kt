@@ -1,33 +1,54 @@
 package com.applicaster.plugin.televisionacademyplayer
 
 import android.os.Bundle
+import android.support.customtabs.CustomTabsService.KEY_URL
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import com.applicaster.analytics.AnalyticsAgentUtil
+import com.applicaster.atom.model.APAtomEntry
+import com.applicaster.model.APURLPlayable
+import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.COMPETITION_ID
 import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.KEY_CONTENT_GROUP
 import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.KEY_CURRENT_PROGRESS
+import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.KEY_NEXT_PLAYLIST_ITEM
+import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.KEY_PLAYABLE
+import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.KEY_QUEUE
 import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.KEY_VIDEO_TYPE
+import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.SUBMISSION_ID
+import com.applicaster.plugin.televisionacademyplayer.network.ContentURLRepostory
+import com.applicaster.plugin.televisionacademyplayer.network.Entry
+import com.applicaster.plugin.televisionacademyplayer.network.OKHttpRepsotory
+import com.applicaster.plugin_manager.login.LoginContract
+import com.applicaster.plugin_manager.login.LoginManager
 import com.applicaster.plugin_manager.playersmanager.Playable
+import com.applicaster.tvaplayerhook.enums.ResponseStatusCodes
 import com.bitmovin.player.BitmovinPlayer
+import com.bitmovin.player.api.event.listener.OnPlaybackFinishedListener
 import com.bitmovin.player.api.event.listener.OnReadyListener
 import com.bitmovin.player.cast.BitmovinCastManager
 import com.bitmovin.player.config.media.SourceConfiguration
 import com.bitmovin.player.config.media.SourceItem
 import com.bitmovin.player.config.vr.VRContentType
 import kotlinx.android.synthetic.main.activity_player.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class TAPlayerActivity : AppCompatActivity() {
-
     private var bitmovinPlayer: BitmovinPlayer? = null
     private var playable: Playable? = null
     private var currentProgress: Double = 0.0
     private var contentGroup: String = ""
-    private var videoType: String = ""
     private val TAG = "TAPlayerActivity"
     private var bitmovinAnalyticInteractor: BitmovinAnalyticInteractor
+    private var loginManager: LoginContract? = null
+    private var uidList: LinkedList<String> = LinkedList()
+    private var playlistItems: ArrayList<String> = ArrayList()
+    private var currentPlaylistItem = -1
+    private var lastItemFinished = false
+    private var videoType: String = ""
 //    private val testUrl = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd"
 
     init {
@@ -41,28 +62,57 @@ class TAPlayerActivity : AppCompatActivity() {
         }
         bitmovinAnalyticInteractor = BitmovinAnalyticInteractor()
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        loginManager = LoginManager.getLoginPlugin()
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.setFlags(
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN
         )
         BitmovinCastManager.getInstance().updateContext(this)
+        setContentView(R.layout.activity_player)
         intent.extras?.apply {
-            playable = getSerializable(PlayerContract.KEY_PLAYABLE) as? Playable
-            currentProgress = getDouble(KEY_CURRENT_PROGRESS, 0.0)
+            playable = getSerializable(KEY_PLAYABLE) as? Playable
+            (getSerializable(KEY_QUEUE) as? LinkedList<String>)?.apply { uidList = this }
             contentGroup = getString(KEY_CONTENT_GROUP, "")
             videoType = getString(KEY_VIDEO_TYPE, "")
+            currentProgress = getDouble(KEY_CURRENT_PROGRESS, 0.0)
+            if (savedInstanceState != null) {
+                currentProgress = savedInstanceState.getDouble(KEY_CURRENT_PROGRESS, 0.0)
+                (savedInstanceState.getSerializable(KEY_URL) as ArrayList<String>)?.apply { playlistItems = this }
+                (savedInstanceState.getSerializable(KEY_QUEUE) as LinkedList<String>)?.apply { uidList = this }
+                (savedInstanceState.getSerializable(KEY_PLAYABLE) as Playable)?.apply { playable = this }
+                currentPlaylistItem = savedInstanceState.getInt(KEY_NEXT_PLAYLIST_ITEM, -1)
+                uidList.poll().takeIf { !it.isNullOrEmpty() }?.apply {
+                    loginManager?.token?.let { getURL(this, it) }
+                }
+            }
         }
-        if (savedInstanceState != null) {
-            currentProgress = savedInstanceState.getDouble(KEY_CURRENT_PROGRESS, 0.0)
+        if (playable != null && playable!!.contentVideoURL != null && currentPlaylistItem >= 0) {
+            playNextItem(true)
+        } else {
+            playable?.takeIf { it is APURLPlayable && !loginManager?.token.isNullOrEmpty() }?.apply {
+                getUIDs(
+                        (playable as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get(COMPETITION_ID) as? String
+                                ?: playable!!.contentVideoURL,
+                        (playable as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get(SUBMISSION_ID) as? String
+                                ?: playable!!.contentVideoURL,
+                        loginManager!!.token)
+            } ?: run { finish() }
         }
-        setContentView(R.layout.activity_player)
+
         bitmovinPlayer = bitmovinPlayerView.player
         bitmovinAnalyticInteractor.initializeAnalyticsCollector(applicationContext, playable)
         bitmovinAnalyticInteractor.attachPlayer(bitmovinPlayer)
-        initializePlayer()
+        bitmovinPlayer?.addEventListener(OnPlaybackFinishedListener {
+            currentProgress = 0.0
+            playNextItem(false)
+        })
+        bitmovinPlayer?.addEventListener(OnReadyListener {
+            bitmovinPlayer?.play()
+        })
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -109,40 +159,73 @@ class TAPlayerActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    private fun initializePlayer() {
-        getContentVideoUrl()?.apply {
-            val sourceConfiguration = SourceConfiguration()
-
-            if (videoType == "360") {
-                val vrSourceItem = SourceItem(this)
-                val vrConfiguration = vrSourceItem.vrConfiguration
-                vrConfiguration.vrContentType = VRContentType.SINGLE
-                vrConfiguration.startPosition = 180.0
-                sourceConfiguration.addSourceItem(vrSourceItem)
-            }else {
-                sourceConfiguration.addSourceItem(this)
+    private fun getURL(id: String, token: String) {
+        ContentURLRepostory().contentUrl(id, "Bearer $token") { status, response ->
+            if (status == ResponseStatusCodes.SUCCESS) {
+                playlistItems.add(response)
+                if (currentPlaylistItem < 0) {
+                    playNextItem(false)
+                }
+                uidList.poll().takeIf { !it.isNullOrEmpty() }?.apply {
+                    loginManager?.token?.let { getURL(this, it) }
+                }
+            } else {
+                finish()
             }
+        }
+    }
 
-            Log.d(TAG, "SET currentProgress :: $currentProgress sec")
-            sourceConfiguration.startOffset = currentProgress
-            bitmovinPlayer?.load(sourceConfiguration)
-            EventListenerInteractor.addListeners(bitmovinPlayer, playable?.playableId
-                    ?: "", contentGroup)
-
-            bitmovinPlayer?.addEventListener(OnReadyListener {
-                bitmovinPlayer?.play()
-            })
+    private fun getUIDs(competition_id: String, submission_id: String, token: String) {
+        OKHttpRepsotory().contentUIDS(competition_id, submission_id, token) { status, response ->
+            if (status == ResponseStatusCodes.SUCCESS) {
+                for (episode: Entry in response?.entry!!) {
+                    episode.content!!.src?.let { uidList.add(it) }
+                }
+                uidList.poll().takeIf { !it.isNullOrEmpty() }?.apply {
+                    loginManager?.token?.let { getURL(this, it) }
+                }
+            } else {
+                finish()
+            }
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putDouble(KEY_CURRENT_PROGRESS, bitmovinPlayer?.currentTime
-                ?: 0.0)
-        outState.putSerializable(PlayerContract.KEY_PLAYABLE, playable)
+        outState.putDouble(KEY_CURRENT_PROGRESS, bitmovinPlayer?.currentTime ?: 0.0)
+        outState.putSerializable(KEY_PLAYABLE, playable)
+        outState.putSerializable(KEY_URL, playlistItems)
+        outState.putSerializable(KEY_QUEUE, uidList)
+        outState.putInt(KEY_NEXT_PLAYLIST_ITEM, currentPlaylistItem)
+    }
+
+    private fun playNextItem(playAfterRotation: Boolean) {
+        if (!playAfterRotation) {
+            lastItemFinished = (currentPlaylistItem + 1) >= playlistItems.size
+            if (lastItemFinished) {
+                return
+            }
+            currentPlaylistItem += 1
+        }
+        playable!!.setContentVideoUrl(playlistItems[currentPlaylistItem])
+        val sourceConfiguration = SourceConfiguration()
+        if (videoType == "360") {
+            val vrSourceItem = SourceItem(playable?.contentVideoURL)
+            val vrConfiguration = vrSourceItem.vrConfiguration
+            vrConfiguration.vrContentType = VRContentType.SINGLE
+            vrConfiguration.startPosition = 180.0
+            sourceConfiguration.addSourceItem(vrSourceItem)
+        } else {
+            sourceConfiguration.addSourceItem(playable!!.contentVideoURL)
+        }
+        sourceConfiguration.addSourceItem(playable!!.contentVideoURL)
+        sourceConfiguration.startOffset = currentProgress
+        bitmovinPlayer?.load(sourceConfiguration)
+        EventListenerInteractor.addListeners(bitmovinPlayer, playable?.playableId
+                ?: "", contentGroup)
+        Log.d(TAG, "play now: " + currentPlaylistItem + " || current:" + currentProgress + " from total items:" + playlistItems.size)
+
     }
 
 
-    private fun getContentVideoUrl() =
-            if (ConfigurationRepository.testVideoUrl.isEmpty()) playable?.contentVideoURL else ConfigurationRepository.testVideoUrl
 }

@@ -20,8 +20,13 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
 
     companion object {
         const val KEY_PLAYABLE = "key_playable"
+        const val KEY_URL = "url_queue"
+        const val KEY_QUEUE = "key_queue"
+        const val KEY_NEXT_PLAYLIST_ITEM = "key_next_Playlist_Item"
         const val KEY_CURRENT_PROGRESS = "KEY_CURRENT_PROGRESS"
         const val KEY_CONTENT_GROUP = "KEY_CONTENT_GROUP"
+        const val COMPETITION_ID = "competition_id"
+        const val SUBMISSION_ID = "submission_id"
         const val KEY_VIDEO_TYPE = "KEY_VIDEO_TYPE"
     }
 
