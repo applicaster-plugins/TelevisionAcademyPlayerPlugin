@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
     s.homepage         = "https://github.com/applicaster-plugins/TelevisionAcademyPlayerPlugin"
     s.license          = 'MIT'
     s.author           = { "Anatolii Afanasiev" => "anatolii.afanasiev@corewillsoft.com" }
-    s.source           = { :git => "https://github.com/applicaster-plugins/TelevisionAcademyPlayerPlugin.git", :tag => s.version.to_s }
+    s.source           = { :git => "https://github.com/applicaster-plugins/TelevisionAcademyPlayerPlugin.git", :tag => 'ios-' + s.version.to_s }
     s.platform = :ios
     s.ios.deployment_target = "10.0"
     s.requires_arc = true

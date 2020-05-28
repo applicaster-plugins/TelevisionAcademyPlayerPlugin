@@ -17,6 +17,7 @@ Pod::Spec.new do |s|
     s.static_framework = true
     s.resources = ['ios/TelevisionAcademyIOSPlayerPlugin/SupportingFiles/*']
     s.source_files = 'ios/TelevisionAcademyIOSPlayerPlugin/PluginClasses/*.swift','ios/TelevisionAcademyIOSPlayerPlugin/PluginClasses/**/*.swift'
+    s.dependency 'ZappPlugins'
     s.dependency 'BitmovinPlayer','~> 2.42.0'
     s.dependency 'google-cast-sdk-no-bluetooth', '= 4.4.4'
     s.dependency 'BitmovinAnalyticsCollector/BitmovinPlayer','~> 1.12.0'
