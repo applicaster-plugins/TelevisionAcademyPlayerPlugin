@@ -23,3 +23,6 @@
     public <fields>;
     public <methods>;
 }
+-keep class com.applicaster.plugin.televisionacademyplayer.** { *; }
+-keep class com.bitmovin.player.** { *; }
+-keep class com.bitmovin.analytics.** { *; }

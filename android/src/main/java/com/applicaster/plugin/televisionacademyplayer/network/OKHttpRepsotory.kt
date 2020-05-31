@@ -14,8 +14,8 @@ import java.io.IOException
  */
 class OKHttpRepsotory {
     fun contentUIDS( competition_id: String,submission_id: String, token: String, callback: (ResponseStatusCodes, UIDSResponse?) -> Unit) {
-        val urlBuilder = HttpUrl.parse(ConfigurationRepository.dspBaseUrl)!!.newBuilder()
-        urlBuilder.addQueryParameter("competition_id", competition_id)
+         val urlBuilder = HttpUrl.parse(ConfigurationRepository.dspBaseUrl)!!.newBuilder()
+                   urlBuilder.addQueryParameter("competition_id", competition_id)
         urlBuilder.addQueryParameter("uid", submission_id)
         urlBuilder.addQueryParameter("token", token)
         val url = urlBuilder.build().toString() + dsp_parameters_url
@@ -28,11 +28,13 @@ class OKHttpRepsotory {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body()
                 val bodyString = body?.string() ?: ""
+                Log.d("TAPlayerActivity",bodyString)
                 if ((response.code()==200) && bodyString.length>2) {
                     callback(ResponseStatusCodes.SUCCESS, Gson().fromJson(bodyString, UIDSResponse::class.java))
                 }
                 else{
                     callback(ResponseStatusCodes.AUTHENTICATION_FAILED, null)
+                    Log.d("TAPlayerActivity","URL_FAILED")
                 }
             }
         })

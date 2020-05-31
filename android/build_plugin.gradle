@@ -8,7 +8,7 @@ android {
         minSdkVersion project.ext.minSdkVersion
         targetSdkVersion project.ext.targetSdkVersion
 
-        consumerProguardFiles 'proguard-rules.pro'
+        consumerProguardFiles 'consumer-rules.pro'
     }
 
     buildTypes {
@@ -17,7 +17,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -42,7 +42,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 
     // Applicaster SDK
-    def applicasterSDKPath = 'com.applicaster:applicaster-android-sdk:2.32.15'
+    def applicasterSDKPath = 'com.applicaster:applicaster-android-sdk:4.2.7'
 
     // Check if an open SDK is defined - if not use the closed one.
     //Check if an open SDK is defined - if not use the closed one.

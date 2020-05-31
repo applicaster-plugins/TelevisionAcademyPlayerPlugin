@@ -19,7 +19,7 @@ publish {
     bintrayKey = System.getenv("MAVEN_PASSWORD")
 
     dryRun = false
-    override = false
+    override = true
 
     artifactId = releaseArtifact
     desc = releaseDescription
