@@ -47,23 +47,39 @@
                   "key": "heartbeat_interval",
                   "default": "5000",
                   "tooltip_text": "Bitmovin heartbeat interval in milliseconds. Default is 5000 milliseconds."
+            },
+            {
+                  "type": "text",
+                  "key": "api_base_url",
+                  "label": "api base url",
+                  "placeholder": "https://....../",
+                  "tooltip_text": "api base url"
+            },
+            {
+                  "type": "text",
+                  "key": "dsp_base_url",
+                  "label": "dsp base url",
+                  "placeholder": "https://zapp-pipes....../",
+                  "tooltip_text": "dsp base url"
             }
       ],
-      "targets": ["mobile"],
-  "hooks": {
-    "fields": [
-      {
-        "group": true,
-        "label": "Before Load",
-        "folded": true,
-        "fields": [
-          {
-            "key": "preload_plugins",
-            "type": "preload_plugins_selector",
-            "label": "Select Plugins"
-          }
-        ]
+      "targets": [
+            "mobile"
+      ],
+      "hooks": {
+            "fields": [
+                  {
+                        "group": true,
+                        "label": "Before Load",
+                        "folded": true,
+                        "fields": [
+                              {
+                                    "key": "preload_plugins",
+                                    "type": "preload_plugins_selector",
+                                    "label": "Select Plugins"
+                              }
+                        ]
+                  }
+            ]
       }
-    ]
-  }
 }
