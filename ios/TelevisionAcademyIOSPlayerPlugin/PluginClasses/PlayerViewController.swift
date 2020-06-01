@@ -29,9 +29,12 @@ class PlayerViewController: UIViewController {
     private var analyticCollector: BitmovinAnalytics?
     private var videoStartTime = Date()
     private var viewSwitchCounter = 0
+    private var nextPlaylistItem = 0
+    private var lastItemFinished = false
     
     // playable data
     let videos: [ZPPlayable]
+    let sourceItems: [PlayableSourceItem]
     let configuration: NSDictionary
     let playerEventsManager = PlayerEventsManager()
     
@@ -61,6 +64,15 @@ class PlayerViewController: UIViewController {
             castingLastVideoElapsedTime = remoteMediaClient.approximateStreamPosition()
             remoteMediaClient.pause()
         }
+        
+        sourceItems = items?.compactMap { (playable) -> PlayableSourceItem in
+            let source = PlayableSourceItem(url: URL(string: playable.contentVideoURLPath())!)!
+            source.itemTitle = playable.playableName()
+            source.playable = playable
+            source.elapsedTime = PlayerViewController.convertToDouble(playable.extensionsDictionary?["playhead_position"])
+            source.contentGroup = playable.extensionsDictionary?["content_group"] as? String
+            return source
+        } ?? []
         
         super.init(nibName: nil, bundle: nil)
         
@@ -127,29 +139,17 @@ class PlayerViewController: UIViewController {
     }
     
     private func setupPlayer() {
-        
-        let config = PlayerConfiguration()
-        
         guard let cssURL = Bundle.main.url(forResource: "bitmovinplayer-ui", withExtension: "min.css"),
             let jsURL = Bundle.main.url(forResource: "bitmovinplayer-ui", withExtension: "min.js") else {
                 print("Please specify the needed resources marked with TODO in ViewController.swift file.")
                 dismiss(animated: true, completion: nil)
                 return
         }
+        
+        let config = PlayerConfiguration()
         config.styleConfiguration.playerUiCss = cssURL
         config.styleConfiguration.playerUiJs = jsURL
         config.styleConfiguration.userInterfaceConfiguration = bitmovinUserInterfaceConfiguration
-        
-        let sourceItems =
-            videos.map { (playable) -> PlayableSourceItem in
-                let source = PlayableSourceItem(url: URL(string: playable.contentVideoURLPath())!)!
-                source.itemTitle = playable.playableName()
-                source.playable = playable
-                source.elapsedTime = convertToDouble(playable.extensionsDictionary?["playhead_position"])
-                source.contentGroup = playable.extensionsDictionary?["content_group"] as? String
-                return source
-        }
-        
         config.sourceItem = sourceItems.first
         
         let player = BitmovinPlayer(configuration: config)
@@ -172,6 +172,18 @@ class PlayerViewController: UIViewController {
     func didStartPlaybackSession() {
         viewSwitchCounter = 0
         videoStartTime = Date()
+    }
+    
+    private func playNextItem() {
+        if (nextPlaylistItem < sourceItems.count) {
+            let item = sourceItems[nextPlaylistItem]
+            nextPlaylistItem += 1
+            
+            let sourceConfig = SourceConfiguration()
+            sourceConfig.addSourceItem(item: item)
+            
+            player?.load(sourceConfiguration: sourceConfig)
+        }
     }
 }
 
@@ -202,6 +214,7 @@ extension PlayerViewController: PlayerListener {
         DispatchQueue.main.asyncAfter(deadline: .now() + (playerVar.isCasting ? 1 : 0)) {
             playerVar.seek(time: self.castingSeekTime())
             playerVar.play()
+            self.nextPlaylistItem += 1
         }
         didStartPlaybackSession()
         
@@ -253,6 +266,11 @@ extension PlayerViewController: PlayerListener {
             "content_uid": getCurrentPlayable?.identifier,
             "content_group": item.contentGroup
         ])
+        
+        if lastItemFinished {
+            nextPlaylistItem = 0
+            lastItemFinished = false
+        }
     }
     
     func onPaused(_ event: PausedEvent) {
@@ -334,6 +352,13 @@ extension PlayerViewController: PlayerListener {
             "content_uid": getCurrentPlayable?.identifier,
             "content_group": sourceItem.contentGroup
         ])
+        
+        lastItemFinished = nextPlaylistItem >= sourceItems.count
+        if (!lastItemFinished) {
+            playNextItem()
+        } else {
+            self.finishPlayer()
+        }
     }
 }
 
@@ -410,7 +435,7 @@ extension PlayerViewController {
         timer?.invalidate()
     }
     
-    private func convertToDouble(_ value : Any?) -> Double? {
+    class private func convertToDouble(_ value : Any?) -> Double? {
         var valueAsDouble = value as? Double
         if let value = value as? Double {
             valueAsDouble = Double(value)
