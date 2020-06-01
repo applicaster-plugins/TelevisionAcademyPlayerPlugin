@@ -21,8 +21,8 @@ import com.tva.quickbrickplayerplugin.analytic.AnalyticUtil
 import com.tva.quickbrickplayerplugin.analytic.BitmovinAnalyticInteractor
 import com.tva.quickbrickplayerplugin.api.ApiFactory
 import com.tva.quickbrickplayerplugin.api.PlayerEvent
+import com.tva.quickbrickplayerplugin.api.VoidCallback
 import kotlinx.android.synthetic.main.player_view.view.*
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
@@ -295,11 +295,8 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         lastTrackTime = System.currentTimeMillis()
         bitmovinPlayer?.let { player ->
             apiFactory.watchListApi
-                    .putWatchlist(sourceId!!, PlayerEvent(
-                            player.duration.toLong(),
-                            (newTime ?: player.currentTime).toLong(),
-                            contentGroup ?: ""))
-                    .subscribe({}, { Timber.e(it) })
+                    .putWatchlist(sourceId!!, PlayerEvent(player.duration.toLong(), (newTime ?: player.currentTime).toLong(),
+                            contentGroup ?: "")).enqueue(VoidCallback())
         }
     }
 
