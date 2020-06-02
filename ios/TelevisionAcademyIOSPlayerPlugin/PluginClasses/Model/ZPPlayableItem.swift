@@ -9,7 +9,7 @@
 import Foundation
 import ZappPlugins
 
-class ZPPlayablItem: NSObject, ZPPlayable {
+class ZPPlayableItem: NSObject, ZPPlayable {
 
     public var name = ""
     public var playDescription = ""
@@ -62,7 +62,7 @@ class ZPPlayablItem: NSObject, ZPPlayable {
 
 // MARK:- Fast Initialization
 
-extension ZPPlayablItem {
+extension ZPPlayableItem {
 
     static func createVASTVideo() -> ZPPlayable {
         return self.pluginPlayableItem(
@@ -79,7 +79,7 @@ extension ZPPlayablItem {
     }
 
     static func pluginPlayableItem(for url: String, param: [String: Any]? = nil) -> ZPPlayable {
-        let item = ZPPlayablItem()
+        let item = ZPPlayableItem()
         item.videoURL = url
         item.name = "Test Video"
         item.extensionsDictionary = param as NSDictionary?

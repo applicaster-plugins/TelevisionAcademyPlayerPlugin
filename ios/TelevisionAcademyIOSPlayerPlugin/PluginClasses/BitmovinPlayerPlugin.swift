@@ -48,10 +48,19 @@ extension BitmovinPlayerPlugin: ZPPlayerProtocol {
             let testUrl = configurationJSONVar["test_video_url"] as? String,
             testUrl.isEmpty == false {
             videos.removeAll()
-            videos.append(ZPPlayablItem.createTest(for: testUrl))
+            videos.append(ZPPlayableItem.createTest(for: testUrl))
         }
+        
+        let dspBaseURL = configurationJSON?["dsp_base_url"] as? String ?? ""
+        let tvaApiBaseURL = configurationJSON?["api_base_url"] as? String ?? ""
+        
+        let feedParser = FeedParser(video: videos.first!,
+                                    dspBaseURL: dspBaseURL,
+                                    tvaApiBaseURL: tvaApiBaseURL)
+        
+        let parsedVideos = feedParser.parseVideos()
 
-        let playerViewController = PlayerViewController(with: videos, configurationJSON: configurationJSON)
+        let playerViewController = PlayerViewController(with: parsedVideos, configurationJSON: configurationJSON)
 
         let instance = BitmovinPlayerPlugin()
         playerViewController.analyticEventDelegate = instance
