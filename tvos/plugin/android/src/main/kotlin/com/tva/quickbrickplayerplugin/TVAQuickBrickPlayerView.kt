@@ -17,6 +17,7 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
+import com.facebook.react.uimanager.events.RCTEventEmitter
 import com.tva.quickbrickplayerplugin.analytic.AnalyticUtil
 import com.tva.quickbrickplayerplugin.analytic.BitmovinAnalyticInteractor
 import com.tva.quickbrickplayerplugin.api.ApiFactory
@@ -292,6 +293,12 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         if (!force && System.currentTimeMillis() - lastTrackTime < TRACK_TIME_INTERVAL) {
             return
         }
+        val event = Arguments.createMap()
+        event.putDouble("time", bitmovinPlayer!!.currentTime)
+        event.putDouble("duration",bitmovinPlayer!!.duration)
+        val reactContext = context as ReactContext
+        reactContext.getJSModule(RCTEventEmitter::class.java).receiveEvent(
+                id, "onVideoTimeChanged", event)
         lastTrackTime = System.currentTimeMillis()
         bitmovinPlayer?.let { player ->
             apiFactory.watchListApi
