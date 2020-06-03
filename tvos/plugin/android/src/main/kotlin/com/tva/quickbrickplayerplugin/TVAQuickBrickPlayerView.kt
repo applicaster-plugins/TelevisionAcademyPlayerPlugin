@@ -1,10 +1,12 @@
 package com.tva.quickbrickplayerplugin
 
 import android.content.Context
+import android.content.Intent
 import android.util.AttributeSet
 import android.util.Log
 import android.view.KeyEvent.*
 import android.widget.FrameLayout
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.applicaster.plugin_manager.login.LoginManager
 import com.applicaster.util.OSUtil
 import com.bitmovin.player.BitmovinPlayer
@@ -17,7 +19,9 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
-import com.facebook.react.uimanager.events.RCTEventEmitter
+import com.tva.quickbrickplayerplugin.TVAQuickBrickPlayerManager.Companion.PROGRESS_EVENT
+import com.tva.quickbrickplayerplugin.TVAQuickBrickPlayerManager.Companion.RN_DURATION
+import com.tva.quickbrickplayerplugin.TVAQuickBrickPlayerManager.Companion.RN_TIME
 import com.tva.quickbrickplayerplugin.analytic.AnalyticUtil
 import com.tva.quickbrickplayerplugin.analytic.BitmovinAnalyticInteractor
 import com.tva.quickbrickplayerplugin.api.ApiFactory
@@ -293,12 +297,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         if (!force && System.currentTimeMillis() - lastTrackTime < TRACK_TIME_INTERVAL) {
             return
         }
-        val event = Arguments.createMap()
-        event.putDouble("time", bitmovinPlayer!!.currentTime)
-        event.putDouble("duration",bitmovinPlayer!!.duration)
-        val reactContext = context as ReactContext
-        reactContext.getJSModule(RCTEventEmitter::class.java).receiveEvent(
-                id, "onVideoTimeChanged", event)
+        notifyProgress()
         lastTrackTime = System.currentTimeMillis()
         bitmovinPlayer?.let { player ->
             apiFactory.watchListApi
@@ -310,5 +309,12 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     fun addEventListener(listener: EventListener<*>) {
         bitmovinPlayer?.addEventListener(listener)
         eventListeners.add(listener)
+    }
+
+    private fun notifyProgress() {
+        val intent = Intent(PROGRESS_EVENT)
+        bitmovinPlayer?.currentTime?.let { intent.putExtra(RN_TIME, it) }
+        bitmovinPlayer?.duration?.let { intent.putExtra(RN_DURATION,it) }
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
     }
 }
