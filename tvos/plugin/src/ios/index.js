@@ -1,7 +1,7 @@
 // @flow
 import * as React from "react";
 import * as R from "ramda";
-import { DeviceEventEmitter, Dimensions, requireNativeComponent, StyleSheet, View, Text } from "react-native";
+import { DeviceEventEmitter, Dimensions, requireNativeComponent, StyleSheet, View } from "react-native";
 import { sendQuickBrickEvent } from "@applicaster/zapp-react-native-bridge/QuickBrick";
 import { sessionStorage } from "@applicaster/zapp-react-native-bridge/ZappStorage/SessionStorage";
 import { withNavigator } from '@applicaster/zapp-react-native-ui-components/Decorators/Navigator/';
@@ -106,7 +106,7 @@ class VideoPlayerComponent extends React.Component<Props, State> {
   }
 
   _onTimeChanged = event => {
-    const { playableItem, navigator } = this.props;
+    const { playableItem } = this.props;
     const { showOverlay } = this.state;
 
     const duration = event.nativeEvent.duration;
