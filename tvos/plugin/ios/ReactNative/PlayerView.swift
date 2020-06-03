@@ -45,11 +45,9 @@ class PlayerView: UIView {
                 playerViewController?.playerKey = self.playerKey
                 playerViewController?.heartbeatInterval = self.heartbeatInterval
                 
-                guard let playerViewController = playerViewController else {
-                    return
-                }
-                let viewController = UIApplication.topViewController()
-                viewController?.present(playerViewController, animated: true)
+                self.addSubview(playerViewController!.view)
+                playerViewController!.view.matchParent()
+                
             } else {
                 playerViewController?.playableItem = playableItem
                 playerViewController?.bitmovinPlayer?.play()

@@ -94,12 +94,14 @@ class TAPlayerActivity : AppCompatActivity() {
             playNextItem(true)
         } else {
             playable?.takeIf { it is APURLPlayable && !loginManager?.token.isNullOrEmpty() }?.apply {
-                getUIDs(
-                        (playable as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get(COMPETITION_ID) as? String
-                                ?: playable!!.contentVideoURL,
-                        (playable as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get(SUBMISSION_ID) as? String
-                                ?: playable!!.contentVideoURL,
-                        loginManager!!.token)
+                val comp = (playable as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get(COMPETITION_ID) as? String ?: ""
+                val sub = (playable as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get(SUBMISSION_ID) as? String ?: ""
+                if (comp == "" || sub == ""){
+                    getURL(playable?.contentVideoURL ?: "",loginManager!!.token)
+                }else{
+                    getUIDs(comp, sub,loginManager!!.token)
+                }
+
             } ?: run { finish() }
         }
 
