@@ -26,7 +26,8 @@ class FeedParser {
     func parseVideos() -> [ZPPlayable] {
         guard let clickedVideoID = video.identifier,
             let request = createFeedContentRequest(from: video.extensionsDictionary) else {
-            return []
+                let video = parseSingleVideo()
+                return [video]
         }
         
         let parseVideosDispatchGroup = DispatchGroup()
@@ -69,7 +70,7 @@ class FeedParser {
             for item in playableItems {
                 parseURLGroup.enter()
 
-                self.parseVideoURL { (url) in
+                self.parseURL(for: item) { (url) in
                     item.videoURL = url
                     parseURLGroup.leave()
                 }
@@ -87,7 +88,7 @@ class FeedParser {
         return result
     }
     
-    private func parseVideoURL(completion: @escaping (String) -> Void) {
+    private func parseURL(for video: ZPPlayable, completion: @escaping (String) -> Void) {
         let session = URLSession.shared
         let url = URL(string: tvaApiBaseURL + "playback/" + video.contentVideoURLPath() + "?manifest_type=HLS")!
         var request = URLRequest(url: url)
@@ -131,6 +132,27 @@ class FeedParser {
         request.httpMethod = "GET"
 
         return request
+    }
+
+    private func parseSingleVideo() -> ZPPlayable {
+        let parseVideoDispatchGroup = DispatchGroup()
+        parseVideoDispatchGroup.enter()
+        
+        let playable = ZPPlayableItem()
+        playable.name = video.playableName()
+        playable.playDescription = video.playableDescription()
+        playable.videoURL = video.contentVideoURLPath()
+        playable.live = video.isLive()
+        playable.extensionsDictionary = video.extensionsDictionary
+
+        parseURL(for: video) { (url) in
+            playable.videoURL = url
+            parseVideoDispatchGroup.leave()
+        }
+        
+        parseVideoDispatchGroup.wait()
+        
+        return playable
     }
 }
 
