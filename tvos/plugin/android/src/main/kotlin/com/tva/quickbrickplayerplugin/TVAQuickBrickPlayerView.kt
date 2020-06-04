@@ -22,6 +22,7 @@ import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.tva.quickbrickplayerplugin.TVAQuickBrickPlayerManager.Companion.PROGRESS_EVENT
 import com.tva.quickbrickplayerplugin.TVAQuickBrickPlayerManager.Companion.RN_DURATION
 import com.tva.quickbrickplayerplugin.TVAQuickBrickPlayerManager.Companion.RN_TIME
+import com.tva.quickbrickplayerplugin.TVAQuickBrickPlayerManager.Companion.RN_VIEW_ID
 import com.tva.quickbrickplayerplugin.analytic.AnalyticUtil
 import com.tva.quickbrickplayerplugin.analytic.BitmovinAnalyticInteractor
 import com.tva.quickbrickplayerplugin.api.ApiFactory
@@ -294,10 +295,10 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     }
 
     private fun trackTime(force: Boolean, newTime: Double? = null) {
+        notifyProgress()
         if (!force && System.currentTimeMillis() - lastTrackTime < TRACK_TIME_INTERVAL) {
             return
         }
-        notifyProgress()
         lastTrackTime = System.currentTimeMillis()
         bitmovinPlayer?.let { player ->
             apiFactory.watchListApi
@@ -313,6 +314,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
 
     private fun notifyProgress() {
         val intent = Intent(PROGRESS_EVENT)
+        intent.putExtra(RN_VIEW_ID, id)
         bitmovinPlayer?.currentTime?.let { intent.putExtra(RN_TIME, it) }
         bitmovinPlayer?.duration?.let { intent.putExtra(RN_DURATION,it) }
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent)

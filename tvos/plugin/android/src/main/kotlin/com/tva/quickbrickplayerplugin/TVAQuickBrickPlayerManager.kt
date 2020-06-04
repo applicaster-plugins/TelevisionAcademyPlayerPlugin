@@ -8,11 +8,12 @@ import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.applicaster.plugin_manager.playersmanager.PlayerContract
 import com.facebook.react.bridge.*
-import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
+import com.facebook.react.uimanager.events.RCTEventEmitter
 import java.lang.ref.WeakReference
+
 
 class TVAQuickBrickPlayerManager(context: ReactApplicationContext) : SimpleViewManager<TVAQuickBrickPlayerView>(), LifecycleEventListener {
 
@@ -55,6 +56,7 @@ class TVAQuickBrickPlayerManager(context: ReactApplicationContext) : SimpleViewM
     companion object {
         const val RN_DURATION = "duration"
         const val RN_TIME = "time"
+        const val RN_VIEW_ID = "rn_view_id"
         const val REACT_CLASS = "TVAQuickBrickPlayer"
         const val PROGRESS_EVENT = "progress_event"
     }
@@ -74,9 +76,11 @@ class TVAQuickBrickPlayerManager(context: ReactApplicationContext) : SimpleViewM
                 val info = Arguments.createMap()
                 info.putDouble(RN_DURATION, intent.extras.getDouble(RN_DURATION))
                 info.putDouble(RN_TIME, intent.extras.getDouble(RN_TIME))
-                reactContextWeakReference.get()?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-                        ?.emit("onVideoTimeChanged", info)
-                Log.d(name, "" + intent.extras.getDouble(RN_DURATION) + " || " + intent.extras.getDouble (RN_TIME))
+//                reactContextWeakReference.get()?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+//                        ?.emit("onVideoTimeChanged", info)
+                reactContextWeakReference.get()?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
+                        intent.extras.getInt(RN_VIEW_ID), "onVideoTimeChanged", info)
+                Log.d(name, "" + intent.extras.getDouble(RN_DURATION) + " || " + intent.extras.getDouble(RN_TIME))
             }
         }
     }
