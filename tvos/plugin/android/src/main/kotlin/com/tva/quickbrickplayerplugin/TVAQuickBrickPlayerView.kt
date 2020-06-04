@@ -34,6 +34,7 @@ import java.util.concurrent.TimeUnit
 class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
 
     private var lastTrackTime = 0L
+    private var lastRnEvent = 0L
     private var eventListeners = mutableListOf<EventListener<*>>()
     private var elapsedTimeSeconds: Long? = null
     private var contentGroup: String? = null
@@ -47,6 +48,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     private val TAG = TVAQuickBrickPlayerView::class.java.simpleName
     private val SEEKING_OFFSET = 10
     private val TRACK_TIME_INTERVAL = TimeUnit.SECONDS.toMillis(5)
+    private val RN_TIME_INTERVAL = TimeUnit.SECONDS.toMillis(1)
     private var bitmovinPlayer: BitmovinPlayer? = null
     private var bitmovinAnalyticInteractor: BitmovinAnalyticInteractor
 
@@ -295,8 +297,12 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     }
 
     private fun trackTime(force: Boolean, newTime: Double? = null) {
+        if (!force && ((System.currentTimeMillis() - lastRnEvent) < 1000)) {
+            return
+        }
+        lastRnEvent = System.currentTimeMillis()
         notifyProgress()
-        if (!force && System.currentTimeMillis() - lastTrackTime < TRACK_TIME_INTERVAL) {
+       if (System.currentTimeMillis() - lastTrackTime < TRACK_TIME_INTERVAL) {
             return
         }
         lastTrackTime = System.currentTimeMillis()

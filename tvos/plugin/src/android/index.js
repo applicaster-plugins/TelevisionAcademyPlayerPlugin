@@ -13,6 +13,7 @@ type Props = {
   onLoad: any,
   onError: any,
   playableItem: {},
+  timeChanged: {},
   pluginConfiguration: {}
 };
 
@@ -42,10 +43,15 @@ export class AndroidPlayer extends React.Component<Props, State> {
   onEnd(event) {
   }
 
+
   onShowSettings = (event) => {
     this.setState({
       settings: event
     });
+  };
+
+  _onTimeChanged = event => {
+    console.log('_onTimeChanged', event);
   };
 
   componentDidMount() {
@@ -54,6 +60,7 @@ export class AndroidPlayer extends React.Component<Props, State> {
     DeviceEventEmitter.addListener("emitterOnError", this.onError);
     DeviceEventEmitter.addListener("onTvKeyDown", this.onKeyDown);
     DeviceEventEmitter.addListener("onShowSettings", this.onShowSettings);
+    DeviceEventEmitter.addListener("onVideoTimeChanged", this._onTimeChanged);
     sendQuickBrickEvent("blockTVKeyEmit", { blockTVKeyEmit: false });
   }
 
@@ -62,7 +69,9 @@ export class AndroidPlayer extends React.Component<Props, State> {
     DeviceEventEmitter.removeListener("emitterOnEnd", this.onEnd);
     DeviceEventEmitter.removeListener("emitterOnError", this.onError);
     DeviceEventEmitter.removeListener("onTvKeyDown", this.onKeyDown);
+
     DeviceEventEmitter.removeListener("onShowSettings", this.onShowSettings);
+    DeviceEventEmitter.removeListener("onVideoTimeChanged", this._onTimeChanged);
     sendQuickBrickEvent("blockTVKeyEmit", { blockTVKeyEmit: true });
   }
 
@@ -86,7 +95,7 @@ export class AndroidPlayer extends React.Component<Props, State> {
   }
 
   render() {
-    const { playableItem, pluginConfiguration } = this.props;
+    const { timeChanged, playableItem, pluginConfiguration } = this.props;
     let configurations = {};
     if (pluginConfiguration) {
       configurations = pluginConfiguration["configuration_json"] || {}
@@ -122,6 +131,7 @@ export class AndroidPlayer extends React.Component<Props, State> {
             style={{ height, width }}
             onKeyChanged={playerEvent}
             pluginConfiguration={configurations}
+            onVideoTimeChanged={timeChanged}
             onSettingSelected={selectedSetting}
           />
           {settingsView}

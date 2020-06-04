@@ -7,13 +7,15 @@ import android.content.IntentFilter
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.facebook.react.bridge.*
+import com.facebook.react.common.MapBuilder
+import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
 import java.lang.ref.WeakReference
 
-
+@ReactModule(name = TVAQuickBrickPlayerManager.REACT_CLASS)
 class TVAQuickBrickPlayerManager(context: ReactApplicationContext) : SimpleViewManager<TVAQuickBrickPlayerView>(), LifecycleEventListener {
 
     override fun getName(): String {
@@ -25,8 +27,8 @@ class TVAQuickBrickPlayerManager(context: ReactApplicationContext) : SimpleViewM
     public override fun createViewInstance(context: ThemedReactContext): TVAQuickBrickPlayerView {
         if (context != null) {
             reactContextWeakReference.get()?.addLifecycleEventListener(this)
-            Log.d(name, "" + "registerBroadcaster")
-            this.registerBroadcaster(context)
+            Log.d(name,  "registerBroadcaster")
+            registerBroadcaster(context)
         }
         return TVAQuickBrickPlayerView(context, null)
     }
@@ -39,6 +41,10 @@ class TVAQuickBrickPlayerManager(context: ReactApplicationContext) : SimpleViewM
     @ReactProp(name = "onKeyChanged")
     fun onKeyChanged(view: TVAQuickBrickPlayerView, event: ReadableMap?) {
         view.onKeyChanged(event)
+    }
+
+    @ReactProp(name = "onVideoTimeChanged")
+    fun onVideoTimeChanged(view: TVAQuickBrickPlayerView, event: ReadableMap?) {
     }
 
     @ReactProp(name = "pluginConfiguration")
@@ -62,6 +68,7 @@ class TVAQuickBrickPlayerManager(context: ReactApplicationContext) : SimpleViewM
 
 
     private fun registerBroadcaster(context: Context) {
+        unregisterBroadcaster()
         val intentFilter = IntentFilter()
         intentFilter.addAction(PROGRESS_EVENT)
         LocalBroadcastManager.getInstance(context).registerReceiver(this.trackPlayerBroadcastReceiver, intentFilter)
@@ -76,6 +83,7 @@ class TVAQuickBrickPlayerManager(context: ReactApplicationContext) : SimpleViewM
                 info.putDouble(RN_TIME, intent.extras.getDouble(RN_TIME))
                 reactContextWeakReference.get()?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
                         ?.emit("onVideoTimeChanged", info)
+//
 //                reactContextWeakReference.get()?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
 //                        intent.extras.getInt(RN_VIEW_ID), "onVideoTimeChanged", info)
                 Log.d(name, "" + intent.extras.getDouble(RN_DURATION) + " || " + intent.extras.getDouble(RN_TIME))
@@ -92,10 +100,20 @@ class TVAQuickBrickPlayerManager(context: ReactApplicationContext) : SimpleViewM
     }
 
     override fun onHostDestroy() {
+        unregisterBroadcaster()
+    }
+
+    private fun unregisterBroadcaster() {
         var context = reactContextWeakReference.get()?.currentActivity
         if (context != null)
             LocalBroadcastManager.getInstance(context).unregisterReceiver(trackPlayerBroadcastReceiver)
+
     }
 
+    override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any>? {
+        val map: MutableMap<String, Any> = HashMap()
+        map["onVideoTimeChanged"] = MapBuilder.of("onVideoTimeChanged", "onVideoTimeChanged") as Any
+        return map
+    }
 
 }
