@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.KeyEvent.*
 import android.widget.FrameLayout
 import com.applicaster.plugin_manager.login.LoginManager
+import com.applicaster.storage.LocalStorage
 import com.applicaster.util.OSUtil
 import com.bitmovin.player.BitmovinPlayer
 import com.bitmovin.player.api.event.listener.*
@@ -43,9 +44,11 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     private val TRACK_TIME_INTERVAL = TimeUnit.SECONDS.toMillis(5)
     private var bitmovinPlayer: BitmovinPlayer? = null
     private var bitmovinAnalyticInteractor: BitmovinAnalyticInteractor
+    private val TOKEN_NAMESPACE = "login"
+    private val TOKEN_KEY = "token"
 
     private val apiFactory by lazy {
-        ApiFactory(baseSkylarkUrl, LoginManager.getLoginPlugin()?.token ?: "")
+        ApiFactory(baseSkylarkUrl, getToken())
     }
     private val analyticUtil by lazy {
         AnalyticUtil()
@@ -306,5 +309,11 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     fun addEventListener(listener: EventListener<*>) {
         bitmovinPlayer?.addEventListener(listener)
         eventListeners.add(listener)
+    }
+
+    private fun getToken(): String {
+        var token = LocalStorage.storageRepository?.get(TOKEN_KEY, TOKEN_NAMESPACE) ?: ""
+        return token.replace("\"", "")
+
     }
 }
