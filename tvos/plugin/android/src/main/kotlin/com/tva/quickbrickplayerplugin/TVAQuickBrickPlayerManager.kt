@@ -6,12 +6,11 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.applicaster.plugin_manager.playersmanager.PlayerContract
 import com.facebook.react.bridge.*
+import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
-import com.facebook.react.uimanager.events.RCTEventEmitter
 import java.lang.ref.WeakReference
 
 
@@ -64,8 +63,7 @@ class TVAQuickBrickPlayerManager(context: ReactApplicationContext) : SimpleViewM
 
     private fun registerBroadcaster(context: Context) {
         val intentFilter = IntentFilter()
-        intentFilter.addAction(PlayerContract.PLAYER_STATE_CHANGED)
-        intentFilter.addAction(PlayerContract.PLAYER_PROGRESS_UPDATE)
+        intentFilter.addAction(PROGRESS_EVENT)
         LocalBroadcastManager.getInstance(context).registerReceiver(this.trackPlayerBroadcastReceiver, intentFilter)
     }
 
@@ -76,10 +74,10 @@ class TVAQuickBrickPlayerManager(context: ReactApplicationContext) : SimpleViewM
                 val info = Arguments.createMap()
                 info.putDouble(RN_DURATION, intent.extras.getDouble(RN_DURATION))
                 info.putDouble(RN_TIME, intent.extras.getDouble(RN_TIME))
-//                reactContextWeakReference.get()?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-//                        ?.emit("onVideoTimeChanged", info)
-                reactContextWeakReference.get()?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
-                        intent.extras.getInt(RN_VIEW_ID), "onVideoTimeChanged", info)
+                reactContextWeakReference.get()?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+                        ?.emit("onVideoTimeChanged", info)
+//                reactContextWeakReference.get()?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
+//                        intent.extras.getInt(RN_VIEW_ID), "onVideoTimeChanged", info)
                 Log.d(name, "" + intent.extras.getDouble(RN_DURATION) + " || " + intent.extras.getDouble(RN_TIME))
             }
         }
