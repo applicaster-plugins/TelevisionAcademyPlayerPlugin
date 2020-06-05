@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 	s.name = "BitmovinRNPlayer"
-	s.version = "0.4.29"
+	s.version = "0.6.1"
 	s.platform = :tvos, :ios
 	s.swift_versions = ['5.1']
 	s.summary = "ZappPlugins"
@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
 	s.author = "Applicaster LTD."
 	s.source = {
 		 :git => 'git@github.com:applicaster-plugins/TelevisionAcademyPlayerPlugin.git',
-		 :tag => s.version.to_s
+         :tag => 'tvos-' + s.version.to_s
   }
 	s.dependency 'React'
 	s.dependency 'ZappCore'
