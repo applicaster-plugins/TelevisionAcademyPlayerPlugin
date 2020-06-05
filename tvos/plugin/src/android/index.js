@@ -1,5 +1,6 @@
 // @flow
 import * as React from "react";
+import {pathOr, default as R} from "ramda";
 import {DeviceEventEmitter, Dimensions, requireNativeComponent, StyleSheet, View} from "react-native";
 import {sendQuickBrickEvent} from "@applicaster/zapp-react-native-bridge/QuickBrick";
 import SettingsView from '../SettingsView';
@@ -26,7 +27,8 @@ export class AndroidPlayer extends React.Component<Props, State> {
     super(props);
     this.state = {
       playerEvent: { keyCode: -1, code: "NONE" },
-      settings: null
+      settings: null,
+      showOverlay: false,
     };
     this.onLoad = this.onLoad.bind(this);
     this.onError = this.onError.bind(this);
@@ -41,6 +43,38 @@ export class AndroidPlayer extends React.Component<Props, State> {
   }
 
   onEnd(event) {
+
+  }
+
+  // == Next Video Overlay == //
+
+  // TODO: move into a helper file
+  getOverlayPlugin() {
+    return R.compose(
+      R.find(R.propEq("type", "player_overlay")),
+      R.prop("plugins")
+    )(this.props);
+  }
+
+  renderOverlay() {
+    const { playableItem, navigator } = this.props;
+    const { configuration, module: OverlayPluginComponent } = this.getOverlayPlugin() || {};
+    const isPlayNextFeed = !!playableItem.extensions?.play_next_feed_url;
+
+    if (isPlayNextFeed && OverlayPluginComponent) {
+      return (
+        <OverlayPluginComponent
+          playableItem={playableItem}
+          configuration={configuration}
+          navigator={navigator}
+          dismissOverlay={(cb = noop) => {
+            if (this._isMounted) {
+              this.setState({ showOverlay: false }, cb);
+            }
+          }}
+        />
+      );
+    }
   }
 
 
@@ -51,7 +85,30 @@ export class AndroidPlayer extends React.Component<Props, State> {
   };
 
   _onTimeChanged = event => {
-    console.log('_onTimeChanged', event);
+    const { playableItem } = this.props;
+    const { showOverlay } = this.state;
+
+    // debug // TODO: remove this on final commit
+    console.log('_onTimeChanged', event, playableItem);
+
+    if (showOverlay) return; // stop if already showed
+
+    // video time
+    const duration = event.nativeEvent.duration;
+    this.currentTime = event.nativeEvent.time;
+
+    const overlayPlugin = this.getOverlayPlugin();
+    const playNextFeed = pathOr(undefined, ['extensions', 'play_next_field_url'], playableItem);
+    const overlayDuration = Number(pathOr(0, ["configuration", "overlay_duration"], overlayPlugin));
+    const overlayTrigger = (R.path(["configuration", "overlay_trigger"], overlayPlugin) === "onStart") ?
+      Number(duration - (duration - overlayDuration)) :
+      Number(duration - overlayDuration);
+
+    const triggerTime = Math.min(duration - overlayDuration, overlayTrigger);
+
+    if (playNextFeed && this.currentTime >= triggerTime && !showOverlay) {
+      this.setState({ showOverlay: true });
+    }
   };
 
   componentDidMount() {
@@ -62,6 +119,8 @@ export class AndroidPlayer extends React.Component<Props, State> {
     DeviceEventEmitter.addListener("onShowSettings", this.onShowSettings);
     DeviceEventEmitter.addListener("onVideoTimeChanged", this._onTimeChanged);
     sendQuickBrickEvent("blockTVKeyEmit", { blockTVKeyEmit: false });
+    this.timeout = setTimeout(this.retrievePluginConfiguration, 1);
+    this._isMounted = true;
   }
 
   componentWillUnmount() {
@@ -73,6 +132,10 @@ export class AndroidPlayer extends React.Component<Props, State> {
     DeviceEventEmitter.removeListener("onShowSettings", this.onShowSettings);
     DeviceEventEmitter.removeListener("onVideoTimeChanged", this._onTimeChanged);
     sendQuickBrickEvent("blockTVKeyEmit", { blockTVKeyEmit: true });
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
+    this._isMounted = true;
   }
 
   onKeyDown(event) {
@@ -101,28 +164,30 @@ export class AndroidPlayer extends React.Component<Props, State> {
       configurations = pluginConfiguration["configuration_json"] || {}
     }
 
-    const { playerEvent, settingsAction, settings, selectedSetting } = this.state;
+    const { playerEvent, settingsAction, settings, selectedSetting, showOverlay } = this.state;
     const { height, width } = Dimensions.get("window");
     let settingsView = null;
     if (settings) {
       settingsView = (
-        <SettingsView style={styles.settingsContainer} settings={settings}
-                      keyAction={settingsAction}
-                      onSettingSelected={(selectedSetting) => {
-                        const updatedSettings = settings.map(setting => {
-                          if (setting.type === selectedSetting.type) {
-                            return {
-                              ...setting,
-                              ...{ selectedId: selectedSetting.id },
-                              subtitle: selectedSetting.title
-                            }
-                          } else {
-                            return setting
-                          }
-                        });
-                        this.setState({ settings: updatedSettings, selectedSetting, settingsAction: "back" })
-                      }}/>);
+        <SettingsView
+          style={styles.settingsContainer} settings={settings}
+          keyAction={settingsAction}
+          onSettingSelected={(selectedSetting) => {
+            const updatedSettings = settings.map(setting => {
+              if (setting.type === selectedSetting.type) {
+                return {
+                  ...setting,
+                  ...{ selectedId: selectedSetting.id },
+                  subtitle: selectedSetting.title
+                }
+              } else {
+                return setting
+              }
+            });
+            this.setState({ settings: updatedSettings, selectedSetting, settingsAction: "back" })
+          }}/>);
     }
+
     return (
       <React.Fragment>
         <View style={styles.container}>
@@ -131,10 +196,11 @@ export class AndroidPlayer extends React.Component<Props, State> {
             style={{ height, width }}
             onKeyChanged={playerEvent}
             pluginConfiguration={configurations}
-            onVideoTimeChanged={timeChanged}
             onSettingSelected={selectedSetting}
+            onVideoTimeChanged={timeChanged}
           />
           {settingsView}
+          {this._isMounted && showOverlay && this.renderOverlay()}
         </View>
       </React.Fragment>
     );
