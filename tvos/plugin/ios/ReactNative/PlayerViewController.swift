@@ -12,9 +12,9 @@
 
  class PlayerViewController: UIViewController {
     weak var eventsResponderDelegate: PlayerEventsResponder?
-    var bitmovinPlayer: BitmovinPlayer?
-    private var bitmovinPlayerView: BMPBitmovinPlayerView?
-    private var analyticCollector: BitmovinAnalytics?
+    weak var bitmovinPlayer: BitmovinPlayer?
+    weak private var bitmovinPlayerView: BMPBitmovinPlayerView?
+    weak private var analyticCollector: BitmovinAnalytics?
 
     var playableItem: NSDictionary? {
         willSet(newPlayableItem) {
@@ -30,16 +30,21 @@
     var heartbeatInterval: Int = 5000
 
     var lastTrackDate: Date = Date(timeIntervalSince1970: 0)
-    var task: URLSessionDataTask? = nil
+    weak var task: URLSessionDataTask? = nil
     let trackTimeStep: Double = 5.0
     var skipSeekTrack: Bool = false
 
-    deinit {
+    func clean() {
         bitmovinPlayer?.destroy()
         bitmovinPlayer = nil
         bitmovinPlayerView = nil
         analyticCollector?.detachPlayer()
         analyticCollector = nil
+        task = nil
+    }
+    
+    deinit {
+        clean()
     }
 
     override func viewDidLoad() {
@@ -84,16 +89,18 @@
         self.analyticCollector = createAnalyticCollector(videoId: identifier)
         self.analyticCollector?.attachBitmovinPlayer(player: player)
 
-        DispatchQueue.main.async {
-            let playerView = BMPBitmovinPlayerView(player: player, frame: .zero)
-            playerView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
-            playerView.frame = self.view.bounds
-            playerView.add(listener: self)
+        DispatchQueue.main.async { [weak self] in
+            if let strongSelf = self {
+                let playerView = BMPBitmovinPlayerView(player: player, frame: .zero)
+                playerView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+                playerView.frame = strongSelf.view.bounds
+                playerView.add(listener: strongSelf)
 
-            self.view.addSubview(playerView)
+                strongSelf.view.addSubview(playerView)
 
-            self.bitmovinPlayer = player
-            self.bitmovinPlayerView = playerView
+                strongSelf.bitmovinPlayer = player
+                strongSelf.bitmovinPlayerView = playerView
+            }
         }
     }
 

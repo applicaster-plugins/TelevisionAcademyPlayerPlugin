@@ -32,6 +32,12 @@ class PlayerView: UIView {
         }
     }
     
+    deinit {
+        playerViewController?.dismiss(animated: false, completion: nil)
+        playerViewController?.clean()
+        playerViewController = nil
+    }
+    
     @objc var playableItem: NSDictionary? {
         didSet {
             if playerViewController == nil {
