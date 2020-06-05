@@ -45,13 +45,22 @@ class PlayerView: UIView {
                 playerViewController?.playerKey = self.playerKey
                 playerViewController?.heartbeatInterval = self.heartbeatInterval
                 
-                self.addSubview(playerViewController!.view)
-                playerViewController!.view.matchParent()
+                guard let playerViewController = playerViewController else {
+                    return
+                }
+                let viewController = UIApplication.topViewController()
+                viewController?.present(playerViewController, animated: true)
                 
             } else {
                 playerViewController?.playableItem = playableItem
                 playerViewController?.bitmovinPlayer?.play()
             }
+        }
+    }
+        
+    public override func insertReactSubview(_ subview: UIView?, at atIndex: Int) {
+        if let subview = subview {
+            playerViewController?.view.addSubview(subview)
         }
     }
     
