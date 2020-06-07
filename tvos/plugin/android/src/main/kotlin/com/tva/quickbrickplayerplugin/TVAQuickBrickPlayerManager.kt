@@ -82,7 +82,7 @@ class TVAQuickBrickPlayerManager(context: ReactApplicationContext) : SimpleViewM
                 info.putDouble(RN_DURATION, intent.extras.getDouble(RN_DURATION))
                 info.putDouble(RN_TIME, intent.extras.getDouble(RN_TIME))
                 reactContextWeakReference.get()?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-                        ?.emit("onVideoTimeChanged", info)
+                        ?.emit("onTimeChanged", info)
 //
 //                reactContextWeakReference.get()?.getJSModule(RCTEventEmitter::class.java)?.receiveEvent(
 //                        intent.extras.getInt(RN_VIEW_ID), "onVideoTimeChanged", info)

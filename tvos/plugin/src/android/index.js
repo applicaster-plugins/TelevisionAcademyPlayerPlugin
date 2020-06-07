@@ -116,9 +116,7 @@ export class AndroidPlayer extends React.Component<Props, State> {
     DeviceEventEmitter.addListener("emitterOnError", this.onError);
     DeviceEventEmitter.addListener("onTvKeyDown", this.onKeyDown);
     DeviceEventEmitter.addListener("onShowSettings", this.onShowSettings);
-    eventEmitter.addListener('onVideoTimeChanged', (event) =>
-                  this._onTimeChanged(event)
-                );
+    eventEmitter.addListener('onTimeChanged', this._onTimeChanged);
     sendQuickBrickEvent("blockTVKeyEmit", { blockTVKeyEmit: false });
 //    this.timeout = setTimeout(this.retrievePluginConfiguration, 1);
 //    this._isMounted = true;
@@ -131,7 +129,7 @@ export class AndroidPlayer extends React.Component<Props, State> {
     DeviceEventEmitter.removeListener("onTvKeyDown", this.onKeyDown);
 
     DeviceEventEmitter.removeListener("onShowSettings", this.onShowSettings);
-    eventEmitter.removeAllListeners('onVideoTimeChanged');
+    eventEmitter.removeAllListeners('onTimeChanged');
     sendQuickBrickEvent("blockTVKeyEmit", { blockTVKeyEmit: true });
     if (this.timeout) {
       clearTimeout(this.timeout);
