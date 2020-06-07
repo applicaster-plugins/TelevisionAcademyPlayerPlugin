@@ -1,10 +1,11 @@
 // @flow
 import * as React from "react";
 import {pathOr, default as R} from "ramda";
-import {DeviceEventEmitter, Dimensions, requireNativeComponent, StyleSheet, View} from "react-native";
+import {DeviceEventEmitter, Dimensions, requireNativeComponent, StyleSheet, View,NativeModules,NativeEventEmitter} from "react-native";
 import {sendQuickBrickEvent} from "@applicaster/zapp-react-native-bridge/QuickBrick";
 import SettingsView from '../SettingsView';
-
+const { ZappPlugin } = NativeModules;
+const eventEmitter = new NativeEventEmitter(NativeModules.PlayerView);
 const PlayerView = requireNativeComponent("TVAQuickBrickPlayer");
 
 type Props = {
@@ -84,43 +85,43 @@ export class AndroidPlayer extends React.Component<Props, State> {
     });
   };
 
-  _onTimeChanged = event => {
+  _onTimeChanged = (event) => {
+    console.log('-----',event)
     const { playableItem } = this.props;
     const { showOverlay } = this.state;
-
-    // debug // TODO: remove this on final commit
-    console.log('_onTimeChanged', event, playableItem);
-
     if (showOverlay) return; // stop if already showed
 
-    // video time
-    const duration = event.nativeEvent.duration;
-    this.currentTime = event.nativeEvent.time;
-
-    const overlayPlugin = this.getOverlayPlugin();
-    const playNextFeed = pathOr(undefined, ['extensions', 'play_next_field_url'], playableItem);
-    const overlayDuration = Number(pathOr(0, ["configuration", "overlay_duration"], overlayPlugin));
-    const overlayTrigger = (R.path(["configuration", "overlay_trigger"], overlayPlugin) === "onStart") ?
-      Number(duration - (duration - overlayDuration)) :
-      Number(duration - overlayDuration);
-
-    const triggerTime = Math.min(duration - overlayDuration, overlayTrigger);
-
-    if (playNextFeed && this.currentTime >= triggerTime && !showOverlay) {
-      this.setState({ showOverlay: true });
-    }
+//    // video time
+    const duration = event.duration;
+    this.currentTime = event.time;
+//
+//    const overlayPlugin = this.getOverlayPlugin();
+//    const playNextFeed = pathOr(undefined, ['extensions', 'play_next_field_url'], playableItem);
+//    const overlayDuration = Number(pathOr(0, ["configuration", "overlay_duration"], overlayPlugin));
+//    const overlayTrigger = (R.path(["configuration", "overlay_trigger"], overlayPlugin) === "onStart") ?
+//      Number(duration - (duration - overlayDuration)) :
+//      Number(duration - overlayDuration);
+//
+//    const triggerTime = Math.min(duration - overlayDuration, overlayTrigger);
+//
+//    if (playNextFeed && this.currentTime >= triggerTime && !showOverlay) {
+//      this.setState({ showOverlay: true });
+//    }
   };
 
   componentDidMount() {
+    console.log('componentDidMount')
     DeviceEventEmitter.addListener("emitterOnLoad", this.onLoad);
     DeviceEventEmitter.addListener("emitterOnEnd", this.onEnd);
     DeviceEventEmitter.addListener("emitterOnError", this.onError);
     DeviceEventEmitter.addListener("onTvKeyDown", this.onKeyDown);
     DeviceEventEmitter.addListener("onShowSettings", this.onShowSettings);
-    DeviceEventEmitter.addListener("onVideoTimeChanged", this._onTimeChanged);
+    eventEmitter.addListener('onVideoTimeChanged', (event) =>
+                  this._onTimeChanged(event)
+                );
     sendQuickBrickEvent("blockTVKeyEmit", { blockTVKeyEmit: false });
-    this.timeout = setTimeout(this.retrievePluginConfiguration, 1);
-    this._isMounted = true;
+//    this.timeout = setTimeout(this.retrievePluginConfiguration, 1);
+//    this._isMounted = true;
   }
 
   componentWillUnmount() {
@@ -130,7 +131,7 @@ export class AndroidPlayer extends React.Component<Props, State> {
     DeviceEventEmitter.removeListener("onTvKeyDown", this.onKeyDown);
 
     DeviceEventEmitter.removeListener("onShowSettings", this.onShowSettings);
-    DeviceEventEmitter.removeListener("onVideoTimeChanged", this._onTimeChanged);
+    eventEmitter.removeAllListeners('onVideoTimeChanged');
     sendQuickBrickEvent("blockTVKeyEmit", { blockTVKeyEmit: true });
     if (this.timeout) {
       clearTimeout(this.timeout);
@@ -197,7 +198,6 @@ export class AndroidPlayer extends React.Component<Props, State> {
             onKeyChanged={playerEvent}
             pluginConfiguration={configurations}
             onSettingSelected={selectedSetting}
-            onVideoTimeChanged={timeChanged}
           />
           {settingsView}
           {this._isMounted && showOverlay && this.renderOverlay()}
