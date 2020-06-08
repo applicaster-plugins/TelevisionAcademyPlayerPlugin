@@ -76,9 +76,11 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         bitmovinPlayer?.setup(createPlayerConfiguration())
-
-        bitmovinPlayerView.onResume()
-        addEventListener(OnReadyListener { analyticUtil.startTrack(it.timestamp, bitmovinPlayer?.duration ?: 0.0) })
+        bitmovinPlayerView.onStart()
+        addEventListener(OnReadyListener {
+            bitmovinPlayer?.play()
+            analyticUtil.startTrack(it.timestamp, bitmovinPlayer?.duration ?: 0.0)
+        })
         addEventListener(OnErrorListener { event ->
             Log.e(TAG, "An Error occurred (${event.code}): ${event.message}")
             analyticUtil.handlePlayerError(event.message)
@@ -101,8 +103,8 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         })
 
         bitmovinAnalyticInteractor.attachPlayer(bitmovinPlayer)
-        bitmovinPlayer?.play()
-        bitmovinPlayerView.onStart()
+        bitmovinPlayerView.onResume()
+
         elapsedTimeSeconds?.let { bitmovinPlayer?.seek(it.toDouble()) }
     }
 
