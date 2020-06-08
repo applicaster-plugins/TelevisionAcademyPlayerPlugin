@@ -53,12 +53,14 @@ class FeedParser {
                 playable.playDescription = entry.summary
                 playable.videoURL = entry.content.src
                 playable.live = false
+                playable.identifier = entry.id as NSString
 
-                var extensions = NSDictionary()
+                let extensions = NSMutableDictionary()
 
                 if let playheadPosition = entry.extensions.playheadPosition {
-                    extensions = ["playhead_position": playheadPosition]
+                    extensions["playhead_position"] = playheadPosition
                 }
+                extensions["content_group"] = entry.extensions.contentGroup
 
                 playable.extensionsDictionary = extensions
 
@@ -120,7 +122,7 @@ class FeedParser {
                                  URLQueryItem(name: "isTVApp", value: "false"),
                                  URLQueryItem(name: "uid", value: submissionID),
                                  URLQueryItem(name: "token", value: token),
-                                 URLQueryItem(name: "competition_id", value: competitionID)]
+                                 URLQueryItem(name: "competitionId", value: competitionID)]
         
         components.percentEncodedQuery = components.percentEncodedQuery?.replacingOccurrences(of: "+", with: "%2B")
         
@@ -143,6 +145,7 @@ class FeedParser {
         playable.playDescription = video.playableDescription()
         playable.videoURL = video.contentVideoURLPath()
         playable.live = video.isLive()
+        playable.identifier = video.identifier
         playable.extensionsDictionary = video.extensionsDictionary
 
         parseURL(for: video) { (url) in
