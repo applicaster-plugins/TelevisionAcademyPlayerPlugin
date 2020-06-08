@@ -358,6 +358,11 @@ extension PlayerViewController: PlayerListener {
             playNextItem()
         } else {
             self.finishPlayer()
+            if let vc = presentingViewController {
+                vc.dismiss(animated: true, completion: nil)
+            } else {
+                self.view.removeFromSuperview()
+            }
         }
     }
 }

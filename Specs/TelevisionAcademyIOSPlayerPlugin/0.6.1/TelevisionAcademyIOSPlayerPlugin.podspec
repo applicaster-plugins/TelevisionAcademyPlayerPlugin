@@ -1,15 +1,15 @@
 Pod::Spec.new do |s|
 
     s.name             = "TelevisionAcademyIOSPlayerPlugin"
-    s.version          = '0.6.2'
+    s.version          = '0.6.1'
     s.summary          = "BitmovinPlayer video player framework for Zapp iOS."
     s.description      = <<-DESC
                           BitmovinPlayer video player framework for Zapp iOS.
                          DESC
     s.homepage         = "https://github.com/applicaster-plugins/TelevisionAcademyPlayerPlugin"
     s.license          = 'MIT'
-    s.author           = { "Pablo Rueda" => "p.rueda@applicaster.com" }
-    s.source           = { :git => "https://github.com/applicaster-plugins/TelevisionAcademyPlayerPlugin.git", :tag => 'ios-' + s.version.to_s }
+    s.author           = { "Anatolii Afanasiev" => "anatolii.afanasiev@corewillsoft.com" }
+    s.source           = { :git => "https://github.com/applicaster-plugins/TelevisionAcademyPlayerPlugin.git", :tag => s.version.to_s }
     s.platform = :ios
     s.ios.deployment_target = "10.0"
     s.requires_arc = true
@@ -17,7 +17,6 @@ Pod::Spec.new do |s|
     s.static_framework = true
     s.resources = ['ios/TelevisionAcademyIOSPlayerPlugin/SupportingFiles/*']
     s.source_files = 'ios/TelevisionAcademyIOSPlayerPlugin/PluginClasses/*.swift','ios/TelevisionAcademyIOSPlayerPlugin/PluginClasses/**/*.swift'
-    s.dependency 'ZappPlugins'
     s.dependency 'BitmovinPlayer','~> 2.42.0'
     s.dependency 'google-cast-sdk-no-bluetooth', '= 4.4.4'
     s.dependency 'BitmovinAnalyticsCollector/BitmovinPlayer','~> 1.12.0'
