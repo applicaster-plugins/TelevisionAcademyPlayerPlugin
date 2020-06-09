@@ -16,6 +16,7 @@ import com.bitmovin.player.config.PlayerConfiguration
 import com.bitmovin.player.config.StyleConfiguration
 import com.bitmovin.player.config.media.SourceConfiguration
 import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
@@ -31,7 +32,7 @@ import com.tva.quickbrickplayerplugin.api.VoidCallback
 import kotlinx.android.synthetic.main.player_view.view.*
 import java.util.concurrent.TimeUnit
 
-class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
+class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs), LifecycleEventListener {
 
     private var lastTrackTime = 0L
     private var lastRnEvent = 0L
@@ -77,10 +78,6 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         super.onAttachedToWindow()
         bitmovinPlayer?.setup(createPlayerConfiguration())
         bitmovinPlayerView.onStart()
-        addEventListener(OnReadyListener {
-            bitmovinPlayer?.play()
-            analyticUtil.startTrack(it.timestamp, bitmovinPlayer?.duration ?: 0.0)
-        })
         addEventListener(OnErrorListener { event ->
             Log.e(TAG, "An Error occurred (${event.code}): ${event.message}")
             analyticUtil.handlePlayerError(event.message)
@@ -103,9 +100,9 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         })
 
         bitmovinAnalyticInteractor.attachPlayer(bitmovinPlayer)
-        bitmovinPlayerView.onResume()
 
         elapsedTimeSeconds?.let { bitmovinPlayer?.seek(it.toDouble()) }
+        (context as ReactContext).addLifecycleEventListener(this)
     }
 
     private fun createPlayerConfiguration() = PlayerConfiguration().apply {
@@ -326,5 +323,20 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         bitmovinPlayer?.currentTime?.let { intent.putExtra(RN_TIME, it) }
         bitmovinPlayer?.duration?.let { intent.putExtra(RN_DURATION,it) }
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
+    }
+
+    override fun onHostResume() {
+        bitmovinPlayer?.onResume()
+        addEventListener(OnReadyListener {
+            bitmovinPlayer?.play()
+            analyticUtil.startTrack(it.timestamp, bitmovinPlayer?.duration ?: 0.0)
+        })
+    }
+
+    override fun onHostPause() {
+        bitmovinPlayer?.onStop()
+    }
+
+    override fun onHostDestroy() {
     }
 }
