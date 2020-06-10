@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
 import android.view.KeyEvent.*
+import android.view.WindowManager
 import android.widget.FrameLayout
 import com.applicaster.plugin_manager.login.LoginManager
 import com.applicaster.util.OSUtil
@@ -95,6 +96,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
 
         elapsedTimeSeconds?.let { bitmovinPlayer?.seek(it.toDouble()) }
         (context as ReactContext).addLifecycleEventListener(this)
+        (context as ReactContext).currentActivity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     private fun createPlayerConfiguration() = PlayerConfiguration().apply {
