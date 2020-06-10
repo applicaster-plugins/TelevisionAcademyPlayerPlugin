@@ -14,6 +14,7 @@ import com.bitmovin.player.config.PlayerConfiguration
 import com.bitmovin.player.config.StyleConfiguration
 import com.bitmovin.player.config.media.SourceConfiguration
 import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
@@ -25,7 +26,7 @@ import com.tva.quickbrickplayerplugin.api.VoidCallback
 import kotlinx.android.synthetic.main.player_view.view.*
 import java.util.concurrent.TimeUnit
 
-class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
+class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs), LifecycleEventListener {
 
     private var lastTrackTime = 0L
     private var eventListeners = mutableListOf<EventListener<*>>()
@@ -68,9 +69,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         bitmovinPlayer?.setup(createPlayerConfiguration())
-
-        bitmovinPlayerView.onResume()
-        addEventListener(OnReadyListener { analyticUtil.startTrack(it.timestamp, bitmovinPlayer?.duration ?: 0.0) })
+        bitmovinPlayerView.onStart()
         addEventListener(OnErrorListener { event ->
             Log.e(TAG, "An Error occurred (${event.code}): ${event.message}")
             analyticUtil.handlePlayerError(event.message)
@@ -93,9 +92,9 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         })
 
         bitmovinAnalyticInteractor.attachPlayer(bitmovinPlayer)
-        bitmovinPlayer?.play()
-        bitmovinPlayerView.onStart()
+
         elapsedTimeSeconds?.let { bitmovinPlayer?.seek(it.toDouble()) }
+        (context as ReactContext).addLifecycleEventListener(this)
     }
 
     private fun createPlayerConfiguration() = PlayerConfiguration().apply {
@@ -303,5 +302,20 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     fun addEventListener(listener: EventListener<*>) {
         bitmovinPlayer?.addEventListener(listener)
         eventListeners.add(listener)
+    }
+
+
+    override fun onHostResume() {
+        bitmovinPlayer?.onResume()
+        addEventListener(OnReadyListener {
+            analyticUtil.startTrack(it.timestamp, bitmovinPlayer?.duration ?: 0.0)
+        })
+    }
+
+    override fun onHostPause() {
+        bitmovinPlayer?.onStop()
+    }
+
+    override fun onHostDestroy() {
     }
 }
