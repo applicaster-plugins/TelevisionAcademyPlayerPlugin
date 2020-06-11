@@ -13,8 +13,8 @@
     }
   ],
   "dependency_name": "@applicaster/quick-brick-television-academy-bitmovin-player",
-  "dependency_version": "0.5.4",
-  "manifest_version": "0.5.4",
+  "dependency_version": "0.6.2",
+  "manifest_version": "0.6.2",
   "platform": "android",
   "author_name": "Maxi Wainberg",
   "author_email": "m.wainberg@applicaster.com",
@@ -34,7 +34,7 @@
   "react_bundle_url": "",
   "extra_dependencies": [],
   "npm_dependencies": [
-    "@applicaster/quick-brick-television-academy-bitmovin-player@0.6.0"
+    "@applicaster/quick-brick-television-academy-bitmovin-player@0.6.2"
   ],
   "project_dependencies": [
     {

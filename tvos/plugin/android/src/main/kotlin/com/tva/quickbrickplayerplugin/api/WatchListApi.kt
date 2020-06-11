@@ -7,6 +7,6 @@ import retrofit2.http.Path
 
 interface WatchListApi {
 
-    @PUT("/watchlist/{content_uid}")
+    @PUT("watchlist/{content_uid}")
     fun putWatchlist(@Path("content_uid") contentUid: String, @Body body: PlayerEvent): Call<Void>
 }
