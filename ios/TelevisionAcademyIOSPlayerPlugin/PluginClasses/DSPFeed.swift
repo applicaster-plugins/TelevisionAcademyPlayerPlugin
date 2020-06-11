@@ -39,14 +39,16 @@ struct Content: Codable {
 // MARK: - EntryExtensions
 struct EntryExtensions: Codable {
     let playheadPosition: Int?
-    let submissionID: String
-    let playNextFieldURL: String?
+    let contentGroup, competitionID, submissionID: String
+    let playNextFeedURL: String?
     let overlayTriggerTimestamp: Int?
 
     enum CodingKeys: String, CodingKey {
         case playheadPosition = "playhead_position"
+        case contentGroup = "content_group"
+        case competitionID = "competition_id"
         case submissionID = "submission_id"
-        case playNextFieldURL = "play_next_field_url"
+        case playNextFeedURL = "play_next_feed_url"
         case overlayTriggerTimestamp = "overlay_trigger_timestamp"
     }
 }
