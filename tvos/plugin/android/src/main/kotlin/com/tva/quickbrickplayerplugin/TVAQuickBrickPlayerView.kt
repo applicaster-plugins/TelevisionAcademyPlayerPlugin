@@ -1,12 +1,16 @@
 package com.tva.quickbrickplayerplugin
 
 import android.content.Context
+import android.media.AudioAttributes
+import android.media.AudioFocusRequest
+import android.media.AudioManager
+import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
 import android.view.KeyEvent.*
 import android.view.WindowManager
 import android.widget.FrameLayout
-import com.applicaster.plugin_manager.login.LoginManager
+import androidx.annotation.RequiresApi
 import com.applicaster.storage.LocalStorage
 import com.applicaster.util.OSUtil
 import com.bitmovin.player.BitmovinPlayer
@@ -26,16 +30,19 @@ import com.tva.quickbrickplayerplugin.api.ApiFactory
 import com.tva.quickbrickplayerplugin.api.PlayerEvent
 import com.tva.quickbrickplayerplugin.api.VoidCallback
 import kotlinx.android.synthetic.main.player_view.view.*
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs), LifecycleEventListener {
 
+    private var finished: Boolean = false
     private var lastTrackTime = 0L
     private var eventListeners = mutableListOf<EventListener<*>>()
     private var elapsedTimeSeconds: Long? = null
     private var contentGroup: String? = null
     private var videoSrc: String? = null
     private var sourceId: String? = null
+
     //Temporary hardcoded
     private var testVideoSrc: String? = null
     private var heartbeatInterval: Int = 5000
@@ -48,6 +55,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     private var bitmovinAnalyticInteractor: BitmovinAnalyticInteractor
     private val TOKEN_NAMESPACE = "login"
     private val TOKEN_KEY = "token"
+    private var audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
     private val apiFactory by lazy {
         ApiFactory(baseSkylarkUrl, getToken())
@@ -68,6 +76,9 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         OSUtil.getLayoutInflater(context).inflate(R.layout.player_view, this)
         bitmovinPlayer = bitmovinPlayerView.player
         bitmovinAnalyticInteractor = BitmovinAnalyticInteractor()
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
     }
 
     override fun onAttachedToWindow() {
@@ -94,7 +105,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         addEventListener(OnSeekListener {
             analyticUtil.trackSeek(it.position, it.seekTarget, bitmovinPlayer?.duration ?: 0.0)
         })
-
+        requestAudioFocus()
         bitmovinAnalyticInteractor.attachPlayer(bitmovinPlayer)
 
         elapsedTimeSeconds?.let { bitmovinPlayer?.seek(it.toDouble()) }
@@ -121,6 +132,15 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        finishPlayer()
+    }
+
+    private fun finishPlayer() {
+        if (finished) {
+            return
+        }
+        finished = true
+        abandonAudioFocus()
         bitmovinPlayerView.onPause()
         bitmovinPlayerView.onStop()
         bitmovinPlayerView.onDestroy()
@@ -128,6 +148,42 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         bitmovinPlayer?.let { player -> analyticUtil.endTrack(player.currentTime, bitmovinPlayer?.duration ?: 0.0) }
         bitmovinAnalyticInteractor.detachPlayer()
     }
+
+    private fun requestAudioFocus() {
+        val audioFocusListener: (Int) -> Unit = {
+            when (it) {
+                AudioManager.AUDIOFOCUS_GAIN -> Timber.d("AUDIOFOCUS_GAIN")
+                AudioManager.AUDIOFOCUS_LOSS -> Timber.d("AUDIOFOCUS_LOSS")
+                AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> Timber.d("AUDIOFOCUS_LOSS_TRANSIENT")
+                AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> Timber.d("AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK")
+                else -> Timber.d("AUDIOFOCUS other $it")
+            }
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            audioManager.requestAudioFocus(audioFocusListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
+        } else {
+            audioManager.requestAudioFocus(audioFocusRequest().setOnAudioFocusChangeListener(audioFocusListener).build())
+        }
+    }
+
+    private fun abandonAudioFocus() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            audioManager.abandonAudioFocus { }
+        } else {
+            audioManager.abandonAudioFocusRequest(audioFocusRequest().build())
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun audioFocusRequest() =
+            AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                    .setAudioAttributes(
+                            AudioAttributes.Builder()
+                                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                                    .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
+                                    .build()
+                    )
+                    .setAcceptsDelayedFocusGain(true)
 
     fun onKeyChanged(event: ReadableMap?) {
         when (event?.getInt("keyCode")) {
@@ -321,12 +377,15 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         addEventListener(OnReadyListener {
             analyticUtil.startTrack(it.timestamp, bitmovinPlayer?.duration ?: 0.0)
         })
+        requestAudioFocus()
     }
 
     override fun onHostPause() {
         bitmovinPlayer?.onStop()
+        abandonAudioFocus()
     }
 
     override fun onHostDestroy() {
+        finishPlayer()
     }
 }
