@@ -119,7 +119,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
 
         elapsedTimeSeconds?.let { bitmovinPlayer?.seek(it.toDouble()) }
         (context as ReactContext).addLifecycleEventListener(this)
-        (context as ReactContext).currentActivity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        (context as ReactContext).currentActivity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     private fun createPlayerConfiguration() = PlayerConfiguration().apply {
@@ -174,7 +174,6 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         }
     }
 
-
     @RequiresApi(Build.VERSION_CODES.O)
     private fun audioFocusRequest() =
             AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
@@ -182,7 +181,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
                     .setAudioAttributes(
                             AudioAttributes.Builder()
                                     .setUsage(AudioAttributes.USAGE_MEDIA)
-                                    .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
+                                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                                     .build()
                     )
                     .setAcceptsDelayedFocusGain(true)

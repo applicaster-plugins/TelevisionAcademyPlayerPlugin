@@ -13,8 +13,8 @@
     }
   ],
   "dependency_name": "@applicaster/quick-brick-television-academy-bitmovin-player",
-  "dependency_version": "0.6.4",
-  "manifest_version": "0.6.4",
+  "dependency_version": "0.6.5",
+  "manifest_version": "0.6.5",
   "platform": "android",
   "author_name": "Vlad Sumtsov",
   "author_email": "vlad.sumtsov@applicaster.com",
@@ -34,7 +34,7 @@
   "react_bundle_url": "",
   "extra_dependencies": [],
   "npm_dependencies": [
-    "@applicaster/quick-brick-television-academy-bitmovin-player@0.6.4"
+    "@applicaster/quick-brick-television-academy-bitmovin-player@0.6.5"
   ],
   "project_dependencies": [
     {

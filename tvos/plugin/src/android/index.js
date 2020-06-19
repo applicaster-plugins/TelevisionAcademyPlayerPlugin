@@ -54,7 +54,7 @@ export class AndroidPlayer extends React.Component<Props, State> {
     DeviceEventEmitter.addListener("emitterOnError", this.onError);
     DeviceEventEmitter.addListener("onTvKeyDown", this.onKeyDown);
     DeviceEventEmitter.addListener("onShowSettings", this.onShowSettings);
-    sendQuickBrickEvent("blockTVKeyEmit", { blockTVKeyEmit: false });
+    sendQuickBrickEvent("blockTVKeyEmit", { blockTVKeyEmit: true });
   }
 
   componentWillUnmount() {
@@ -63,7 +63,6 @@ export class AndroidPlayer extends React.Component<Props, State> {
     DeviceEventEmitter.removeListener("emitterOnError", this.onError);
     DeviceEventEmitter.removeListener("onTvKeyDown", this.onKeyDown);
     DeviceEventEmitter.removeListener("onShowSettings", this.onShowSettings);
-    sendQuickBrickEvent("blockTVKeyEmit", { blockTVKeyEmit: true });
   }
 
   onKeyDown(event) {
