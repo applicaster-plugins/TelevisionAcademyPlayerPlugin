@@ -63,6 +63,15 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     private val analyticUtil by lazy {
         AnalyticUtil()
     }
+    private val audioFocusListener: (Int) -> Unit = {
+        when (it) {
+            AudioManager.AUDIOFOCUS_GAIN -> Timber.d("AUDIOFOCUS_GAIN")
+            AudioManager.AUDIOFOCUS_LOSS -> Timber.d("AUDIOFOCUS_LOSS")
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> Timber.d("AUDIOFOCUS_LOSS_TRANSIENT")
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> Timber.d("AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK")
+            else -> Timber.d("AUDIOFOCUS other $it")
+        }
+    }
 
     companion object {
         private const val ELAPSED_TIME = "playhead_position"
@@ -150,19 +159,10 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     }
 
     private fun requestAudioFocus() {
-        val audioFocusListener: (Int) -> Unit = {
-            when (it) {
-                AudioManager.AUDIOFOCUS_GAIN -> Timber.d("AUDIOFOCUS_GAIN")
-                AudioManager.AUDIOFOCUS_LOSS -> Timber.d("AUDIOFOCUS_LOSS")
-                AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> Timber.d("AUDIOFOCUS_LOSS_TRANSIENT")
-                AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> Timber.d("AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK")
-                else -> Timber.d("AUDIOFOCUS other $it")
-            }
-        }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             audioManager.requestAudioFocus(audioFocusListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
         } else {
-            audioManager.requestAudioFocus(audioFocusRequest().setOnAudioFocusChangeListener(audioFocusListener).build())
+            audioManager.requestAudioFocus(audioFocusRequest().build())
         }
     }
 
@@ -174,9 +174,11 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         }
     }
 
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun audioFocusRequest() =
             AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                    .setOnAudioFocusChangeListener(audioFocusListener)
                     .setAudioAttributes(
                             AudioAttributes.Builder()
                                     .setUsage(AudioAttributes.USAGE_MEDIA)
