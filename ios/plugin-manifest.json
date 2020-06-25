@@ -13,7 +13,7 @@
       "platform": "ios",
       "author_name": "Vlad Sumtsov",
       "author_email": "vlad.sumtsov@corewillsoft.com",
-      "manifest_version": "0.6.3",
+      "manifest_version": "0.6.4",
       "name": "Television Academy Player",
       "description": "iOS Plugin for Television Academy",
       "type": "player",
@@ -21,7 +21,7 @@
       "identifier": "TelevisionAcademyPlayerPlugin",
       "ui_builder_support": true,
       "dependency_name": "TelevisionAcademyIOSPlayerPlugin",
-      "dependency_version": "0.6.3",
+      "dependency_version": "0.6.4",
       "min_zapp_sdk": "12.0.0",
       "deprecated_since_zapp_sdk": "",
       "unsupported_since_zapp_sdk": "",
@@ -61,6 +61,13 @@
                   "label": "dsp base url",
                   "placeholder": "https://zapp-pipes....../",
                   "tooltip_text": "dsp base url"
+            },
+            {
+              "type": "text",
+              "key": "dsp_parameters_url",
+              "label": "dsp parameters",
+              "placeholder": "&type=submissions&screen=videos&env=prod&isTVApp=false",
+              "tooltip_text": "dsp parameters"
             }
       ],
       "targets": [

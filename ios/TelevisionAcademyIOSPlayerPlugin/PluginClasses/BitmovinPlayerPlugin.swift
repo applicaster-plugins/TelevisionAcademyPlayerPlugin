@@ -53,10 +53,12 @@ extension BitmovinPlayerPlugin: ZPPlayerProtocol {
         
         let dspBaseURL = configurationJSON?["dsp_base_url"] as? String ?? ""
         let tvaApiBaseURL = configurationJSON?["api_base_url"] as? String ?? ""
+        let dspParamemers = configurationJSON?["dsp_parameters_url"] as? String ?? ""
         
         let feedParser = FeedParser(video: videos.first!,
                                     dspBaseURL: dspBaseURL,
-                                    tvaApiBaseURL: tvaApiBaseURL)
+                                    tvaApiBaseURL: tvaApiBaseURL,
+                                    dspParameters: dspParamemers)
         
         let parsedVideos = feedParser.parseVideos()
 

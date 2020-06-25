@@ -150,7 +150,9 @@ class PlayerViewController: UIViewController {
         config.styleConfiguration.playerUiCss = cssURL
         config.styleConfiguration.playerUiJs = jsURL
         config.styleConfiguration.userInterfaceConfiguration = bitmovinUserInterfaceConfiguration
-        config.sourceItem = sourceItems.first
+        if let firstItem = sourceItems.first {
+            config.sourceItem = firstItem
+        }
         
         let player = BitmovinPlayer(configuration: config)
         player.add(listener: self)

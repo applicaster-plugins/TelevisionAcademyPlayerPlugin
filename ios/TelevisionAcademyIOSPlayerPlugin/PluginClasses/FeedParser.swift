@@ -14,13 +14,15 @@ class FeedParser {
     let video: ZPPlayable
     let dspBaseURL: String
     let tvaApiBaseURL: String
+    let dspParameters: String
     
-    init(video: ZPPlayable, dspBaseURL: String, tvaApiBaseURL: String) {
+    init(video: ZPPlayable, dspBaseURL: String, tvaApiBaseURL: String, dspParameters: String) {
         let loginPluginsManager = ZAAppConnector.sharedInstance().pluginsDelegate?.loginPluginsManager
         self.token = loginPluginsManager?.createWithUserData()?.getUserToken() ?? ""
         self.video = video
         self.dspBaseURL = dspBaseURL
         self.tvaApiBaseURL = tvaApiBaseURL
+        self.dspParameters = dspParameters
     }
     
     func parseVideos() -> [ZPPlayable] {
@@ -112,17 +114,13 @@ class FeedParser {
     private func createFeedContentRequest(from config: NSDictionary?) -> URLRequest? {
         guard let submissionID = video.extensionsDictionary?["submission_id"] as? String,
             let competitionID = video.extensionsDictionary?["competition_id"] as? String,
-            var components = URLComponents(string: "\(dspBaseURL)fetchData") else {
+            var components = URLComponents(string: "\(dspBaseURL)fetchData?\(dspParameters)") else {
                 return nil
         }
         
-        components.queryItems = [URLQueryItem(name: "type", value: "submissions"),
-                                 URLQueryItem(name: "screen", value: "videos"),
-                                 URLQueryItem(name: "env", value: "prod"),
-                                 URLQueryItem(name: "isTVApp", value: "false"),
-                                 URLQueryItem(name: "uid", value: submissionID),
-                                 URLQueryItem(name: "token", value: token),
-                                 URLQueryItem(name: "competitionId", value: competitionID)]
+        components.queryItems?.append(contentsOf: [URLQueryItem(name: "uid", value: submissionID),
+                                                   URLQueryItem(name: "token", value: token),
+                                                   URLQueryItem(name: "competitionId", value: competitionID)])
         
         components.percentEncodedQuery = components.percentEncodedQuery?.replacingOccurrences(of: "+", with: "%2B")
         
