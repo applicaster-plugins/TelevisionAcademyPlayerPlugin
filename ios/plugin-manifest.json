@@ -61,6 +61,13 @@
                   "label": "dsp base url",
                   "placeholder": "https://zapp-pipes....../",
                   "tooltip_text": "dsp base url"
+            },
+            {
+              "type": "text",
+              "key": "dsp_parameters_url",
+              "label": "dsp parameters",
+              "placeholder": "&type=submissions&screen=videos&env=prod&isTVApp=false",
+              "tooltip_text": "dsp parameters"
             }
       ],
       "targets": [
