@@ -82,7 +82,7 @@ class TAPlayerActivity : AppCompatActivity() {
             }
         }
         if (playable != null && playable!!.contentVideoURL != null && currentPlaylistItem >= 0) {
-            playNextItem(true)
+            playItem()
         } else {
             playable?.takeIf { it is APURLPlayable && !loginManager?.token.isNullOrEmpty() }?.apply {
                 val comp = (playable as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get(COMPETITION_ID) as? String ?: ""
@@ -102,9 +102,15 @@ class TAPlayerActivity : AppCompatActivity() {
         bitmovinAnalyticInteractor.attachPlayer(bitmovinPlayer)
         bitmovinPlayer?.addEventListener(OnPlaybackFinishedListener {
             currentProgress = 0.0
-            playNextItem(false)
+            playNextItem()
         })
         bitmovinPlayer?.addEventListener(OnReadyListener {
+            // if the currentProgress is near the end start play the video from the beginning
+            if(((bitmovinPlayer!!.duration) - END_TIME_BUFFER <  currentProgress) && bitmovinPlayer!!.duration > END_TIME_BUFFER + 1) {
+                        currentProgress = 0.0
+                        playItem()
+            }
+
             bitmovinPlayer?.play()
         })
     }
@@ -159,7 +165,7 @@ class TAPlayerActivity : AppCompatActivity() {
                 if (status == ResponseStatusCodes.SUCCESS) {
                     playable.setContentVideoUrl(response)
                     if (index == 0) { // start playing when the first item return
-                        playNextItem(false)
+                        playNextItem()
                     }
                 } else {
                     finish()
@@ -198,14 +204,19 @@ class TAPlayerActivity : AppCompatActivity() {
         outState.putInt(KEY_NEXT_PLAYLIST_ITEM, currentPlaylistItem)
     }
 
-    private fun playNextItem(playAfterRotation: Boolean) {
-        if (!playAfterRotation) {
-            lastItemFinished = (currentPlaylistItem + 1) >= playlistItems.size
-            if (lastItemFinished) {
-                return
-            }
-            currentPlaylistItem += 1
+    private fun playNextItem( ) {
+
+        lastItemFinished = (currentPlaylistItem + 1) >= playlistItems.size
+        if (lastItemFinished) {
+            return
         }
+        currentPlaylistItem += 1
+
+        playItem()
+    }
+
+    private fun playItem() {
+
         playable = playlistItems[currentPlaylistItem]
         val sourceConfiguration = SourceConfiguration()
         if (videoType == "360") {
@@ -226,5 +237,7 @@ class TAPlayerActivity : AppCompatActivity() {
 
     }
 
-
+    companion object {
+        const val END_TIME_BUFFER = 5
+    }
 }
