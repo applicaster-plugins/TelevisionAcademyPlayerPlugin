@@ -1,7 +1,7 @@
 package com.applicaster.plugin.televisionacademyplayer
 
+import android.content.res.TypedArray
 import android.os.Bundle
-import android.support.customtabs.CustomTabsService.KEY_URL
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
@@ -61,6 +61,7 @@ class TAPlayerActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         loginManager = LoginManager.getLoginPlugin()
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.setFlags(
@@ -69,6 +70,7 @@ class TAPlayerActivity : AppCompatActivity() {
         )
         BitmovinCastManager.getInstance().updateContext(this)
         setContentView(R.layout.activity_player)
+
         intent.extras?.apply {
             playable = getSerializable(KEY_PLAYABLE) as? Playable
             contentGroup = getString(KEY_CONTENT_GROUP, "")
@@ -76,25 +78,10 @@ class TAPlayerActivity : AppCompatActivity() {
             currentProgress = getDouble(KEY_CURRENT_PROGRESS, 0.0)
             if (savedInstanceState != null) {
                 currentProgress = savedInstanceState.getDouble(KEY_CURRENT_PROGRESS, 0.0)
-                (savedInstanceState.getSerializable(KEY_URL) as ArrayList<Playable>)?.apply { playlistItems = this }
+                (savedInstanceState.getSerializable(KEY_PLAYABLE_LIST) as? Array<Playable>)?.toList()?.apply { playlistItems = this }
                 (savedInstanceState.getSerializable(KEY_PLAYABLE) as Playable)?.apply { playable = this }
                 currentPlaylistItem = savedInstanceState.getInt(KEY_NEXT_PLAYLIST_ITEM, -1)
             }
-        }
-        if (playable != null && playable!!.contentVideoURL != null && currentPlaylistItem >= 0) {
-            playItem()
-        } else {
-            playable?.takeIf { it is APURLPlayable && !loginManager?.token.isNullOrEmpty() }?.apply {
-                val comp = (playable as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get(COMPETITION_ID) as? String ?: ""
-                val sub = (playable as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get(SUBMISSION_ID) as? String ?: ""
-                if (comp == "" || sub == ""){
-                    playlistItems = listOf(playable!!)
-                    getURL()
-                }else{
-                    getPlaylistItems(comp, sub,loginManager!!.token)
-                }
-
-            } ?: run { finish() }
         }
 
         bitmovinPlayer = bitmovinPlayerView.player
@@ -113,6 +100,24 @@ class TAPlayerActivity : AppCompatActivity() {
 
             bitmovinPlayer?.play()
         })
+
+        if (playable != null && playable!!.contentVideoURL != null && currentPlaylistItem >= 0) {
+            playItem()
+        } else {
+            playable?.takeIf { it is APURLPlayable && !loginManager?.token.isNullOrEmpty() }?.apply {
+                val comp = (playable as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get(COMPETITION_ID) as? String ?: ""
+                val sub = (playable as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get(SUBMISSION_ID) as? String ?: ""
+                if (comp == "" || sub == ""){
+                    playlistItems = listOf(playable!!)
+                    getURL()
+                }else{
+                    getPlaylistItems(comp, sub,loginManager!!.token)
+                }
+
+            } ?: run { finish() }
+        }
+
+
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -200,7 +205,7 @@ class TAPlayerActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState.putDouble(KEY_CURRENT_PROGRESS, bitmovinPlayer?.currentTime ?: 0.0)
         outState.putSerializable(KEY_PLAYABLE, playable)
-        outState.putSerializable(KEY_URL, playlistItems.toTypedArray())
+        outState.putSerializable(KEY_PLAYABLE_LIST, playlistItems.toTypedArray())
         outState.putInt(KEY_NEXT_PLAYLIST_ITEM, currentPlaylistItem)
     }
 
@@ -246,5 +251,6 @@ class TAPlayerActivity : AppCompatActivity() {
 
     companion object {
         const val END_TIME_BUFFER = 5
+        const val KEY_PLAYABLE_LIST = "KEY_PLAYABLE_LIST"
     }
 }
