@@ -50,25 +50,13 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
         val intent = Intent(context, TAPlayerActivity::class.java)
         getContentPlayable().also {
             intent.putExtra(KEY_PLAYABLE, it)
-            intent.putExtra(KEY_CURRENT_PROGRESS, getProgress(it))
-            intent.putExtra(KEY_CONTENT_GROUP, getContentGroup(it))
-            intent.putExtra(KEY_VIDEO_TYPE, getVideoType(it))
+            intent.putExtra(KEY_CURRENT_PROGRESS, it.getProgress())
+            intent.putExtra(KEY_CONTENT_GROUP, it.getContentGroup())
+            intent.putExtra(KEY_VIDEO_TYPE, it.getVideoType())
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             context.startActivity(intent)
         }
     }
-
-    private fun getProgress(it: Playable): Double =
-            (it as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get("playhead_position")?.toString()?.toDoubleOrNull()
-                    ?: 0.0
-
-    private fun getContentGroup(it: Playable): String =
-            (it as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get("content_group")?.toString()
-                    ?: ""
-
-    private fun getVideoType(it: Playable): String =
-            (it as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get("video_type")?.toString()
-                    ?: ""
 
     override fun attachInline(viewGroup: ViewGroup) {
         super.attachInline(viewGroup)
@@ -76,7 +64,7 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
         bitmovinAnalyticInteractor = BitmovinAnalyticInteractor().apply {
             initializeAnalyticsCollector(context, getContentPlayable())
         }
-        EventListenerInteractor.addListeners(videoView.player, firstPlayable.playableId, getContentGroup(getContentPlayable()))
+        EventListenerInteractor.addListeners(videoView.player, firstPlayable.playableId, getContentPlayable().getContentGroup())
     }
 
     override fun removeInline(viewGroup: ViewGroup) {

@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 project.ext {
-    releaseVersion = '0.5.2'
+    releaseVersion = '0.6.0'
     releaseVersionCode = 1
     minSdkVersion = 17
     targetSdkVersion = 29
@@ -22,9 +22,9 @@ project.ext {
 
 buildscript {
     //use for upload artifact
-    ext.kotlin_version = '1.3.10'
+//    ext.kotlin_version = '1.3.10'
     //dev use
-//    ext.kotlin_version = '1.2.51'
+    ext.kotlin_version = '1.2.51'
     repositories {
         google()
         jcenter()
@@ -108,23 +108,6 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
 
-//    // Applicaster SDK
-//    def applicasterSDKPath = 'com.applicaster:applicaster-android-sdk:2.32.15'
-//
-//    // Check if an open SDK is defined - if not use the closed one.
-//    //Check if an open SDK is defined - if not use the closed one.
-//    def devSDK = findProject(':applicaster-android-sdk')
-//    if (devSDK != null) {
-//        api project(':applicaster-android-sdk') {
-//            exclude group:    'com.applicaster', module: 'applicaster-android-sdk'
-//            exclude group:    'com.applicaster', module: 'zapp-root-android'
-//        }
-//    } else {
-//        api(applicasterSDKPath) {
-//            exclude group:    'com.applicaster', module: 'applicaster-android-sdk'
-//            exclude group:    'com.applicaster', module: 'zapp-root-android'
-//        }
-//    }
 }
 apply plugin: 'bintray-release'
 

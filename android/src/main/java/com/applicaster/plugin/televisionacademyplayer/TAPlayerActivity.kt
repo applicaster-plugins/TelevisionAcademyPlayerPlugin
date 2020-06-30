@@ -15,11 +15,9 @@ import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.K
 import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.KEY_CURRENT_PROGRESS
 import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.KEY_NEXT_PLAYLIST_ITEM
 import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.KEY_PLAYABLE
-import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.KEY_QUEUE
 import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.KEY_VIDEO_TYPE
 import com.applicaster.plugin.televisionacademyplayer.PlayerContract.Companion.SUBMISSION_ID
 import com.applicaster.plugin.televisionacademyplayer.network.ContentURLRepostory
-import com.applicaster.plugin.televisionacademyplayer.network.Entry
 import com.applicaster.plugin.televisionacademyplayer.network.OKHttpRepsotory
 import com.applicaster.plugin_manager.login.LoginContract
 import com.applicaster.plugin_manager.login.LoginManager
@@ -33,7 +31,6 @@ import com.bitmovin.player.config.media.SourceConfiguration
 import com.bitmovin.player.config.media.SourceItem
 import com.bitmovin.player.config.vr.VRContentType
 import kotlinx.android.synthetic.main.activity_player.*
-import java.util.*
 import kotlin.collections.ArrayList
 
 class TAPlayerActivity : AppCompatActivity() {
@@ -44,8 +41,7 @@ class TAPlayerActivity : AppCompatActivity() {
     private val TAG = "TAPlayerActivity"
     private var bitmovinAnalyticInteractor: BitmovinAnalyticInteractor
     private var loginManager: LoginContract? = null
-    private var uidList: LinkedList<String> = LinkedList()
-    private var playlistItems: ArrayList<String> = ArrayList()
+    private var playlistItems: List<Playable> = ArrayList()
     private var currentPlaylistItem = -1
     private var lastItemFinished = false
     private var videoType: String = ""
@@ -75,31 +71,27 @@ class TAPlayerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_player)
         intent.extras?.apply {
             playable = getSerializable(KEY_PLAYABLE) as? Playable
-            (getSerializable(KEY_QUEUE) as? LinkedList<String>)?.apply { uidList = this }
             contentGroup = getString(KEY_CONTENT_GROUP, "")
             videoType = getString(KEY_VIDEO_TYPE, "")
             currentProgress = getDouble(KEY_CURRENT_PROGRESS, 0.0)
             if (savedInstanceState != null) {
                 currentProgress = savedInstanceState.getDouble(KEY_CURRENT_PROGRESS, 0.0)
-                (savedInstanceState.getSerializable(KEY_URL) as ArrayList<String>)?.apply { playlistItems = this }
-                (savedInstanceState.getSerializable(KEY_QUEUE) as LinkedList<String>)?.apply { uidList = this }
+                (savedInstanceState.getSerializable(KEY_URL) as ArrayList<Playable>)?.apply { playlistItems = this }
                 (savedInstanceState.getSerializable(KEY_PLAYABLE) as Playable)?.apply { playable = this }
                 currentPlaylistItem = savedInstanceState.getInt(KEY_NEXT_PLAYLIST_ITEM, -1)
-                uidList.poll().takeIf { !it.isNullOrEmpty() }?.apply {
-                    loginManager?.token?.let { getURL(this, it) }
-                }
             }
         }
         if (playable != null && playable!!.contentVideoURL != null && currentPlaylistItem >= 0) {
-            playNextItem(true)
+            playItem()
         } else {
             playable?.takeIf { it is APURLPlayable && !loginManager?.token.isNullOrEmpty() }?.apply {
                 val comp = (playable as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get(COMPETITION_ID) as? String ?: ""
                 val sub = (playable as? APAtomEntry.APAtomEntryPlayable)?.entry?.extensions?.get(SUBMISSION_ID) as? String ?: ""
                 if (comp == "" || sub == ""){
-                    getURL(playable?.contentVideoURL ?: "",loginManager!!.token)
+                    playlistItems = listOf(playable!!)
+                    getURL()
                 }else{
-                    getUIDs(comp, sub,loginManager!!.token)
+                    getPlaylistItems(comp, sub,loginManager!!.token)
                 }
 
             } ?: run { finish() }
@@ -109,10 +101,16 @@ class TAPlayerActivity : AppCompatActivity() {
         bitmovinAnalyticInteractor.initializeAnalyticsCollector(applicationContext, playable)
         bitmovinAnalyticInteractor.attachPlayer(bitmovinPlayer)
         bitmovinPlayer?.addEventListener(OnPlaybackFinishedListener {
-            currentProgress = 0.0
-            playNextItem(false)
+            playNextItem()
         })
         bitmovinPlayer?.addEventListener(OnReadyListener {
+            // if the currentProgress is near the end start play the video from the beginning
+            if(((bitmovinPlayer!!.duration) - END_TIME_BUFFER <  currentProgress) && bitmovinPlayer!!.duration > END_TIME_BUFFER + 1) {
+                playable?.setProgress(0.0)
+                playable?.let { updatePlayable(it) }
+                playItem()
+            }
+
             bitmovinPlayer?.play()
         })
     }
@@ -161,31 +159,37 @@ class TAPlayerActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    private fun getURL(id: String, token: String) {
-        ContentURLRepostory().contentUrl(id, "Bearer $token") { status, response ->
-            if (status == ResponseStatusCodes.SUCCESS) {
-                playlistItems.add(response)
-                if (currentPlaylistItem < 0) {
-                    playNextItem(false)
+    private fun getURL() {
+        for ((index, playable) in playlistItems.withIndex()) {
+            ContentURLRepostory().contentUrl(playable.contentVideoURL, "Bearer ${loginManager!!.token}") { status, response ->
+                if (status == ResponseStatusCodes.SUCCESS) {
+                    playable.setContentVideoUrl(response)
+                    if (index == 0) { // start playing when the first item return
+                        playNextItem()
+                    }
+                } else {
+                    finish()
                 }
-                uidList.poll().takeIf { !it.isNullOrEmpty() }?.apply {
-                    loginManager?.token?.let { getURL(this, it) }
-                }
-            } else {
-                finish()
             }
         }
     }
 
-    private fun getUIDs(competition_id: String, submission_id: String, token: String) {
+    private fun getPlaylistItems(competition_id: String, submission_id: String, token: String) {
         OKHttpRepsotory().contentUIDS(competition_id, submission_id, token) { status, response ->
             if (status == ResponseStatusCodes.SUCCESS) {
-                for (episode: Entry in response?.entry!!) {
-                    episode.content!!.src?.let { uidList.add(it) }
+
+                // rearrange list according to the current playable
+                var orderedEntryLIst = (response?.entries ?: listOf()).toMutableList()
+                var currentItemIndex = orderedEntryLIst.indexOfFirst { it.id == playable?.playableId}
+                if(currentItemIndex != null) {
+                    repeat(currentItemIndex) {
+                        orderedEntryLIst.removeAt(0)
+                    }
                 }
-                uidList.poll().takeIf { !it.isNullOrEmpty() }?.apply {
-                    loginManager?.token?.let { getURL(this, it) }
-                }
+
+                playlistItems = orderedEntryLIst.map { it.playable }
+
+                getURL()
             } else {
                 finish()
             }
@@ -196,20 +200,24 @@ class TAPlayerActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState.putDouble(KEY_CURRENT_PROGRESS, bitmovinPlayer?.currentTime ?: 0.0)
         outState.putSerializable(KEY_PLAYABLE, playable)
-        outState.putSerializable(KEY_URL, playlistItems)
-        outState.putSerializable(KEY_QUEUE, uidList)
+        outState.putSerializable(KEY_URL, playlistItems.toTypedArray())
         outState.putInt(KEY_NEXT_PLAYLIST_ITEM, currentPlaylistItem)
     }
 
-    private fun playNextItem(playAfterRotation: Boolean) {
-        if (!playAfterRotation) {
-            lastItemFinished = (currentPlaylistItem + 1) >= playlistItems.size
-            if (lastItemFinished) {
-                return
-            }
-            currentPlaylistItem += 1
+    private fun playNextItem( ) {
+
+        lastItemFinished = (currentPlaylistItem + 1) >= playlistItems.size
+        if (lastItemFinished) {
+            return
         }
-        playable!!.setContentVideoUrl(playlistItems[currentPlaylistItem])
+        currentPlaylistItem += 1
+
+        updatePlayable(playlistItems[currentPlaylistItem])
+
+        playItem()
+    }
+
+    private fun playItem() {
         val sourceConfiguration = SourceConfiguration()
         if (videoType == "360") {
             val vrSourceItem = SourceItem(playable?.contentVideoURL)
@@ -229,5 +237,14 @@ class TAPlayerActivity : AppCompatActivity() {
 
     }
 
+    private fun updatePlayable(playable: Playable) {
+        this.playable = playable
+        videoType = playable.getVideoType()
+        contentGroup = playable.getContentGroup()
+        currentProgress = playable.getProgress()
+    }
 
+    companion object {
+        const val END_TIME_BUFFER = 5
+    }
 }
