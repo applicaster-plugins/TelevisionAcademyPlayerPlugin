@@ -114,7 +114,7 @@ class FeedParser {
     private func createFeedContentRequest(from config: NSDictionary?) -> URLRequest? {
         guard let submissionID = video.extensionsDictionary?["submission_id"] as? String,
             let competitionID = video.extensionsDictionary?["competition_id"] as? String,
-            var components = URLComponents(string: "\(dspBaseURL)fetchData?\(dspParameters)") else {
+            var components = URLComponents(string: "\(dspBaseURL)?\(dspParameters)") else {
                 return nil
         }
         
