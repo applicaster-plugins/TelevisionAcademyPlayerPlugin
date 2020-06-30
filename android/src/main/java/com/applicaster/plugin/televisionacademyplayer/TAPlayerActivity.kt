@@ -101,14 +101,14 @@ class TAPlayerActivity : AppCompatActivity() {
         bitmovinAnalyticInteractor.initializeAnalyticsCollector(applicationContext, playable)
         bitmovinAnalyticInteractor.attachPlayer(bitmovinPlayer)
         bitmovinPlayer?.addEventListener(OnPlaybackFinishedListener {
-            currentProgress = 0.0
             playNextItem()
         })
         bitmovinPlayer?.addEventListener(OnReadyListener {
             // if the currentProgress is near the end start play the video from the beginning
             if(((bitmovinPlayer!!.duration) - END_TIME_BUFFER <  currentProgress) && bitmovinPlayer!!.duration > END_TIME_BUFFER + 1) {
-                        currentProgress = 0.0
-                        playItem()
+                playable?.setProgress(0.0)
+                playable?.let { updatePlayable(it) }
+                playItem()
             }
 
             bitmovinPlayer?.play()
@@ -212,12 +212,12 @@ class TAPlayerActivity : AppCompatActivity() {
         }
         currentPlaylistItem += 1
 
+        updatePlayable(playlistItems[currentPlaylistItem])
+
         playItem()
     }
 
     private fun playItem() {
-
-        playable = playlistItems[currentPlaylistItem]
         val sourceConfiguration = SourceConfiguration()
         if (videoType == "360") {
             val vrSourceItem = SourceItem(playable?.contentVideoURL)
@@ -235,6 +235,13 @@ class TAPlayerActivity : AppCompatActivity() {
                 ?: "", contentGroup)
         Log.d("TAPlayerActivity", "play now: " + currentPlaylistItem + " || current:" + currentProgress + " from total items:" + playlistItems.size)
 
+    }
+
+    private fun updatePlayable(playable: Playable) {
+        this.playable = playable
+        videoType = playable.getVideoType()
+        contentGroup = playable.getContentGroup()
+        currentProgress = playable.getProgress()
     }
 
     companion object {
