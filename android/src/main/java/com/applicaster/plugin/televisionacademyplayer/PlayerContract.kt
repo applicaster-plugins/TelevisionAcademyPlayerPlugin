@@ -12,6 +12,7 @@ import com.applicaster.plugin_manager.playersmanager.Playable
 import com.applicaster.plugin_manager.playersmanager.PlayableConfiguration
 import com.applicaster.plugin_manager.playersmanager.PlayerContract
 import com.bitmovin.player.BitmovinPlayerView
+import com.bitmovin.player.cast.BitmovinCastManager
 import com.bitmovin.player.config.media.SourceConfiguration
 
 
@@ -126,6 +127,9 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
     }
 
     override fun executeOnStartup(context: Context?, listener: HookListener?) {
+        BitmovinCastManager.initialize();
+        videoView = BitmovinPlayerView(context)
+        videoView.player?.config?.remoteControlConfiguration?.receiverStylesheetUrl = ConfigurationRepository.chromecastStyleCssUrl
         listener?.onHookFinished()
     }
 
