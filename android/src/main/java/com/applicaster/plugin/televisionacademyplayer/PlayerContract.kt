@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.view.ViewGroup
 import com.applicaster.analytics.AnalyticsAgentUtil
-import com.applicaster.atom.model.APAtomEntry
 import com.applicaster.model.APChannel
 import com.applicaster.player.defaultplayer.BasePlayer
 import com.applicaster.plugin_manager.hook.ApplicationLoaderHookUpI
@@ -15,12 +14,11 @@ import com.applicaster.plugin_manager.playersmanager.PlayerContract
 import com.bitmovin.player.BitmovinPlayerView
 import com.bitmovin.player.config.media.SourceConfiguration
 
+
 class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
 
     companion object {
         const val KEY_PLAYABLE = "key_playable"
-        const val KEY_URL = "url_queue"
-        const val KEY_QUEUE = "key_queue"
         const val KEY_NEXT_PLAYLIST_ITEM = "key_next_Playlist_Item"
         const val KEY_CURRENT_PROGRESS = "KEY_CURRENT_PROGRESS"
         const val KEY_CONTENT_GROUP = "KEY_CONTENT_GROUP"
@@ -39,6 +37,7 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
     override fun init(playableList: MutableList<Playable>, context: Context) {
         super.init(playableList, context)
         videoView = BitmovinPlayerView(context)
+        videoView.player?.config?.remoteControlConfiguration?.receiverStylesheetUrl = ConfigurationRepository.chromecastStyleCssUrl
         initializeAnalyticsEvent()
     }
 
