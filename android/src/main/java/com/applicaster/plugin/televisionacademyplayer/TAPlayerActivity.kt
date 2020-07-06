@@ -48,14 +48,6 @@ class TAPlayerActivity : AppCompatActivity() {
 //    private val testUrl = "https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd"
 
     init {
-        //Important to initialise BitmovinCastManager after applicaster to make sync work correctly.
-        if (!BitmovinCastManager.isInitialized()) {
-            if (ConfigurationRepository.chromeCastAppId.isNullOrEmpty()) {
-                BitmovinCastManager.initialize()
-            } else {
-                BitmovinCastManager.initialize(ConfigurationRepository.chromeCastAppId, null)
-            }
-        }
         bitmovinAnalyticInteractor = BitmovinAnalyticInteractor()
     }
 
