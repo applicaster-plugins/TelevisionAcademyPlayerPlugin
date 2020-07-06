@@ -30,9 +30,9 @@
             android:name="BITMOVIN_PLAYER_LICENSE_KEY"
             android:value="@string/bitmovin_player_license_key" />
 
-        <meta-data
-            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
-            android:value="com.bitmovin.player.cast.BitmovinCastOptionsProvider"
-            tools:replace="android:value"/>
+<!--        <meta-data-->
+<!--            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"-->
+<!--            android:value="com.bitmovin.player.cast.BitmovinCastOptionsProvider"-->
+<!--            tools:replace="android:value"/>-->
     </application>
 </manifest>
