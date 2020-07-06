@@ -87,19 +87,20 @@ android {
 
 dependencies {
     implementation 'com.applicaster:applicaster-android-sdk:4.2.7'
-    implementation 'com.bitmovin.player:playercore:2.37.0'
+
     implementation 'com.bitmovin.analytics:collector-bitmovin-player:1.12.1'
     implementation 'com.applicaster:PlayerEvents:0.0.+'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.android.support:support-compat:$androidSupportVersion"
-    implementation 'com.bitmovin.player:playercore:2.37.0'
+
     implementation 'com.bitmovin.analytics:collector-bitmovin-player:1.12.1'
     implementation 'com.applicaster:PlayerEvents:0.0.+'
     implementation 'com.github.LiquidPlayer:LiquidCore:0.5.1'
 
-    implementation "com.google.android.gms:play-services-cast-framework:$playServicesCastVersion"
+    implementation 'com.bitmovin.player:playercore:2.37.0'
+
     //only needed if Chromecast is used
     implementation "com.android.support:mediarouter-v7:$androidSupportVersion"
     //only needed if Chromecast is used
