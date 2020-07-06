@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 project.ext {
-    releaseVersion = '0.6.1'
+    releaseVersion = '0.7.0'
     releaseVersionCode = 1
     minSdkVersion = 17
     targetSdkVersion = 29
@@ -118,7 +118,7 @@ publish {
     bintrayKey = System.getenv("MAVEN_PASSWORD")
 
     dryRun = false
-    override = true
+    override = false
 
     artifactId = releaseArtifact
     desc = releaseDescription
