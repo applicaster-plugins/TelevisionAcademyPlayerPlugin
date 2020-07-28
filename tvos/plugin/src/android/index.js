@@ -85,6 +85,14 @@ export class AndroidPlayer extends React.Component<Props, State> {
     return true;
   }
 
+  onVideoEnd = () => {
+    console.log("on video end");
+  };
+
+  onVideoProgress = (currentTime, playableDuration, seekableDuration) => {
+    console.log("on video progress");
+  };
+
   render() {
     const { playableItem, pluginConfiguration } = this.props;
     let configurations = {};
@@ -123,6 +131,8 @@ export class AndroidPlayer extends React.Component<Props, State> {
             onKeyChanged={playerEvent}
             pluginConfiguration={configurations}
             onSettingSelected={selectedSetting}
+            onVideoEnd={this.onVideoEnd}
+            onVideoProgress={this.onVideoProgress}
           />
           {settingsView}
         </View>
