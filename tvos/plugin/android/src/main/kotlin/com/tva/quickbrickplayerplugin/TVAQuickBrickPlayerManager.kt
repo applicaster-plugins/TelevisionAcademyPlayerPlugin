@@ -5,6 +5,7 @@ import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
+import com.tva.quickbrickplayerplugin.quickbrickInterface.QuickBrickPlayer
 
 class TVAQuickBrickPlayerManager(context: ReactApplicationContext) : SimpleViewManager<TVAQuickBrickPlayerView>() {
 
@@ -39,5 +40,9 @@ class TVAQuickBrickPlayerManager(context: ReactApplicationContext) : SimpleViewM
 
     companion object {
         val REACT_CLASS = "TVAQuickBrickPlayer"
+    }
+
+    override fun getExportedCustomBubblingEventTypeConstants(): Map<String, Any> {
+        return QuickBrickPlayer.registerCallbackProps()
     }
 }

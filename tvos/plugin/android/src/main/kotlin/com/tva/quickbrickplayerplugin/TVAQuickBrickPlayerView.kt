@@ -31,11 +31,14 @@ import com.tva.quickbrickplayerplugin.api.ApiFactory
 import com.tva.quickbrickplayerplugin.api.PlayerEvent
 import com.tva.quickbrickplayerplugin.api.VoidCallback
 import com.tva.quickbrickplayerplugin.quickbrickInterface.QuickBrickPlayer
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.player_view.view.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs), LifecycleEventListener, QuickBrickPlayer {
+class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs), LifecycleEventListener {
 
     private var finished: Boolean = false
     private var lastTrackTime = 0L
@@ -58,6 +61,16 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     private val TOKEN_NAMESPACE = "login"
     private val TOKEN_KEY = "token"
     private var audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+
+    private var playbackProgressObservable: Disposable? = null
+
+    //used to send events to the react native module
+    private val quickBrickPlayer: QuickBrickPlayer = object: QuickBrickPlayer{
+        override fun getCurrentTime() {}
+        override fun setPlayableItem(source: ReadableMap) {}
+        override fun setPlayerState(state: String?) {}
+        override fun getPlayerView(): View = this@TVAQuickBrickPlayerView
+    }
 
     private val apiFactory by lazy {
         ApiFactory(baseSkylarkUrl, getToken())
@@ -102,20 +115,34 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         })
         addEventListener(OnTimeChangedListener {
             trackTime(false)
-           // onProgressChange( elapsedTimeSeconds ?: 0, 0, 500)
         })
         addEventListener(OnPlayListener {
             trackTime(false)
+            quickBrickPlayer.onPlay()
         })
         addEventListener(OnPausedListener {
             trackTime(false)
             analyticUtil.trackPause(it.time, bitmovinPlayer?.duration ?: 0.0)
+            quickBrickPlayer.onPause()
         })
         addEventListener(OnPlaybackFinishedListener {
             trackTime(true)
+            quickBrickPlayer.onEnd()
         })
         addEventListener(OnSeekListener {
             analyticUtil.trackSeek(it.position, it.seekTarget, bitmovinPlayer?.duration ?: 0.0)
+            quickBrickPlayer.onSeek(it.position * 1000L, it.seekTarget.toLong() * 1000L)
+        })
+        addEventListener(OnReadyListener {
+            playbackProgressObservable =
+                    Observable.interval(1, TimeUnit.SECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { p ->
+                        quickBrickPlayer.onTimeUpdate(
+                                (bitmovinPlayer?.currentTime?.toLong() ?: 0L * 1000),
+                                (bitmovinPlayer?.duration?.toLong() ?: 0L * 1000) ?: 0L
+                        )
+                    }
         })
         requestAudioFocus()
         bitmovinAnalyticInteractor.attachPlayer(bitmovinPlayer)
@@ -144,6 +171,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        playbackProgressObservable?.dispose()
         finishPlayer()
     }
 
@@ -205,12 +233,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         }
     }
 
-    override fun getCurrentTime() {
-        59
-    }
-
-    override fun setPlayableItem(source: ReadableMap) {
-//      fun setPlayableItem(source: ReadableMap) {
+    fun setPlayableItem(source: ReadableMap) {
         videoSrc = source.getMap("content")?.getString("src")
         sourceId = source.getString("id")
 
@@ -225,14 +248,6 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
             }
         }
         bitmovinAnalyticInteractor.initializeAnalyticsCollector(context, sourceId, heartbeatInterval)
-    }
-
-    override fun setPlayerState(state: String?) {
-        //
-    }
-
-    override fun getPlayerView(): View {
-        return this
     }
 
     fun setPluginConfiguration(params: ReadableMap) {
@@ -405,4 +420,17 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     override fun onHostDestroy() {
         finishPlayer()
     }
+
+    private fun timeUpdate(): Observable<Long> {
+        return Observable.interval(1, TimeUnit.SECONDS)
+                .map { checkIfPlayerIsPlaying() }
+    }
+
+    private fun checkIfPlayerIsPlaying(): Long {
+        if (bitmovinPlayer?.isPlaying!!) {
+            return bitmovinPlayer?.currentTime?.toLong() ?: 1
+        }
+        return 1.toLong()
+    }
+
 }

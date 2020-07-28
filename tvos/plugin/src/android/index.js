@@ -89,8 +89,12 @@ export class AndroidPlayer extends React.Component<Props, State> {
     console.log("on video end");
   };
 
-  onVideoProgress = (currentTime, playableDuration, seekableDuration) => {
-    console.log("on video progress");
+  onVideoEnd = () => {
+    console.log("on video end");
+  };
+
+  onTimeUpdate = (event) => {
+    console.log("on time update" + event.nativeEvent.currentTime + event.nativeEvent.playableDuration);
   };
 
   render() {
@@ -132,7 +136,7 @@ export class AndroidPlayer extends React.Component<Props, State> {
             pluginConfiguration={configurations}
             onSettingSelected={selectedSetting}
             onVideoEnd={this.onVideoEnd}
-            onVideoProgress={this.onVideoProgress}
+            onTimeUpdate={this.onTimeUpdate}
           />
           {settingsView}
         </View>
