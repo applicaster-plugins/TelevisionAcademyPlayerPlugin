@@ -37,6 +37,7 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.player_view.view.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
+import kotlin.reflect.jvm.internal.impl.renderer.DescriptorRenderer
 
 class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs), LifecycleEventListener {
 
@@ -94,7 +95,12 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         private const val VIDEO_QUALITY_TYPE = "video_quality"
         private const val AUDIO_TRACK_TYPE = "audio_quality"
         private const val LANGUAGE_SUBTITLE_TYPE = "language_subtitle"
+        private const val DEFAULT_DURATION = 0
+        private const val DEFAULT_TIME = 0
     }
+
+    private fun Long.toMilliseconds() = this * 1000
+    private fun Double.toMilliseconds() = this * 1000
 
     init {
         OSUtil.getLayoutInflater(context).inflate(R.layout.player_view, this)
@@ -123,7 +129,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         })
         addEventListener(OnPausedListener {
             trackTime(false)
-            analyticUtil.trackPause(it.time, bitmovinPlayer?.duration ?: 0.0)
+            analyticUtil.trackPause(it.time, bitmovinPlayer?.duration ?: DEFAULT_DURATION.toDouble())
             quickBrickPlayer.onPause()
         })
         addEventListener(OnPlaybackFinishedListener {
@@ -131,8 +137,8 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
             quickBrickPlayer.onEnd()
         })
         addEventListener(OnSeekListener {
-            analyticUtil.trackSeek(it.position, it.seekTarget, bitmovinPlayer?.duration ?: 0.0)
-            quickBrickPlayer.onSeek(it.position * 1000L, it.seekTarget.toLong() * 1000L)
+            analyticUtil.trackSeek(it.position, it.seekTarget, bitmovinPlayer?.duration ?: DEFAULT_DURATION.toDouble())
+            quickBrickPlayer.onSeek(it.position.toMilliseconds(), it.seekTarget.toLong().toMilliseconds())
         })
         addEventListener(OnReadyListener {
             playbackProgressObservable =
@@ -140,8 +146,8 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe { p ->
                         quickBrickPlayer.onTimeUpdate(
-                                (bitmovinPlayer?.currentTime?.toLong() ?: 0L * 1000),
-                                (bitmovinPlayer?.duration?.toLong() ?: 0L * 1000) ?: 0L
+                                (bitmovinPlayer?.currentTime?.toLong()?.toMilliseconds() ?: DEFAULT_TIME.toLong()),
+                                (bitmovinPlayer?.duration?.toLong()?.toMilliseconds() ?: DEFAULT_DURATION.toLong())
                         )
                     }
         })
@@ -407,7 +413,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     override fun onHostResume() {
         bitmovinPlayer?.onResume()
         addEventListener(OnReadyListener {
-            analyticUtil.startTrack(it.timestamp, bitmovinPlayer?.duration ?: 0.0)
+            analyticUtil.startTrack(it.timestamp, bitmovinPlayer?.duration ?: DEFAULT_DURATION.toDouble())
         })
         requestAudioFocus()
     }
@@ -419,18 +425,6 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
 
     override fun onHostDestroy() {
         finishPlayer()
-    }
-
-    private fun timeUpdate(): Observable<Long> {
-        return Observable.interval(1, TimeUnit.SECONDS)
-                .map { checkIfPlayerIsPlaying() }
-    }
-
-    private fun checkIfPlayerIsPlaying(): Long {
-        if (bitmovinPlayer?.isPlaying!!) {
-            return bitmovinPlayer?.currentTime?.toLong() ?: 1
-        }
-        return 1.toLong()
     }
 
 }
