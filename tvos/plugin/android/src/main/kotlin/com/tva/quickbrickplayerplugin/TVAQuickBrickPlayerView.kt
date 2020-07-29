@@ -112,6 +112,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         addEventListener(OnErrorListener { event ->
             Log.e(TAG, "An Error occurred (${event.code}): ${event.message}")
             analyticUtil.handlePlayerError(event.message)
+            quickBrickPlayer.onError(event.message, Exception(event.message))
         })
         addEventListener(OnTimeChangedListener {
             trackTime(false)
@@ -376,7 +377,6 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
             val newTime = player.currentTime.minus(SEEKING_OFFSET)
             player.seek(newTime)
             trackTime(true, newTime)
-
         }
     }
 

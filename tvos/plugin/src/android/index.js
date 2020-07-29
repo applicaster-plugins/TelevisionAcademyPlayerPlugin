@@ -85,16 +85,26 @@ export class AndroidPlayer extends React.Component<Props, State> {
     return true;
   }
 
-  onVideoEnd = () => {
-    console.log("on video end");
+  onVideoStart = () => {
+    console.log("on video start");
   };
 
   onVideoEnd = () => {
     console.log("on video end");
   };
 
-  onTimeUpdate = (event) => {
-    console.log("on time update" + event.nativeEvent.currentTime + event.nativeEvent.playableDuration);
+  onVideoPause = () => {
+    console.log("on video pause");
+  };
+
+  onVideoProgress = (event) => {
+    console.log("on video progress" + " current time" + event.nativeEvent.currentTime + "duration" + event.nativeEvent.playableDuration);
+  };
+  onVideoSeek = (event) => {
+    console.log("on video seek" + " current time" + event.nativeEvent.currentTime + "seek time" + event.nativeEvent.seekTime);
+  };
+  onVideoError = (event) => {
+    console.log("on video error" + " message" + event.nativeEvent.message + "exception message" + event.nativeEvent.exception);
   };
 
   render() {
@@ -135,8 +145,12 @@ export class AndroidPlayer extends React.Component<Props, State> {
             onKeyChanged={playerEvent}
             pluginConfiguration={configurations}
             onSettingSelected={selectedSetting}
+            eventVideoStart={this.onVideoStart}
             onVideoEnd={this.onVideoEnd}
-            onTimeUpdate={this.onTimeUpdate}
+            eventVideoPause={this.onVideoPause}
+            onVideoProgress={this.onVideoProgress}
+            onVideoSeek={this.onVideoSeek}
+            onVideoError={this.onVideoError}
           />
           {settingsView}
         </View>
