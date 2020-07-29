@@ -8,6 +8,7 @@ import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
 import android.view.KeyEvent.*
+import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.annotation.RequiresApi
@@ -29,9 +30,14 @@ import com.tva.quickbrickplayerplugin.analytic.BitmovinAnalyticInteractor
 import com.tva.quickbrickplayerplugin.api.ApiFactory
 import com.tva.quickbrickplayerplugin.api.PlayerEvent
 import com.tva.quickbrickplayerplugin.api.VoidCallback
+import com.tva.quickbrickplayerplugin.quickbrickInterface.QuickBrickPlayer
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.player_view.view.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
+import kotlin.reflect.jvm.internal.impl.renderer.DescriptorRenderer
 
 class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs), LifecycleEventListener {
 
@@ -57,11 +63,30 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     private val TOKEN_KEY = "token"
     private var audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
+    private var playbackProgressObservable: Disposable? = null
+
+    //used to send events to the react native module
+    private val quickBrickPlayer: QuickBrickPlayer = object: QuickBrickPlayer{
+        override fun getCurrentTime() {}
+        override fun setPlayableItem(source: ReadableMap) {}
+        override fun setPlayerState(state: String?) {}
+        override fun getPlayerView(): View = this@TVAQuickBrickPlayerView
+    }
+
     private val apiFactory by lazy {
         ApiFactory(baseSkylarkUrl, getToken())
     }
     private val analyticUtil by lazy {
         AnalyticUtil()
+    }
+    private val audioFocusListener: (Int) -> Unit = {
+        when (it) {
+            AudioManager.AUDIOFOCUS_GAIN -> Timber.d("AUDIOFOCUS_GAIN")
+            AudioManager.AUDIOFOCUS_LOSS -> Timber.d("AUDIOFOCUS_LOSS")
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> Timber.d("AUDIOFOCUS_LOSS_TRANSIENT")
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> Timber.d("AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK")
+            else -> Timber.d("AUDIOFOCUS other $it")
+        }
     }
 
     companion object {
@@ -70,7 +95,12 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         private const val VIDEO_QUALITY_TYPE = "video_quality"
         private const val AUDIO_TRACK_TYPE = "audio_quality"
         private const val LANGUAGE_SUBTITLE_TYPE = "language_subtitle"
+        private const val DEFAULT_DURATION = 0
+        private const val DEFAULT_TIME = 0
     }
+
+    private fun Long.toMilliseconds() = this * 1000
+    private fun Double.toMilliseconds() = this * 1000
 
     init {
         OSUtil.getLayoutInflater(context).inflate(R.layout.player_view, this)
@@ -88,29 +118,45 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
         addEventListener(OnErrorListener { event ->
             Log.e(TAG, "An Error occurred (${event.code}): ${event.message}")
             analyticUtil.handlePlayerError(event.message)
+            quickBrickPlayer.onError(event.message, Exception(event.message))
         })
         addEventListener(OnTimeChangedListener {
             trackTime(false)
         })
         addEventListener(OnPlayListener {
             trackTime(false)
+            quickBrickPlayer.onPlay()
         })
         addEventListener(OnPausedListener {
             trackTime(false)
-            analyticUtil.trackPause(it.time, bitmovinPlayer?.duration ?: 0.0)
+            analyticUtil.trackPause(it.time, bitmovinPlayer?.duration ?: DEFAULT_DURATION.toDouble())
+            quickBrickPlayer.onPause()
         })
         addEventListener(OnPlaybackFinishedListener {
             trackTime(true)
+            quickBrickPlayer.onEnd()
         })
         addEventListener(OnSeekListener {
-            analyticUtil.trackSeek(it.position, it.seekTarget, bitmovinPlayer?.duration ?: 0.0)
+            analyticUtil.trackSeek(it.position, it.seekTarget, bitmovinPlayer?.duration ?: DEFAULT_DURATION.toDouble())
+            quickBrickPlayer.onSeek(it.position.toMilliseconds(), it.seekTarget.toLong().toMilliseconds())
+        })
+        addEventListener(OnReadyListener {
+            playbackProgressObservable =
+                    Observable.interval(1, TimeUnit.SECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { p ->
+                        quickBrickPlayer.onTimeUpdate(
+                                (bitmovinPlayer?.currentTime?.toLong()?.toMilliseconds() ?: DEFAULT_TIME.toLong()),
+                                (bitmovinPlayer?.duration?.toLong()?.toMilliseconds() ?: DEFAULT_DURATION.toLong())
+                        )
+                    }
         })
         requestAudioFocus()
         bitmovinAnalyticInteractor.attachPlayer(bitmovinPlayer)
 
         elapsedTimeSeconds?.let { bitmovinPlayer?.seek(it.toDouble()) }
         (context as ReactContext).addLifecycleEventListener(this)
-        (context as ReactContext).currentActivity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        (context as ReactContext).currentActivity?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     private fun createPlayerConfiguration() = PlayerConfiguration().apply {
@@ -132,6 +178,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
+        playbackProgressObservable?.dispose()
         finishPlayer()
     }
 
@@ -150,19 +197,10 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     }
 
     private fun requestAudioFocus() {
-        val audioFocusListener: (Int) -> Unit = {
-            when (it) {
-                AudioManager.AUDIOFOCUS_GAIN -> Timber.d("AUDIOFOCUS_GAIN")
-                AudioManager.AUDIOFOCUS_LOSS -> Timber.d("AUDIOFOCUS_LOSS")
-                AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> Timber.d("AUDIOFOCUS_LOSS_TRANSIENT")
-                AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> Timber.d("AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK")
-                else -> Timber.d("AUDIOFOCUS other $it")
-            }
-        }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             audioManager.requestAudioFocus(audioFocusListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
         } else {
-            audioManager.requestAudioFocus(audioFocusRequest().setOnAudioFocusChangeListener(audioFocusListener).build())
+            audioManager.requestAudioFocus(audioFocusRequest().build())
         }
     }
 
@@ -177,10 +215,11 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     @RequiresApi(Build.VERSION_CODES.O)
     private fun audioFocusRequest() =
             AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                    .setOnAudioFocusChangeListener(audioFocusListener)
                     .setAudioAttributes(
                             AudioAttributes.Builder()
                                     .setUsage(AudioAttributes.USAGE_MEDIA)
-                                    .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
+                                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                                     .build()
                     )
                     .setAcceptsDelayedFocusGain(true)
@@ -344,7 +383,6 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
             val newTime = player.currentTime.minus(SEEKING_OFFSET)
             player.seek(newTime)
             trackTime(true, newTime)
-
         }
     }
 
@@ -375,7 +413,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     override fun onHostResume() {
         bitmovinPlayer?.onResume()
         addEventListener(OnReadyListener {
-            analyticUtil.startTrack(it.timestamp, bitmovinPlayer?.duration ?: 0.0)
+            analyticUtil.startTrack(it.timestamp, bitmovinPlayer?.duration ?: DEFAULT_DURATION.toDouble())
         })
         requestAudioFocus()
     }
@@ -388,4 +426,5 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     override fun onHostDestroy() {
         finishPlayer()
     }
+
 }

@@ -54,7 +54,7 @@ export class AndroidPlayer extends React.Component<Props, State> {
     DeviceEventEmitter.addListener("emitterOnError", this.onError);
     DeviceEventEmitter.addListener("onTvKeyDown", this.onKeyDown);
     DeviceEventEmitter.addListener("onShowSettings", this.onShowSettings);
-    sendQuickBrickEvent("blockTVKeyEmit", { blockTVKeyEmit: false });
+    sendQuickBrickEvent("blockTVKeyEmit", { blockTVKeyEmit: true });
   }
 
   componentWillUnmount() {
@@ -63,7 +63,6 @@ export class AndroidPlayer extends React.Component<Props, State> {
     DeviceEventEmitter.removeListener("emitterOnError", this.onError);
     DeviceEventEmitter.removeListener("onTvKeyDown", this.onKeyDown);
     DeviceEventEmitter.removeListener("onShowSettings", this.onShowSettings);
-    sendQuickBrickEvent("blockTVKeyEmit", { blockTVKeyEmit: true });
   }
 
   onKeyDown(event) {
@@ -84,6 +83,28 @@ export class AndroidPlayer extends React.Component<Props, State> {
     }
     return true;
   }
+
+  onVideoStart = () => {
+    console.log("on video start");
+  };
+
+  onVideoEnd = () => {
+    console.log("on video end");
+  };
+
+  onVideoPause = () => {
+    console.log("on video pause");
+  };
+
+  onVideoProgress = (event) => {
+    console.log("on video progress" + " current time" + event.nativeEvent.currentTime + "duration" + event.nativeEvent.playableDuration);
+  };
+  onVideoSeek = (event) => {
+    console.log("on video seek" + " current time" + event.nativeEvent.currentTime + "seek time" + event.nativeEvent.seekTime);
+  };
+  onVideoError = (event) => {
+    console.log("on video error" + " message" + event.nativeEvent.message + "exception message" + event.nativeEvent.exception);
+  };
 
   render() {
     const { playableItem, pluginConfiguration } = this.props;
@@ -123,6 +144,12 @@ export class AndroidPlayer extends React.Component<Props, State> {
             onKeyChanged={playerEvent}
             pluginConfiguration={configurations}
             onSettingSelected={selectedSetting}
+            eventVideoStart={this.onVideoStart}
+            onVideoEnd={this.onVideoEnd}
+            eventVideoPause={this.onVideoPause}
+            onVideoProgress={this.onVideoProgress}
+            onVideoSeek={this.onVideoSeek}
+            onVideoError={this.onVideoError}
           />
           {settingsView}
         </View>
