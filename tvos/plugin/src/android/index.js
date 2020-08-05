@@ -1,8 +1,10 @@
 // @flow
 import * as React from "react";
-import {DeviceEventEmitter, Dimensions, requireNativeComponent, StyleSheet, View} from "react-native";
-import {sendQuickBrickEvent} from "@applicaster/zapp-react-native-bridge/QuickBrick";
+import { DeviceEventEmitter, Dimensions, requireNativeComponent, StyleSheet, View } from "react-native";
+import { sendQuickBrickEvent } from "@applicaster/zapp-react-native-bridge/QuickBrick";
 import SettingsView from '../SettingsView';
+import * as R from "ramda";
+import { withNavigator } from '@applicaster/zapp-react-native-ui-components/Decorators/Navigator/';
 
 const PlayerView = requireNativeComponent("TVAQuickBrickPlayer");
 
@@ -17,15 +19,17 @@ type Props = {
 };
 
 type State = {
+  showOverlay: boolean,
   keyEvent: {}
 };
 
-export class AndroidPlayer extends React.Component<Props, State> {
+class VideoPlayerComponent extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.state = {
       playerEvent: { keyCode: -1, code: "NONE" },
-      settings: null
+      settings: null,
+      showOverlay: false
     };
     this.onLoad = this.onLoad.bind(this);
     this.onError = this.onError.bind(this);
@@ -55,6 +59,8 @@ export class AndroidPlayer extends React.Component<Props, State> {
     DeviceEventEmitter.addListener("onTvKeyDown", this.onKeyDown);
     DeviceEventEmitter.addListener("onShowSettings", this.onShowSettings);
     sendQuickBrickEvent("blockTVKeyEmit", { blockTVKeyEmit: true });
+    this.timeout = setTimeout(this.retrievePluginConfiguration, 1);
+    this._isMounted = true;
   }
 
   componentWillUnmount() {
@@ -63,6 +69,9 @@ export class AndroidPlayer extends React.Component<Props, State> {
     DeviceEventEmitter.removeListener("emitterOnError", this.onError);
     DeviceEventEmitter.removeListener("onTvKeyDown", this.onKeyDown);
     DeviceEventEmitter.removeListener("onShowSettings", this.onShowSettings);
+    if (this.timeout) {
+      clearTimeout(this.timeout);
+    }
   }
 
   onKeyDown(event) {
@@ -84,27 +93,76 @@ export class AndroidPlayer extends React.Component<Props, State> {
     return true;
   }
 
-  onVideoStart = () => {
-    console.log("on video start");
+  onVideoStart = () => {};
+
+  onVideoEnd = (event) => {
+    const { navigator } = this.props
+    const overlay = this.state.showOverlay;
+
+    if (this.props.onEnded && (!overlay)) {
+      this.props.onEnded(event.nativeEvent);
+      navigator.canGoBack() && navigator.goBack();
+    }
   };
 
-  onVideoEnd = () => {
-    console.log("on video end");
-  };
-
-  onVideoPause = () => {
-    console.log("on video pause");
-  };
+  onVideoPause = () => {};
 
   onVideoProgress = (event) => {
-    console.log("on video progress" + " current time" + event.nativeEvent.currentTime + "duration" + event.nativeEvent.playableDuration);
+    const { playableItem } = this.props;
+    const { showOverlay } = this.state;
+
+    const duration = event.nativeEvent.playableDuration;
+    this.currentTime = event.nativeEvent.currentTime;
+
+    const isPlayNextFeed = !!playableItem.extensions?.play_next_feed_url;
+
+    const overlayPlugin = this.getOverlayPlugin();
+
+    const overlayDuration =
+      Number(R.path(["configuration", "overlay_duration"], overlayPlugin)) || 0;
+
+    // eslint-disable-next-line max-len
+    const overlayTrigger = (R.path(["configuration", "overlay_trigger"], overlayPlugin) === "onStart") ? Number(duration - (duration - overlayDuration)) : Number(duration - overlayDuration)
+
+    const triggerTime = Math.min(duration - overlayDuration, overlayTrigger);
+    if (isPlayNextFeed && this.currentTime >= triggerTime && !showOverlay) {
+      this.setState({ showOverlay: true });
+    }
   };
-  onVideoSeek = (event) => {
-    console.log("on video seek" + " current time" + event.nativeEvent.currentTime + "seek time" + event.nativeEvent.seekTime);
-  };
-  onVideoError = (event) => {
-    console.log("on video error" + " message" + event.nativeEvent.message + "exception message" + event.nativeEvent.exception);
-  };
+  
+  onVideoSeek = (event) => {};
+  onVideoError = (event) => {};
+
+  renderOverlay() {
+    const { playableItem, navigator } = this.props;
+
+    const { configuration, module: OverlayPluginComponent } =
+      this.getOverlayPlugin() || {};
+
+    const isPlayNextFeed = !!playableItem.extensions?.play_next_feed_url;
+
+    if (isPlayNextFeed) {
+      return (
+        <OverlayPluginComponent
+          playableItem={playableItem}
+          configuration={configuration}
+          navigator={navigator}
+          dismissOverlay={(cb = noop) => {
+            if (this._isMounted) {
+              this.setState({ showOverlay: false }, cb);
+            }
+          }}
+        />
+      );
+    }
+  }
+
+  getOverlayPlugin() {
+    return R.compose(
+      R.find(R.propEq("type", "player_overlay")),
+      R.prop("plugins")
+    )(this.props);
+  }
 
   render() {
     const { playableItem, pluginConfiguration } = this.props;
@@ -119,22 +177,25 @@ export class AndroidPlayer extends React.Component<Props, State> {
     if (settings) {
       settingsView = (
         <SettingsView style={styles.settingsContainer} settings={settings}
-                      keyAction={settingsAction}
-                      onSettingSelected={(selectedSetting) => {
-                        const updatedSettings = settings.map(setting => {
-                          if (setting.type === selectedSetting.type) {
-                            return {
-                              ...setting,
-                              ...{ selectedId: selectedSetting.id },
-                              subtitle: selectedSetting.title
-                            }
-                          } else {
-                            return setting
-                          }
-                        });
-                        this.setState({ settings: updatedSettings, selectedSetting, settingsAction: "back" })
-                      }}/>);
+          keyAction={settingsAction}
+          onSettingSelected={(selectedSetting) => {
+            const updatedSettings = settings.map(setting => {
+              if (setting.type === selectedSetting.type) {
+                return {
+                  ...setting,
+                  ...{ selectedId: selectedSetting.id },
+                  subtitle: selectedSetting.title
+                }
+              } else {
+                return setting
+              }
+            });
+            this.setState({ settings: updatedSettings, selectedSetting, settingsAction: "back" })
+          }} />);
     }
+
+    const showOverlay = this.state.showOverlay;
+
     return (
       <React.Fragment>
         <View style={styles.container}>
@@ -151,6 +212,7 @@ export class AndroidPlayer extends React.Component<Props, State> {
             onVideoSeek={this.onVideoSeek}
             onVideoError={this.onVideoError}
           />
+          {this._isMounted === true && showOverlay && this.renderOverlay()}
           {settingsView}
         </View>
       </React.Fragment>
@@ -171,6 +233,28 @@ export class AndroidPlayer extends React.Component<Props, State> {
     }
     return "";
   }
+
+  retrievePluginConfiguration = async () => {
+    try {
+      const baseSkylarkUrl = await sessionStorage.getItem("baseSkylarkUrl", NAMESPACE);
+      const testVideoSrc = await sessionStorage.getItem("test_video_url", NAMESPACE);
+      const bitmovinAnalyticLicenseKey = await sessionStorage.getItem("BitmovinAnalyticLicenseKey", NAMESPACE);
+      const bitmovinPlayerLicenseKey = await sessionStorage.getItem("plist.BitmovinPlayerLicenseKey", NAMESPACE);
+      const heartbeatInterval = await sessionStorage.getItem("heartbeat_interval", NAMESPACE);
+      this.setState({
+        pluginConfiguration: {
+          baseSkylarkUrl,
+          testVideoSrc,
+          bitmovinAnalyticLicenseKey,
+          bitmovinPlayerLicenseKey,
+          heartbeatInterval
+        }
+      })
+    } catch (e) {
+      this.setState({ pluginConfiguration: {} })
+    }
+  };
+
 }
 
 const styles = StyleSheet.create({
@@ -181,3 +265,5 @@ const styles = StyleSheet.create({
     height: '100%'
   },
 });
+
+export const AndroidPlayer = withNavigator(VideoPlayerComponent);
