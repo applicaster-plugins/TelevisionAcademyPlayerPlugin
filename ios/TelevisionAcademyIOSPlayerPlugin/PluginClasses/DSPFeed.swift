@@ -67,7 +67,7 @@ struct MediaGroup: Codable {
 // MARK: - MediaItem
 struct MediaItem: Codable {
     let type, key: String
-    let src: String
+    let src: String?
 }
 
 // MARK: - TypeClass
