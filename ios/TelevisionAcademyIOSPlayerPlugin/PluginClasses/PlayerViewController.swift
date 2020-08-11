@@ -15,6 +15,12 @@ import GoogleCast
 
 class PlayerViewController: UIViewController {
     
+    //Constants used for User ID tracking functionality
+    struct UserIDConstants {
+        static let userIDLocalStorageKey = "user_id"
+        static let loginNamespace = "login"
+    }
+    
     enum Constants: Int {
         case miliseconds = 1000
     }
@@ -134,6 +140,9 @@ class PlayerViewController: UIViewController {
         config.cdnProvider = CdnProvider.bitmovin
         config.videoId = videoId
         config.heartbeatInterval = Int(self.configuration["heartbeat_interval"] as? String ?? "") ?? defaultAnalyticHeartbeat
+        if let userID = ZAAppConnector.sharedInstance().storageDelegate?.localStorageValue(for:UserIDConstants.userIDLocalStorageKey, namespace:UserIDConstants.loginNamespace) {
+            config.customerUserId = userID
+        }
           
         return BitmovinAnalytics(config: config);
     }
