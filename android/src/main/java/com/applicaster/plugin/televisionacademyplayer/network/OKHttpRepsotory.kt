@@ -16,7 +16,7 @@ import java.io.IOException
 class OKHttpRepsotory {
     fun contentUIDS( competition_id: String,submission_id: String, token: String, callback: (ResponseStatusCodes, APAtomFeed?) -> Unit) {
          val urlBuilder = HttpUrl.parse(ConfigurationRepository.dspBaseUrl)!!.newBuilder()
-                   urlBuilder.addQueryParameter("competition_id", competition_id)
+                   urlBuilder.addQueryParameter("competitionId", competition_id)
         urlBuilder.addQueryParameter("uid", submission_id)
         urlBuilder.addQueryParameter("token", token)
         val url = urlBuilder.build().toString() + dsp_parameters_url
