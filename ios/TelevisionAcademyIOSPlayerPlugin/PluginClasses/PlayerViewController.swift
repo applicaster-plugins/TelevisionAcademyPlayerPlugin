@@ -162,6 +162,7 @@ class PlayerViewController: UIViewController {
         if let firstItem = sourceItems.first {
             config.sourceItem = firstItem
         }
+        config.tweaksConfiguration.isCustomHlsLoadingEnabled = false //needed to prevent bug with AES-KEY
         
         let player = BitmovinPlayer(configuration: config)
         player.add(listener: self)
