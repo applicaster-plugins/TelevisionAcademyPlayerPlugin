@@ -82,6 +82,7 @@
         let config = PlayerConfiguration()
         config.playbackConfiguration.isAutoplayEnabled = true
         config.sourceItem = sourceItem
+        config.tweaksConfiguration.isCustomHlsLoadingEnabled = false //needed to prevent bug with AES-KEY
 
         let player = BitmovinPlayer(configuration: config)
         player.add(listener: self)
