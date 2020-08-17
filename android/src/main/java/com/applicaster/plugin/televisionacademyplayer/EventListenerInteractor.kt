@@ -4,6 +4,8 @@ package com.applicaster.plugin.televisionacademyplayer
 import android.util.Log
 import com.applicaster.analytics.AnalyticsAgentUtil
 import com.applicaster.playerevents.PlayerEventsManager
+import com.applicaster.storage.LocalStorage
+import com.applicaster.util.StringUtil
 import com.bitmovin.player.BitmovinPlayer
 import com.bitmovin.player.api.event.data.*
 import com.bitmovin.player.api.event.listener.*
@@ -22,6 +24,8 @@ object EventListenerInteractor {
     const val TIMECODE_TO = "Timecode To"
     const val ITEM_DURATION = "Item Duration"
 
+    var userId = LocalStorage.storageRepository?.get("user_id","login")
+
     private val listeners = mutableListOf(
         object : OnPausedListener {
             override fun onPaused(event: PausedEvent) {
@@ -35,12 +39,16 @@ object EventListenerInteractor {
                         Pair("content_group", contentGroup)
                     )
                 )
+                val params = mutableMapOf(
+                    TIMECODE_TO to event.time.toLong().toString(),
+                    ITEM_DURATION to duration.toLong().toString()
+                )
+                if (StringUtil.isNotEmpty(userId)) {
+                    params.put("user_id", userId.toString())
+                }
                 AnalyticsAgentUtil.logTimedEvent(
                     "Pause",
-                    mapOf(
-                        TIMECODE_TO to event.time.toLong().toString(),
-                        ITEM_DURATION to duration.toLong().toString()
-                    )
+                    params
                 )
             }
         },
@@ -56,12 +64,16 @@ object EventListenerInteractor {
                         Pair("content_group", contentGroup)
                     )
                 )
-                AnalyticsAgentUtil.logTimedEvent(
-                    "Play VOD Item",
-                    mapOf(
+                val params = mutableMapOf(
                         TIMECODE_TO to event.timestamp.toString(),
                         ITEM_DURATION to duration.toLong().toString()
-                    )
+                )
+                if (StringUtil.isNotEmpty(userId)) {
+                    params.put("user_id", userId.toString())
+                }
+                AnalyticsAgentUtil.logTimedEvent(
+                    "Play VOD Item",
+                    params
                 )
 
 
@@ -79,13 +91,17 @@ object EventListenerInteractor {
                         Pair("content_group", contentGroup)
                     )
                 )
-                AnalyticsAgentUtil.logEvent(
-                    "Seek",
-                    mapOf(
+                val params = mutableMapOf(
                         TIMECODE_FROM to event.position.toString(),
                         TIMECODE_TO to event.seekTarget.toString(),
                         ITEM_DURATION to duration.toLong().toString()
-                    )
+                )
+                if (StringUtil.isNotEmpty(userId)) {
+                    params.put("user_id", userId.toString())
+                }
+                AnalyticsAgentUtil.logEvent(
+                    "Seek",
+                    params
                 )
             }
 
