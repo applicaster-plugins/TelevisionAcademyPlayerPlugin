@@ -2,6 +2,8 @@ package com.applicaster.plugin.televisionacademyplayer
 
 import android.content.Context
 import com.applicaster.plugin_manager.playersmanager.Playable
+import com.applicaster.storage.LocalStorage
+import com.applicaster.util.StringUtil
 import com.bitmovin.analytics.BitmovinAnalyticsConfig
 import com.bitmovin.analytics.bitmovin.player.BitmovinPlayerCollector
 import com.bitmovin.analytics.enums.CDNProvider
@@ -19,6 +21,11 @@ internal class BitmovinAnalyticInteractor {
         bitmovinAnalyticsConfig.heartbeatInterval = ConfigurationRepository.heartbeatInterval
         bitmovinAnalyticsConfig.videoId = playable?.playableId
         bitmovinAnalyticsConfig.cdnProvider = CDNProvider.BITMOVIN
+
+        val userId = LocalStorage.storageRepository?.get("user_id","login")
+        if (StringUtil.isNotEmpty(userId)) {
+            bitmovinAnalyticsConfig.customUserId = userId
+        }
 
         analyticsCollector = BitmovinPlayerCollector(bitmovinAnalyticsConfig, context)
     }
