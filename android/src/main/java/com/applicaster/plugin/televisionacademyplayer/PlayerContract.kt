@@ -12,8 +12,6 @@ import com.applicaster.plugin_manager.hook.HookListener
 import com.applicaster.plugin_manager.playersmanager.Playable
 import com.applicaster.plugin_manager.playersmanager.PlayableConfiguration
 import com.applicaster.plugin_manager.playersmanager.PlayerContract
-import com.applicaster.storage.LocalStorage
-import com.applicaster.util.StringUtil
 import com.bitmovin.player.BitmovinPlayerView
 import com.bitmovin.player.config.media.SourceConfiguration
 
@@ -125,15 +123,7 @@ class PlayerContract : BasePlayer(), ApplicationLoaderHookUpI {
         when {
             playable.isLive -> AnalyticsAgentUtil.PLAY_CHANNEL
             else -> AnalyticsAgentUtil.PLAY_VOD_ITEM
-        }.let {
-            val userId = LocalStorage.storageRepository?.get("user_id","login")
-            if (StringUtil.isNotEmpty(userId)) {
-                AnalyticsAgentUtil.endTimedEvent(it, mapOf("user_id" to userId))
-            }
-            else {
-                AnalyticsAgentUtil.endTimedEvent(it)
-            }
-        }
+        }.let { AnalyticsAgentUtil.endTimedEvent(it) }
     }
 
     override fun executeOnStartup(context: Context?, listener: HookListener?) {

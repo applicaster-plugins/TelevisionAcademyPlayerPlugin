@@ -22,9 +22,7 @@ import com.applicaster.plugin.televisionacademyplayer.network.OKHttpRepsotory
 import com.applicaster.plugin_manager.login.LoginContract
 import com.applicaster.plugin_manager.login.LoginManager
 import com.applicaster.plugin_manager.playersmanager.Playable
-import com.applicaster.storage.LocalStorage
 import com.applicaster.tvaplayerhook.enums.ResponseStatusCodes
-import com.applicaster.util.StringUtil
 import com.bitmovin.player.BitmovinPlayer
 import com.bitmovin.player.api.event.listener.OnPlaybackFinishedListener
 import com.bitmovin.player.api.event.listener.OnReadyListener
@@ -154,15 +152,7 @@ class TAPlayerActivity : AppCompatActivity() {
         when {
             playable?.isLive == true -> AnalyticsAgentUtil.PLAY_CHANNEL
             else -> AnalyticsAgentUtil.PLAY_VOD_ITEM
-        }.let {
-            val userId = LocalStorage.storageRepository?.get("user_id","login")
-            if (StringUtil.isNotEmpty(userId)) {
-                AnalyticsAgentUtil.endTimedEvent(it, mapOf("user_id" to userId))
-            }
-            else {
-                AnalyticsAgentUtil.endTimedEvent(it)
-            }
-        }
+        }.let { AnalyticsAgentUtil.endTimedEvent(it) }
         EventListenerInteractor.removeListeners(bitmovinPlayer)
         bitmovinAnalyticInteractor.detachPlayer()
         super.onDestroy()
