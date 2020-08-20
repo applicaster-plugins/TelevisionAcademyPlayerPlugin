@@ -14,7 +14,7 @@
     weak var eventsResponderDelegate: PlayerEventsResponder?
     weak var bitmovinPlayer: BitmovinPlayer?
     weak private var bitmovinPlayerView: BMPBitmovinPlayerView?
-    weak private var analyticCollector: BitmovinAnalytics?
+    weak var analyticCollector: BitmovinAnalytics?
 
     var playableItem: NSDictionary? {
         willSet(newPlayableItem) {
@@ -23,10 +23,12 @@
             }
         }
     }
+    var sourceId: NSString?
     var baseSkylarkUrl: NSString?
     var testVideoSrc: NSString?
     var analyticKey: NSString?
     var playerKey: NSString?
+    var userId: NSString?
     var heartbeatInterval: Int = 5000
 
     var lastTrackDate: Date = Date(timeIntervalSince1970: 0)
@@ -60,6 +62,8 @@
             let videoSrc = content[BridgeConstants.source.rawValue] as? NSString else {
                 return
         }
+        
+        self.sourceId = sourceId
 
         var elapsedTime: Double? = nil
         var contentGroup: String? = nil
@@ -89,6 +93,7 @@
 
         self.analyticCollector = createAnalyticCollector(videoId: identifier)
         self.analyticCollector?.attachBitmovinPlayer(player: player)
+        self.bitmovinPlayer = player
 
         DispatchQueue.main.async { [weak self] in
             if let strongSelf = self {
@@ -98,14 +103,12 @@
                 playerView.add(listener: strongSelf)
 
                 strongSelf.view.addSubview(playerView)
-
-                strongSelf.bitmovinPlayer = player
                 strongSelf.bitmovinPlayerView = playerView
             }
         }
     }
 
-    private func createAnalyticCollector(videoId: String) -> BitmovinAnalytics? {
+    func createAnalyticCollector(videoId: String) -> BitmovinAnalytics? {
         guard let analyticKey = self.analyticKey,
             let playerKey = self.playerKey
             else { return nil }
@@ -114,6 +117,11 @@
         config.cdnProvider = CdnProvider.bitmovin
         config.videoId = videoId
         config.heartbeatInterval = self.heartbeatInterval
+        
+        if self.userId !== nil {
+            config.customerUserId = self.userId! as String
+        }
+        
 
         return BitmovinAnalytics(config: config);
     }
