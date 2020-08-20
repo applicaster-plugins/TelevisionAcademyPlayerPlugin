@@ -254,7 +254,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
                 }
             }
         }
-        bitmovinAnalyticInteractor.initializeAnalyticsCollector(context, sourceId, heartbeatInterval)
+        bitmovinAnalyticInteractor.initializeAnalyticsCollector(context, sourceId, heartbeatInterval, customUserId())
     }
 
     fun setPluginConfiguration(params: ReadableMap) {
@@ -406,6 +406,12 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     private fun getToken(): String {
         var token = LocalStorage.storageRepository?.get(TOKEN_KEY, TOKEN_NAMESPACE) ?: ""
         return token.replace("\"", "")
+
+    }
+
+    private fun getCustomUserId(): String? {
+        var id = LocalStorage.storageRepository?.get(CUSTOM_USER_ID_KEY, CUSTOM_USER_ID_NAMESPACE) ?: ""
+        return id.replace("\"", "")
 
     }
 

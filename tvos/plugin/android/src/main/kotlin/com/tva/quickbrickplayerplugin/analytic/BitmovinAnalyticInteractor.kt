@@ -11,13 +11,14 @@ internal class BitmovinAnalyticInteractor {
 
     private var analyticsCollector: BitmovinPlayerCollector? = null
 
-    fun initializeAnalyticsCollector(context: Context, sourceId: String?, heartbeatInterval: Int) {
+    fun initializeAnalyticsCollector(context: Context, sourceId: String?, heartbeatInterval: Int, customUserId: String?) {
         val bitmovinAnalyticsConfig = BitmovinAnalyticsConfig(
             context.getString(R.string.bitmovin_analytics_license_key),
             context.getString(R.string.bitmovin_player_license_key)
         )
         bitmovinAnalyticsConfig.heartbeatInterval = heartbeatInterval
         bitmovinAnalyticsConfig.videoId = sourceId
+        bitmovinAnalyticsConfig.customUserId = customUserId
         bitmovinAnalyticsConfig.cdnProvider = CDNProvider.BITMOVIN
 
         analyticsCollector = BitmovinPlayerCollector(bitmovinAnalyticsConfig, context)
