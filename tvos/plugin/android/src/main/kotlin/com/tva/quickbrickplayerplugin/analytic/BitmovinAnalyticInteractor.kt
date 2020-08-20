@@ -5,6 +5,7 @@ import com.bitmovin.analytics.BitmovinAnalyticsConfig
 import com.bitmovin.analytics.bitmovin.player.BitmovinPlayerCollector
 import com.bitmovin.analytics.enums.CDNProvider
 import com.bitmovin.player.BitmovinPlayer
+import com.applicaster.util.StringUtil
 import com.tva.quickbrickplayerplugin.R
 
 internal class BitmovinAnalyticInteractor {
@@ -18,7 +19,9 @@ internal class BitmovinAnalyticInteractor {
         )
         bitmovinAnalyticsConfig.heartbeatInterval = heartbeatInterval
         bitmovinAnalyticsConfig.videoId = sourceId
-        bitmovinAnalyticsConfig.customUserId = customUserId
+        if (StringUtil.isNotEmpty(customUserId)) {
+            bitmovinAnalyticsConfig.customUserId = customUserId
+        }
         bitmovinAnalyticsConfig.cdnProvider = CDNProvider.BITMOVIN
 
         analyticsCollector = BitmovinPlayerCollector(bitmovinAnalyticsConfig, context)
