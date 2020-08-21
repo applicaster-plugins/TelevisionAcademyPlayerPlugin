@@ -27,6 +27,8 @@ class PlayerView: UIView {
     
     @objc public var onVideoTimeChanged: RCTBubblingEventBlock?
     
+    @objc public var userId: NSString?
+    
     @objc var onKeyChanged: NSDictionary? {
         didSet {
         }
@@ -44,7 +46,7 @@ class PlayerView: UIView {
                 playerViewController = PlayerViewController()
                 playerViewController?.eventsResponderDelegate = self
                 playerViewController?.playableItem = playableItem
-                
+                playerViewController?.userId = self.userId
                 playerViewController?.baseSkylarkUrl = self.baseSkylarkUrl
                 playerViewController?.testVideoSrc = self.testVideoSrc
                 playerViewController?.analyticKey = self.analyticKey
@@ -93,6 +95,12 @@ class PlayerView: UIView {
             playerViewController?.analyticKey = self.analyticKey
             playerViewController?.playerKey = self.playerKey
             playerViewController?.heartbeatInterval = self.heartbeatInterval
+            
+            if let sourceId = playerViewController?.sourceId as String?, let bitmovinPlayer = playerViewController?.bitmovinPlayer,
+              playerViewController?.analyticCollector == nil {
+              playerViewController?.analyticCollector = playerViewController?.createAnalyticCollector(videoId: sourceId)
+              playerViewController?.analyticCollector?.attachBitmovinPlayer(player: bitmovinPlayer)
+            }
         }
     }
     

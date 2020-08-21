@@ -17,6 +17,7 @@ enum BridgeConstants: String {
     case contentGroup = "content_group"
     case baseSkylarkUrl = "baseSkylarkUrl"
     case testVideoSrc = "testVideoSrc"
+    case userId = "userId"
     case type = "type"
     case keyCode = "keyCode"
     case bitmovinAnalyticLicenseKey = "bitmovinAnalyticLicenseKey"

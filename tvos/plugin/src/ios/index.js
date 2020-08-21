@@ -2,6 +2,7 @@
 import * as React from "react";
 import * as R from "ramda";
 import { DeviceEventEmitter, Dimensions, requireNativeComponent, StyleSheet, View } from "react-native";
+import { localStorage } from '@applicaster/zapp-react-native-bridge/ZappStorage/LocalStorage';
 import { sendQuickBrickEvent } from "@applicaster/zapp-react-native-bridge/QuickBrick";
 import { sessionStorage } from "@applicaster/zapp-react-native-bridge/ZappStorage/SessionStorage";
 import { withNavigator } from '@applicaster/zapp-react-native-ui-components/Decorators/Navigator/';
@@ -17,6 +18,7 @@ type Props = {
   pluginConfiguration: {}
 };
 type State = {
+  isReady: boolean,
   showOverlay: boolean,
 };
 const NAMESPACE = "TelevisionAcademyPlayerPluginTV";
@@ -28,6 +30,7 @@ class VideoPlayerComponent extends React.Component<Props, State> {
       playerEvent: { keyCode: -1, code: "NONE" },
       showOverlay: false
     };
+    this.userId = null
     this.onLoad = this.onLoad.bind(this);
     this.onError = this.onError.bind(this);
     this.onEnd = this.onEnd.bind(this);
@@ -59,7 +62,7 @@ class VideoPlayerComponent extends React.Component<Props, State> {
     }
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     DeviceEventEmitter.addListener("emitterOnLoad", this.onLoad);
     DeviceEventEmitter.addListener("emitterOnEnd", this.onEnd);
     DeviceEventEmitter.addListener("emitterOnError", this.onError);
@@ -67,6 +70,7 @@ class VideoPlayerComponent extends React.Component<Props, State> {
     sendQuickBrickEvent("blockTVKeyEmit", { blockTVKeyEmit: false });
     this.timeout = setTimeout(this.retrievePluginConfiguration, 1);
     this._isMounted = true;
+    this.userId = await localStorage.getItem("user_id", "login");
   }
 
   componentWillUnmount() {
@@ -147,6 +151,7 @@ class VideoPlayerComponent extends React.Component<Props, State> {
         style: { height, width },
         playableItem,
         pluginConfiguration,
+        userId: this.userId,
         onVideoEnd: this._onEnd,
         onVideoTimeChanged: this._onTimeChanged,
       }
