@@ -14,7 +14,7 @@
     weak var eventsResponderDelegate: PlayerEventsResponder?
     weak var bitmovinPlayer: BitmovinPlayer?
     weak private var bitmovinPlayerView: BMPBitmovinPlayerView?
-    weak var analyticCollector: BitmovinAnalytics?
+    var analyticCollector: BitmovinAnalytics?
 
     var playableItem: NSDictionary? {
         willSet(newPlayableItem) {
