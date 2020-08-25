@@ -45,6 +45,12 @@ extension PlayerViewController: PlayerListener, UserInterfaceListener {
     }
     
     func onPlay(_ event: PlayEvent) {
+        //We don't track play events when time is 0
+        guard let currentTime = bitmovinPlayer?.currentTime,
+            currentTime > 0 else {
+            return
+        }
+
         self.trackTime(force: false)
     }
     
