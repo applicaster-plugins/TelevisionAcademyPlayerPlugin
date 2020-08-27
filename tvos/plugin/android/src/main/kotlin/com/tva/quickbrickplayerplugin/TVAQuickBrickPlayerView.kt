@@ -59,7 +59,8 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     private val TRACK_TIME_INTERVAL = TimeUnit.SECONDS.toMillis(5)
     private var bitmovinPlayer: BitmovinPlayer? = null
     private var bitmovinAnalyticInteractor: BitmovinAnalyticInteractor
-    private val TOKEN_NAMESPACE = "login"
+    private val LOGIN_NAMESPACE = "login"
+    private val USERID_KEY = "user_id"
     private val TOKEN_KEY = "token"
     private var audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
@@ -254,7 +255,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
                 }
             }
         }
-        bitmovinAnalyticInteractor.initializeAnalyticsCollector(context, sourceId, heartbeatInterval, customUserId())
+        bitmovinAnalyticInteractor.initializeAnalyticsCollector(context, sourceId, heartbeatInterval, getCustomUserId())
     }
 
     fun setPluginConfiguration(params: ReadableMap) {
@@ -404,17 +405,16 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
     }
 
     private fun getToken(): String {
-        var token = LocalStorage.storageRepository?.get(TOKEN_KEY, TOKEN_NAMESPACE) ?: ""
+        var token = LocalStorage.storageRepository?.get(TOKEN_KEY, LOGIN_NAMESPACE) ?: ""
         return token.replace("\"", "")
 
     }
 
     private fun getCustomUserId(): String? {
-        var id = LocalStorage.storageRepository?.get(CUSTOM_USER_ID_KEY, CUSTOM_USER_ID_NAMESPACE) ?: ""
+        var id = LocalStorage.storageRepository?.get(USERID_KEY, LOGIN_NAMESPACE) ?: ""
         return id.replace("\"", "")
 
     }
-
 
     override fun onHostResume() {
         bitmovinPlayer?.onResume()
