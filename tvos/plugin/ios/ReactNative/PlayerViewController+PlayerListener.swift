@@ -70,7 +70,10 @@ extension PlayerViewController: PlayerListener, UserInterfaceListener {
     }
     
     func onTimeChanged(_ event: TimeChangedEvent) {
-        self.trackTime(force: false)
+        //We don't track onTimeChanged events when time is 0
+        if let currentTime = bitmovinPlayer?.currentTime, Int(currentTime) > 0 {
+            self.trackTime(force: false)
+        }
         eventsResponderDelegate?.onTimeChangedEvent(time: event.currentTime, duration: (self.bitmovinPlayer?.duration ?? 0))
     }
     
