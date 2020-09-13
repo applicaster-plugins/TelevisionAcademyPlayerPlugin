@@ -55,6 +55,12 @@ extension PlayerViewController: PlayerListener, UserInterfaceListener {
     }
     
     func onPaused(_ event: PausedEvent) {
+        //We don't track pause events when time is 0
+        guard let currentTime = bitmovinPlayer?.currentTime,
+            Int(currentTime) > 0 else {
+            return
+        }
+        
         self.trackTime(force: false)
         
         // analytics
