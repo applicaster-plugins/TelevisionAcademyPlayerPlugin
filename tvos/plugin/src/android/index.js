@@ -47,6 +47,10 @@ class VideoPlayerComponent extends React.Component<Props, State> {
   }
 
   onShowSettings = (event) => {
+    typeof event == "object" && event instanceof Array && event.length == 0 ? 
+    this.setState({
+      settings: null
+    }) :
     this.setState({
       settings: event
     });
@@ -190,7 +194,7 @@ class VideoPlayerComponent extends React.Component<Props, State> {
                 return setting
               }
             });
-            this.setState({ settings: updatedSettings, selectedSetting, settingsAction: "back" })
+            this.setState({ settings: null, selectedSetting, settingsAction: "back" })
           }} />);
     }
 
