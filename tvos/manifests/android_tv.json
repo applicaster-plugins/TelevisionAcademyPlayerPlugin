@@ -34,7 +34,7 @@
   "react_bundle_url": "",
   "extra_dependencies": [],
   "npm_dependencies": [
-    "@applicaster/quick-brick-television-academy-bitmovin-player@0.8.2"
+    "@applicaster/quick-brick-television-academy-bitmovin-player@0.8.6"
   ],
   "project_dependencies": [
     {
