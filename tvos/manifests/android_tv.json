@@ -13,8 +13,8 @@
     }
   ],
   "dependency_name": "@applicaster/quick-brick-television-academy-bitmovin-player",
-  "dependency_version": "0.8.2",
-  "manifest_version": "0.8.2",
+  "dependency_version": "0.8.6",
+  "manifest_version": "0.8.6",
   "platform": "android",
   "author_name": "Sergey Zhigunov",
   "author_email": "s.zhyhunov@applicaster.com",

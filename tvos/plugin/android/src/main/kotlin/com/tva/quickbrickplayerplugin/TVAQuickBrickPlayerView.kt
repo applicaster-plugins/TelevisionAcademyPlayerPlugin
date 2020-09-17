@@ -12,6 +12,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.annotation.RequiresApi
+import com.applicaster.BuildConfig
 import com.applicaster.storage.LocalStorage
 import com.applicaster.util.OSUtil
 import com.bitmovin.player.BitmovinPlayer
@@ -37,7 +38,6 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.player_view.view.*
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
-import kotlin.reflect.jvm.internal.impl.renderer.DescriptorRenderer
 
 class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs), LifecycleEventListener {
 
@@ -237,7 +237,7 @@ class TVAQuickBrickPlayerView(context: Context, attrs: AttributeSet?) : FrameLay
             KEYCODE_MEDIA_STOP -> stopPlayback()
             KEYCODE_DPAD_RIGHT, KEYCODE_MEDIA_FAST_FORWARD -> seekForward()
             KEYCODE_DPAD_LEFT, KEYCODE_MEDIA_REWIND -> seekBackward()
-            KEYCODE_MENU -> showSettingsEvent()
+            KEYCODE_DPAD_DOWN, KEYCODE_DPAD_UP, KEYCODE_MENU -> showSettingsEvent()
         }
     }
 
