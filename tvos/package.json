@@ -21,13 +21,13 @@
     "@applicaster/zapplicaster-cli": "3.0.7",
     "react": "16.8.3",
     "react-dom": "16.13.0",
-    "react-native": "0.59.10"
+    "react-native": "0.62.3"
   },
   "peerDependencies": {
     "@applicaster/zapplicaster-cli": "3.0.0",
     "react": "16.8.3",
     "react-dom": "16.13.0",
-    "react-native": "0.59.10"
+    "react-native": "0.62.3"
   },
   "dependencies": {}
 }
